@@ -52,6 +52,9 @@ public class ShiroConfig {
 		// 获取网站基本信息
 		map.put("/exam/api/sys/config/detail", "anon");
 
+		// 文件读取
+		map.put("/upload/file/**", "anon");
+
 		map.put("/", "anon");
 		map.put("/v2/**", "anon");
 		map.put("/doc.html", "anon");

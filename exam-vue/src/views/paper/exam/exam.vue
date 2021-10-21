@@ -54,16 +54,27 @@
 
         <el-card class="qu-content">
           <p v-if="quData.content">{{ quData.sort + 1 }}.{{ quData.content }}</p>
+          <p v-if="quData.image!=null && quData.image!=''">
+            <el-image :src="quData.image" style="max-width:100%;" />
+          </p>
           <div v-if="quData.quType === 1 || quData.quType===3">
             <el-radio-group v-model="radioValue">
-              <el-radio v-for="item in quData.answerList" :label="item.id">{{ item.abc }}.{{ item.content }} <div v-if="item.image" style="clear: both" /></el-radio>
+              <el-radio v-for="item in quData.answerList" :label="item.id">{{ item.abc }}.{{ item.content }}
+                <div v-if="item.image!=null && item.image!=''" style="clear: both">
+                  <el-image :src="item.image" style="max-width:100%;" />
+                </div>
+              </el-radio>
             </el-radio-group>
           </div>
 
           <div v-if="quData.quType === 2">
 
             <el-checkbox-group v-model="multiValue">
-              <el-checkbox v-for="item in quData.answerList" :label="item.id">{{ item.abc }}.{{ item.content }} <div v-if="item.image" style="clear: both" /></el-checkbox>
+              <el-checkbox v-for="item in quData.answerList" :label="item.id">{{ item.abc }}.{{ item.content }}
+                <div v-if="item.image!=null && item.image!=''" style="clear: both">
+                  <el-image :src="item.image" style="max-width:100%;" />
+                </div>
+              </el-checkbox>
             </el-checkbox-group>
 
           </div>

@@ -198,6 +198,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         PaperQu paperQu = paperQuService.findByKey(paperId, quId);
         BeanMapper.copy(paperQu, respDTO);
         respDTO.setContent(qu.getContent());
+        respDTO.setImage(qu.getImage());
 
         // 答案列表
         List<PaperQuAnswerExtDTO> list = paperQuAnswerService.listForExam(paperId, quId);
