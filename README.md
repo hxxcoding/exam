@@ -51,9 +51,16 @@ Mysql5.7+  [点此下载](https://cdn.yfhl.net/java-win/mysql-installer-communit
 
 
 # 其它支持
-QQ交流群：865330294      
-邮箱：626264481@qq.com   
-手机：18710213152    
+QQ交流群：865330294 
+
+杨经理：     
+    邮箱：626264481@qq.com   
+    手机：18710213152 
+   
+郭经理：
+    邮箱：835487894@qq.com   
+    手机：18603038204
+
 网站：https://lp-exam.yfhl.net  
 
 
