@@ -148,9 +148,9 @@
 
           <el-date-picker
             v-model="dateValues"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
-            type="daterange"
+            format="yyyy-MM-dd HH:mm"
+            value-format="yyyy-MM-dd HH:mm"
+            type="datetimerange"
             range-separator="至"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
@@ -204,8 +204,6 @@
     <div style="margin-top: 20px">
       <el-button type="primary" @click="handleSave">保存</el-button>
     </div>
-
-
 
   </div>
 </template>

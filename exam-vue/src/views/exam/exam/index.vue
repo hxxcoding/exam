@@ -19,7 +19,7 @@
       <el-date-picker
         v-model="listQuery.params.startTime"
         class="filter-item"
-        value-format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd HH:mm"
         type="date"
         placeholder="考试开始时间"
       />
@@ -27,7 +27,7 @@
       <el-date-picker
         v-model="listQuery.params.endTime"
         class="filter-item"
-        value-format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd HH:mm"
         type="date"
         placeholder="考试结束时间"
       />
