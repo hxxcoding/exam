@@ -64,17 +64,17 @@
 
         </el-table-column>
 
-        <!--      <el-table-column-->
-        <!--        label="客观分"-->
-        <!--        align="center"-->
-        <!--        prop="subjScore"-->
-        <!--      />-->
+        <el-table-column
+          label="客观分"
+          align="center"
+          prop="objScore"
+        />
 
-        <!--      <el-table-column-->
-        <!--        label="主观分"-->
-        <!--        align="center"-->
-        <!--        prop="objScore"-->
-        <!--      />-->
+        <el-table-column
+          label="主观分"
+          align="center"
+          prop="subjScore"
+        />
 
         <el-table-column
           label="考试得分"
@@ -139,7 +139,7 @@
 
     <el-dialog title="考试截图" :visible.sync="dialogVisible" width="500px">
 
-      <img v-for="item in captureList" :src="item.capture" style="width: 230px">
+      <img v-for="item in captureList" :key="item.id" :src="item.capture" style="width: 230px">
 
     </el-dialog>
 
