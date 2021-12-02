@@ -2,7 +2,7 @@
 
   <div>
 
-    <el-card v-for="item in paperList" :key="item" style="margin-bottom: 10px; line-height: 30px;">
+    <el-card v-for="item in paperList" :key="item.id" style="margin-bottom: 10px; line-height: 30px;">
 
       <el-row :gutter="20">
         <el-col :span="12">
@@ -45,10 +45,12 @@ import { listPaper } from '@/api/paper/paper'
 export default {
   name: 'UserPaperList',
   props: {
+    // eslint-disable-next-line vue/require-default-prop
     examId: {
       type: String,
       defaultValue: ''
     },
+    // eslint-disable-next-line vue/require-default-prop
     userId: {
       type: String,
       defaultValue: ''

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <h2 class="text-center">开发人员入职培训考试</h2>
+    <h2 class="text-center">{{ paperData.title }}</h2>
     <p class="text-center" style="color: #666">{{ paperData.createTime }}</p>
 
     <el-row :gutter="24" style="margin-top: 50px">
@@ -22,7 +22,7 @@
 
     <el-card style="margin-top: 20px">
 
-      <div v-for="item in paperData.quList" class="qu-content">
+      <div v-for="item in paperData.quList" :key="item.id" class="qu-content">
 
         <p>{{ item.sort + 1 }}.{{ item.content }}（得分：{{ item.actualScore }}）</p>
         <p v-if="item.image!=null && item.image!=''">
@@ -30,7 +30,7 @@
         </p>
         <div v-if="item.quType === 1 || item.quType===3">
           <el-radio-group v-model="radioValues[item.id]">
-            <el-radio v-for="an in item.answerList" :label="an.id">
+            <el-radio v-for="an in item.answerList" :key="an.id" :label="an.id">
               {{ an.abc }}.{{ an.content }}
               <div v-if="an.image!=null && an.image!=''" style="clear: both">
                 <el-image :src="an.image" style="max-width:100%;" />
@@ -74,7 +74,7 @@
 
         <div v-if="item.quType === 2">
           <el-checkbox-group v-model="multiValues[item.id]">
-            <el-checkbox v-for="an in item.answerList" :label="an.id">{{ an.abc }}.{{ an.content }}
+            <el-checkbox v-for="an in item.answerList" :key="an.id" :label="an.id">{{ an.abc }}.{{ an.content }}
               <div v-if="an.image!=null && an.image!=''" style="clear: both">
                 <el-image :src="an.image" style="max-width:100%;" />
               </div>

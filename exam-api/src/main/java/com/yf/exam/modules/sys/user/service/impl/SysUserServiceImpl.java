@@ -84,7 +84,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         SysUser user = this.getOne(wrapper, false);
         if(user == null){
-            throw new ServiceException(ApiError.ERROR_90010001);
+            throw new ServiceException(ApiError.ERROR_90010002);
         }
 
         // 被禁用

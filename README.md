@@ -3,7 +3,9 @@
 # TODO
 * deal 限时考试按照 limit_time 和 end_time 以最短的为准倒计时
 * deal 我的成绩中查看试卷
+* deal excel 导入导出试题 (setup sql_mode)
 * 如已经开始过当前考试 但未交卷，开始考试后读取已经做过的题 （暂存）
+* 教师查看所属班级的学生答题情况
 * 考试结束 自动提交已经保存的题目
 * 限制考试机器
 * 简答题
@@ -47,14 +49,15 @@ SpringBoot / Redis / Shiro / Vue / MySQL
 
 # 环境要求
 JDK 1.8+  [点此下载](https://cdn.yfhl.net/java-win/jdk-8u181-windows-x64.exe)        
-Mysql5.7+  [点此下载](https://cdn.yfhl.net/java-win/mysql-installer-community-5.7.31.0.msi)    
+Mysql5.7+  [点此下载](https://cdn.yfhl.net/java-win/mysql-installer-community-5.7.31.0.msi)  
+sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION    _BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 
 
 
 # 快速运行
 1、自行安装MySQL数据库（版本最好大于5.7），将`安装资源中`的`数据库初始化.sql`导入到安装好的数据库    
 2、安装Java环境，要求JDK版本大于1.7    
-3、请修改外置配置文件：application.properties 改成您自己的MySQL配置    
+3、请修改外置配置文件：application.properties 改成您自己的MySQL配置、上传文件的路径
 4、Windows通过start.bat运行，Linux运行start.sh运行    
 5、如果无意外，可通过：http://localhost:8101 访问到项目了    
 6、管理员账号密码：admin/admin 学员账号：person/person    
