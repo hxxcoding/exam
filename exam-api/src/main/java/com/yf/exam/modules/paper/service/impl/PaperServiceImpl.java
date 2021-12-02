@@ -332,7 +332,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         Calendar cl = Calendar.getInstance();
         cl.setTimeInMillis(System.currentTimeMillis());
         cl.add(Calendar.MINUTE, exam.getTotalTime());
-        paper.setLimitTime(cl.getTime());
+        paper.setLimitTime(cl.getTime().after(exam.getEndTime()) ? exam.getEndTime() : cl.getTime());
 
         paperService.save(paper);
 

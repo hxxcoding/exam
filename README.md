@@ -1,8 +1,15 @@
 # 云帆培训考试系统 开源版
 
+# TODO
+* deal 限时考试按照 limit_time 和 end_time 以最短的为准倒计时
+* 当前考试 已经开始 但未交卷 进入后 继续开始倒计时 并读取已经做过的题 （暂存）
+* 考试结束 自动提交已经保存的题目
+* 限制考试机器
+* 简答题
+
 # 项目演示
 开源版本：https://lite.yfhl.net  
-管理账号：admin/admin 学员账号：person/person   
+管理账号：admin/admin ~~~~学员账号：person/person   
 
 商业版本：https://lp-exam.yfhl.net
 

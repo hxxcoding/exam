@@ -15,6 +15,7 @@
 
           <div><strong>考试名称：</strong>{{ detailData.title }}</div>
           <div><strong>考试时长：</strong>{{ detailData.totalTime }}分钟</div>
+          <div><strong>考试时段：</strong>{{ detailData.startTime }} ~ {{ detailData.endTime }}</div>
           <div><strong>试卷总分：</strong>{{ detailData.totalScore }}分</div>
           <div><strong>及格分数：</strong>{{ detailData.qualifyScore }}分</div>
           <div><strong>考试描述：</strong>{{ detailData.content }}</div>
@@ -80,7 +81,7 @@ export default {
 
       // 打开
       const loading = Loading.service({
-        text: '正在努力创建试卷...',
+        text: '正在创建试卷...',
         background: 'rgba(0, 0, 0, 0.7)'
       })
 

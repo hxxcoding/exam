@@ -29,8 +29,7 @@ public class ExamDetailRespDTO extends PaperDTO {
 
         // 结束时间
         Calendar cl = Calendar.getInstance();
-        cl.setTime(this.getCreateTime());
-        cl.add(Calendar.MINUTE, getTotalTime());
+        cl.setTime(this.getLimitTime());
 
         return (cl.getTimeInMillis() - System.currentTimeMillis()) / 1000;
     }
