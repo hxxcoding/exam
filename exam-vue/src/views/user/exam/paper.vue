@@ -2,7 +2,7 @@
 
   <div>
 
-    <el-card v-for="item in paperList" style="margin-bottom: 10px; line-height: 30px;">
+    <el-card v-for="item in paperList" :key="item" style="margin-bottom: 10px; line-height: 30px;">
 
       <el-row :gutter="20">
         <el-col :span="12">
@@ -18,11 +18,16 @@
         </el-col>
 
         <el-col :span="12">
-          是否合格：{{item.userScore > item.qualifyScore ?'是':'否'}}
+          是否合格：{{ item.userScore > item.qualifyScore ?'是':'否' }}
         </el-col>
 
         <el-col :span="12">
           考试状态：{{ item.state | paperStateFilter }}
+        </el-col>
+
+        <el-col :span="12">
+          操作：
+          <el-button size="mini" icon="el-icon-view" round @click="handlePaperDetail(item.id)">查看答题情况</el-button>
         </el-col>
 
       </el-row>
@@ -85,6 +90,10 @@ export default {
       listPaper(this.userId, this.examId).then(response => {
         this.paperList = response.data.records
       })
+    },
+
+    handlePaperDetail(id) {
+      this.$router.push({ name: 'ShowExam', params: { id: id }})
     }
   }
 }
