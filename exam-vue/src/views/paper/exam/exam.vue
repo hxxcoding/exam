@@ -8,11 +8,8 @@
         <el-card style="margin-bottom: 10px">
 
           距离考试结束还有：<span style="color: #ff0000;">{{ hour }}时{{ min }}分{{ sec }}秒</span>
-          <el-button style="float: right; margin-top: -10px" type="warning" icon="el-icon-plus" :loading="loading" @click="handSave()">
+          <el-button style="float: right; margin-top: -10px" type="warning" icon="el-icon-plus" :loading="loading" @click="handHandExam()">
             {{ handleText }}
-          </el-button>
-          <el-button style="float: right; margin-top: -10px; margin-right: 10px" type="primary" icon="el-icon-coin" @click="handPrevious()">
-            暂存
           </el-button>
 
         </el-card>
