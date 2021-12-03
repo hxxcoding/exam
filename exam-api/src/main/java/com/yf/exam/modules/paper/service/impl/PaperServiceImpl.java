@@ -117,9 +117,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         // 查找该用户是否已经创建过试卷且未交卷 返回未完成的试卷
         Paper paper = paperService.getOne(new QueryWrapper<Paper>()
-                .eq("user_id", userId)
-                .eq("exam_id", examId)
-                .eq("state", 0));
+                .lambda().eq(Paper::getUserId, userId)
+                .eq(Paper::getExamId, examId)
+                .eq(Paper::getState, 0));
 
         if (paper != null) {
             return paper.getId();
@@ -457,7 +457,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         //如果不是正常的，抛出异常
         if(!PaperState.ING.equals(paper.getState())){
-            throw new ServiceException(1, "试卷状态不正确！");
+            throw new ServiceException(1, "试卷状态错误！");
         }
 
         // 客观分
