@@ -81,7 +81,7 @@ export default {
 
       // 打开
       const loading = Loading.service({
-        text: '正在创建试卷...',
+        text: '正在进入考试...',
         background: 'rgba(0, 0, 0, 0.7)'
       })
 
@@ -90,7 +90,7 @@ export default {
 
         if (response.code === 0) {
           this.$message({
-            message: '试卷创建成功，即将进入考试！',
+            message: '试卷读取成功，即将进入考试！',
             type: 'success'
           })
 

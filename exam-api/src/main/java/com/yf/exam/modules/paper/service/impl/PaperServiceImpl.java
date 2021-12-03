@@ -115,6 +115,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             throw new ServiceException(1, "考试不存在！");
         }
 
+        // 查找该用户是否已经创建过试卷且未交卷 返回未完成的试卷
+        Paper paper = paperService.getOne(new QueryWrapper<Paper>()
+                .eq("user_id", userId)
+                .eq("exam_id", examId)
+                .eq("state", 0));
+
+        if (paper != null) {
+            return paper.getId();
+        }
+
         if(!ExamState.ENABLE.equals(exam.getState())){
             throw new ServiceException(1, "考试状态不正确！");
         }
