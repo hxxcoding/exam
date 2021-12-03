@@ -60,8 +60,17 @@
           <div v-if="quData.quType === 1 || quData.quType===3">
             <el-radio-group v-model="radioValue">
               <el-radio v-for="item in quData.answerList" :key="item.id" :label="item.id">{{ item.abc }}.{{ item.content }}
-                <div v-if="item.image!=null && item.image!=''" style="clear: both">
+                <div
+                  v-if="item.image!=null && item.image!==''
+                    && item.image.endsWith('.jpg') || item.image.endsWith('.png')"
+                  style="clear: both"
+                >
                   <el-image :src="item.image" style="max-width:100%;" />
+                </div>
+                <div v-else-if="item.image!=null && item.image!==''">
+                  <el-link :href="item.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                    下载附件
+                  </el-link>
                 </div>
               </el-radio>
             </el-radio-group>
@@ -71,8 +80,17 @@
 
             <el-checkbox-group v-model="multiValue">
               <el-checkbox v-for="item in quData.answerList" :key="item.id" :label="item.id">{{ item.abc }}.{{ item.content }}
-                <div v-if="item.image!=null && item.image!=''" style="clear: both">
+                <div
+                  v-if="item.image!=null && item.image!==''
+                    && item.image.endsWith('.jpg') || item.image.endsWith('.png')"
+                  style="clear: both"
+                >
                   <el-image :src="item.image" style="max-width:100%;" />
+                </div>
+                <div v-else-if="item.image!=null && item.image!==''">
+                  <el-link :href="item.image" type="success" target="_blank" icon="el-icon-files" :underline="true">
+                    下载附件
+                  </el-link>
                 </div>
               </el-checkbox>
             </el-checkbox-group>
@@ -344,7 +362,6 @@ export default {
       // 查找下个详情
       const params = { paperId: this.paperId, quId: item.quId }
       quDetail(params).then(response => {
-        console.log(response)
         this.quData = response.data
         this.radioValue = ''
         this.multiValue = []
