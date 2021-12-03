@@ -7,7 +7,7 @@
       <el-col :span="24">
         <el-card style="margin-bottom: 10px">
 
-          距离考试结束还有：<span style="color: #ff0000;">{{ min }}分钟{{ sec }}秒</span>
+          距离考试结束还有：<span style="color: #ff0000;">{{ hour }}时{{ min }}分{{ sec }}秒</span>
           <el-button style="float: right; margin-top: -10px" type="primary" icon="el-icon-plus" :loading="loading" @click="handHandExam()">
             {{ handleText }}
           </el-button>
@@ -28,21 +28,21 @@
           <div v-if="paperData.radioList!==undefined && paperData.radioList.length > 0">
             <p class="card-title">单选题</p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.radioList" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)"> {{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.radioList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)"> {{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
           <div v-if="paperData.multiList!==undefined && paperData.multiList.length > 0">
             <p class="card-title">多选题</p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.multiList" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.multiList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
           <div v-if="paperData.judgeList!==undefined && paperData.judgeList.length > 0">
             <p class="card-title">判断题</p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.judgeList" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.judgeList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
@@ -59,7 +59,7 @@
           </p>
           <div v-if="quData.quType === 1 || quData.quType===3">
             <el-radio-group v-model="radioValue">
-              <el-radio v-for="item in quData.answerList" :label="item.id">{{ item.abc }}.{{ item.content }}
+              <el-radio v-for="item in quData.answerList" :key="item.id" :label="item.id">{{ item.abc }}.{{ item.content }}
                 <div v-if="item.image!=null && item.image!=''" style="clear: both">
                   <el-image :src="item.image" style="max-width:100%;" />
                 </div>
@@ -70,7 +70,7 @@
           <div v-if="quData.quType === 2">
 
             <el-checkbox-group v-model="multiValue">
-              <el-checkbox v-for="item in quData.answerList" :label="item.id">{{ item.abc }}.{{ item.content }}
+              <el-checkbox v-for="item in quData.answerList" :key="item.id" :label="item.id">{{ item.abc }}.{{ item.content }}
                 <div v-if="item.image!=null && item.image!=''" style="clear: both">
                   <el-image :src="item.image" style="max-width:100%;" />
                 </div>
@@ -137,10 +137,18 @@ export default {
       multiValue: [],
       // 已答ID
       answeredIds: [],
+      hour: '00',
       min: '00',
       sec: '00'
     }
   },
+  mounted() {
+    window.addEventListener('beforeunload', this.beforeUnloadHandler, false)
+  },
+  destroyed() {
+    window.removeEventListener('beforeunload', this.beforeUnloadHandler, false)
+  },
+  // 回退时无法弹窗
   created() {
     const id = this.$route.params.id
     if (typeof id !== 'undefined') {
@@ -151,6 +159,9 @@ export default {
 
   methods: {
 
+    beforeUnloadHandler(e) {
+      e.returnValue = '离开此页面？' // 此处返回任意字符串，不返回null即可，不能修改默认提示内容
+    },
     // 倒计时
     countdown() {
       const leftSeconds = this.paperData.leftSeconds
@@ -162,9 +173,11 @@ export default {
       }
 
       // 时
+      const hour = parseInt(leftSeconds / 3600)
       const min = parseInt(leftSeconds / 60 % 60)
       const sec = parseInt(leftSeconds % 60)
 
+      this.hour = hour > 9 ? hour : '0' + hour
       this.min = min > 9 ? min : '0' + min
       this.sec = sec > 9 ? sec : '0' + sec
       const that = this
@@ -240,11 +253,11 @@ export default {
       const params = { id: this.paperId }
       handExam(params).then(() => {
         this.$message({
-          message: '试卷提交成功，即将进入试卷详情！',
+          message: '试卷提交成功！',
           type: 'success'
         })
 
-        this.$router.push({ name: 'ShowExam', params: { id: this.paperId }})
+        this.$router.push({ name: 'ExamOnline' })
       })
     },
 
