@@ -41,7 +41,7 @@
           <el-input v-model="postForm.content" type="textarea" />
         </el-form-item>
 
-        <el-form-item label="试题图片">
+        <el-form-item label="试题图片(附件)">
           <file-upload v-model="postForm.image" />
         </el-form-item>
 
@@ -159,6 +159,14 @@ export default {
       {
         value: 3,
         label: '判断题'
+      },
+      {
+        value: 4,
+        label: '操作题'
+      },
+      {
+        value: 5,
+        label: '填空题'
       }
       ],
 
@@ -197,6 +205,10 @@ export default {
 
     handleTypeChange(v) {
       this.postForm.answerList = []
+      if (v === 5) { // 填空题
+        this.postForm.answerList.push({ isRight: true, content: '', analysis: '填空题答案内容请使用英文半角符号\';\'分割。例如 1;2;3;' })
+      }
+
       if (v === 3) {
         this.postForm.answerList.push({ isRight: true, content: '正确', analysis: '' })
         this.postForm.answerList.push({ isRight: false, content: '错误', analysis: '' })
@@ -225,8 +237,6 @@ export default {
       })
     },
     submitForm() {
-      console.log(JSON.stringify(this.postForm))
-
       let rightCount = 0
 
       this.postForm.answerList.forEach(function(item) {

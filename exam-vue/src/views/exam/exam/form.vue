@@ -80,7 +80,7 @@
           </el-table-column>
 
           <el-table-column
-            label="判断题数量"
+            label="判断数量"
             align="center"
           >
 
@@ -91,11 +91,31 @@
           </el-table-column>
 
           <el-table-column
-            label="判断题分数"
+            label="判断分数"
             align="center"
           >
             <template slot-scope="scope">
               <el-input-number v-model="scope.row.judgeScore" :controls="false" style="width: 100%" />
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            label="操作题数量"
+            align="center"
+          >
+
+            <template slot-scope="scope">
+              <el-input-number v-model="scope.row.saqCount" :controls="false" style="width: 100%" />
+            </template>
+
+          </el-table-column>
+
+          <el-table-column
+            label="操作题分数"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-input-number v-model="scope.row.saqScore" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
 
@@ -321,6 +341,7 @@ export default {
           that.postForm.totalScore += item.radioCount * item.radioScore
           that.postForm.totalScore += item.multiCount * item.multiScore
           that.postForm.totalScore += item.judgeCount * item.judgeScore
+          that.postForm.totalScore += item.saqCount * item.saqScore
         })
 
         // 赋值
@@ -400,6 +421,16 @@ export default {
               this.$notify({
                 title: '提示信息',
                 message: '题库第：[' + (i + 1) + ']项存在无效的判断题配置！',
+                type: 'warning',
+                duration: 2000
+              })
+              return
+            }
+
+            if ((repo.saqCount > 0 && repo.saqScore === 0) || (repo.saqCount === 0 && repo.saqScore > 0)) {
+              this.$notify({
+                title: '提示信息',
+                message: '题库第：[' + (i + 1) + ']项存在无效的操作题配置！',
                 type: 'warning',
                 duration: 2000
               })

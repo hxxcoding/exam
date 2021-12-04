@@ -170,23 +170,29 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
             List<ExamRepoDTO> repoList = reqDTO.getRepoList();
 
             for(ExamRepoDTO item: repoList){
-                if(item.getRadioCount()!=null
-                        && item.getRadioCount()>0
-                        && item.getRadioScore()!=null
-                        && item.getRadioScore()>0){
-                    objScore+=item.getRadioCount()*item.getRadioScore();
+                if(item.getRadioCount() != null
+                        && item.getRadioCount() > 0
+                        && item.getRadioScore() != null
+                        && item.getRadioScore() > 0) {
+                    objScore += item.getRadioCount() * item.getRadioScore();
                 }
-                if(item.getMultiCount()!=null
-                        && item.getMultiCount()>0
-                        && item.getMultiScore()!=null
-                        && item.getMultiScore()>0){
-                    objScore+=item.getMultiCount()*item.getMultiScore();
+                if(item.getMultiCount() != null
+                        && item.getMultiCount() > 0
+                        && item.getMultiScore() != null
+                        && item.getMultiScore() > 0){
+                    objScore += item.getMultiCount() * item.getMultiScore();
                 }
-                if(item.getJudgeCount()!=null
-                        && item.getJudgeCount()>0
-                        && item.getJudgeScore()!=null
-                        && item.getJudgeScore()>0){
-                    objScore+=item.getJudgeCount()*item.getJudgeScore();
+                if(item.getJudgeCount() != null
+                        && item.getJudgeCount() > 0
+                        && item.getJudgeScore() != null
+                        && item.getJudgeScore() > 0){
+                    objScore += item.getJudgeCount() * item.getJudgeScore();
+                }
+                if(item.getSaqCount() != null
+                        && item.getSaqCount() > 0
+                        && item.getSaqScore() != null
+                        && item.getSaqScore() > 0){
+                    objScore += item.getSaqCount() * item.getSaqScore();
                 }
             }
         }

@@ -20,8 +20,14 @@ public class ExamDetailRespDTO extends PaperDTO {
     @ApiModelProperty(value = "多选题列表", required=true)
     private List<PaperQuDTO> multiList;
 
-    @ApiModelProperty(value = "判断题", required=true)
+    @ApiModelProperty(value = "判断题列表", required=true)
     private List<PaperQuDTO> judgeList;
+
+    @ApiModelProperty(value = "操作题列表", required=true)
+    private List<PaperQuDTO> saqList;
+
+    @ApiModelProperty(value = "填空题列表", required=true)
+    private List<PaperQuDTO> blankList;
 
 
     @ApiModelProperty(value = "剩余结束秒数", required=true)

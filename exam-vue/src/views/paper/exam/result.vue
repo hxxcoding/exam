@@ -25,15 +25,27 @@
       <div v-for="item in paperData.quList" :key="item.id" class="qu-content">
 
         <p>{{ item.sort + 1 }}.{{ item.content }}（得分：{{ item.actualScore }}）</p>
-        <p v-if="item.image!=null && item.image!=''">
-          <el-image :src="item.image" style="max-width:100%;" />
-        </p>
+        <div v-if="item.image!=null && item.image!=''">
+          <el-image :src="item.image" style="max-width:100%;">
+            <div slot="error" class="image-slot">
+              <el-link :href="item.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                下载附件
+              </el-link>
+            </div>
+          </el-image>
+        </div>
         <div v-if="item.quType === 1 || item.quType===3">
           <el-radio-group v-model="radioValues[item.id]">
             <el-radio v-for="an in item.answerList" :key="an.id" :label="an.id">
               {{ an.abc }}.{{ an.content }}
-              <div v-if="an.image!=null && an.image!=''" style="clear: both">
-                <el-image :src="an.image" style="max-width:100%;" />
+              <div v-if="an.image!=null && an.image!==''" style="clear: both">
+                <el-image :src="an.image" style="max-width:100%;">
+                  <div slot="error" class="image-slot">
+                    <el-link :href="an.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                      下载附件
+                    </el-link>
+                  </div>
+                </el-image>
               </div>
             </el-radio>
           </el-radio-group>
@@ -65,7 +77,17 @@
           <el-row :gutter="24">
 
             <el-col :span="12">
-              我的回答：{{ item.answer }}
+              回答：
+              <div v-if="item.answer!=null && item.answer!==''">
+                <el-image :src="item.answer" style="max-width:100%;">
+                  <div slot="error" class="image-slot">
+                    <el-link :href="item.answer" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                      {{ item.answer }}
+                    </el-link>
+                  </div>
+                </el-image>
+              </div>
+              <!--              TODO-->
             </el-col>
 
           </el-row>
@@ -75,8 +97,14 @@
         <div v-if="item.quType === 2">
           <el-checkbox-group v-model="multiValues[item.id]">
             <el-checkbox v-for="an in item.answerList" :key="an.id" :label="an.id">{{ an.abc }}.{{ an.content }}
-              <div v-if="an.image!=null && an.image!=''" style="clear: both">
-                <el-image :src="an.image" style="max-width:100%;" />
+              <div v-if="an.image!=null && an.image!==''" style="clear: both">
+                <el-image :src="an.image" style="max-width:100%;">
+                  <div slot="error" class="image-slot">
+                    <el-link :href="an.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                      下载附件
+                    </el-link>
+                  </div>
+                </el-image>
               </div>
             </el-checkbox>
           </el-checkbox-group>

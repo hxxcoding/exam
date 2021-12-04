@@ -46,6 +46,13 @@
             </el-row>
           </div>
 
+          <div v-if="paperData.saqList!==undefined && paperData.saqList.length > 0">
+            <p class="card-title">操作题</p>
+            <el-row :gutter="24" class="card-line">
+              <el-tag v-for="item in paperData.saqList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+            </el-row>
+          </div>
+
         </el-card>
 
       </el-col>
@@ -54,23 +61,26 @@
 
         <el-card class="qu-content">
           <p v-if="quData.content">{{ quData.sort + 1 }}.{{ quData.content }}</p>
-          <p v-if="quData.image!=null && quData.image!=''">
-            <el-image :src="quData.image" style="max-width:100%;" />
-          </p>
+          <div v-if="quData.image!=null && quData.image!==''">
+            <el-image :src="quData.image" style="max-width:100%;">
+              <div slot="error" class="image-slot">
+                <el-link :href="quData.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                  下载附件
+                </el-link>
+              </div>
+            </el-image>
+          </div>
           <div v-if="quData.quType === 1 || quData.quType===3">
             <el-radio-group v-model="radioValue">
               <el-radio v-for="item in quData.answerList" :key="item.id" :label="item.id">{{ item.abc }}.{{ item.content }}
-                <div
-                  v-if="item.image!=null && item.image!==''
-                    && item.image.endsWith('.jpg') || item.image.endsWith('.png')"
-                  style="clear: both"
-                >
-                  <el-image :src="item.image" style="max-width:100%;" />
-                </div>
-                <div v-else-if="item.image!=null && item.image!==''">
-                  <el-link :href="item.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
-                    下载附件
-                  </el-link>
+                <div v-if="item.image!=null && item.image!==''" style="clear: both">
+                  <el-image :src="item.image" style="max-width:100%;">
+                    <div slot="error" class="image-slot">
+                      <el-link :href="item.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                        下载附件
+                      </el-link>
+                    </div>
+                  </el-image>
                 </div>
               </el-radio>
             </el-radio-group>
@@ -80,21 +90,27 @@
 
             <el-checkbox-group v-model="multiValue">
               <el-checkbox v-for="item in quData.answerList" :key="item.id" :label="item.id">{{ item.abc }}.{{ item.content }}
-                <div
-                  v-if="item.image!=null && item.image!==''
-                    && item.image.endsWith('.jpg') || item.image.endsWith('.png')"
-                  style="clear: both"
-                >
-                  <el-image :src="item.image" style="max-width:100%;" />
-                </div>
-                <div v-else-if="item.image!=null && item.image!==''">
-                  <el-link :href="item.image" type="success" target="_blank" icon="el-icon-files" :underline="true">
-                    下载附件
-                  </el-link>
+                <div v-if="item.image!=null && item.image!==''" style="clear: both">
+                  <el-image :src="item.image" style="max-width:100%;">
+                    <div slot="error" class="image-slot">
+                      <el-link :href="item.image" type="success" target="_blank" icon="el-icon-files" :underline="true">
+                        下载附件
+                      </el-link>
+                    </div>
+                  </el-image>
                 </div>
               </el-checkbox>
             </el-checkbox-group>
 
+          </div>
+
+          <div v-if="quData.quType === 4">
+            <file-upload
+              v-model="answer"
+              list-type="office-file"
+              tips="只能上传.xlsx/.docx/.pptx文件"
+              accept=".xlsx, .docx, .pptx, application/msword, application/pdf"
+            />
           </div>
 
         </el-card>
@@ -120,10 +136,11 @@
 <script>
 import { paperDetail, quDetail, handExam, fillAnswer } from '@/api/paper/exam'
 import { Loading } from 'element-ui'
+import FileUpload from '@/components/FileUpload'
 
 export default {
   name: 'ExamProcess',
-
+  components: { FileUpload },
   data() {
     return {
       // 全屏/不全屏
@@ -147,12 +164,15 @@ export default {
         leftSeconds: 99999,
         radioList: [],
         multiList: [],
-        judgeList: []
+        judgeList: [],
+        saqList: []
       },
       // 单选选定值
       radioValue: '',
       // 多选选定值
       multiValue: [],
+      // 操作题答案（文件路径）
+      answer: '',
       // 已答ID
       answeredIds: [],
       hour: '00',
@@ -330,7 +350,7 @@ export default {
         answers.push(this.radioValue)
       }
 
-      const params = { paperId: this.paperId, quId: this.cardItem.quId, answers: answers, answer: '' }
+      const params = { paperId: this.paperId, quId: this.cardItem.quId, answers: answers, answer: this.cardItem.quType === 4 ? this.answer : '' }
       fillAnswer(params).then(() => {
         // 必须选择一个值
         if (answers.length > 0) {
@@ -376,6 +396,9 @@ export default {
             this.multiValue.push(item.id)
           }
         })
+        if (this.quData.quType === 4) {
+          this.answer = this.quData.answer
+        }
 
         // 关闭详情
         loading.close()
@@ -396,6 +419,8 @@ export default {
           this.cardItem = this.paperData.multiList[0]
         } else if (this.paperData.judgeList) {
           this.cardItem = this.paperData.judgeList[0]
+        } else if (this.paperData.saqList) {
+          this.cardItem = this.paperData.saqList[0]
         }
 
         const that = this
@@ -409,6 +434,10 @@ export default {
         })
 
         this.paperData.judgeList.forEach(function(item) {
+          that.allItem.push(item)
+        })
+
+        this.paperData.saqList.forEach(function(item) {
           that.allItem.push(item)
         })
 

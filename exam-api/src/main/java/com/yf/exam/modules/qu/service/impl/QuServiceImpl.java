@@ -224,7 +224,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
         List<QuAnswerDTO> answers = qu.getAnswerList();
 
 
-            if (CollectionUtils.isEmpty(answers)) {
+            if (CollectionUtils.isEmpty(answers) && !qu.getQuType().equals(QuType.SAQ)) {
                 throw new ServiceException(1, no + "客观题至少要包含一个备选答案！");
             }
 
@@ -245,7 +245,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
                 }
             }
 
-            if (trueCount == 0) {
+            if (trueCount == 0 && !qu.getQuType().equals(QuType.SAQ)) {
                 throw new ServiceException(1, no + "至少要包含一个正确项！");
             }
 

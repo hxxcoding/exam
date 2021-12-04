@@ -85,7 +85,13 @@ export default {
     },
     // 删除文件之前的钩子
     beforeRemove() {
-      return this.$confirm(`确定移除文件吗？`)
+      return this.$confirm(`确定移除文件吗？`, `提示`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // TODO 删除已上传的文件
+      })
     },
 
     // 文件列表移除文件时的钩子

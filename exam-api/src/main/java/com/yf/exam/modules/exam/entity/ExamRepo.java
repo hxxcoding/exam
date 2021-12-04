@@ -74,5 +74,29 @@ public class ExamRepo extends Model<ExamRepo> {
     */
     @TableField("judge_score")
     private Integer judgeScore;
+
+    /**
+    * 操作题数量
+    */
+    @TableField("saq_count")
+    private Integer saqCount;
+
+    /**
+    * 操作题分数
+    */
+    @TableField("saq_score")
+    private Integer saqScore;
+
+    /**
+    * 填空题数量 TODO 在数据库中新建填空题字段
+    */
+//    @TableField("saq_count")
+//    private Integer blankCount;
+
+    /**
+    * 填空题分数
+    */
+//    @TableField("saq_score")
+//    private Integer blankScore;
     
 }

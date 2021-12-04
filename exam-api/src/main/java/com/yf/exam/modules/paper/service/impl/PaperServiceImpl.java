@@ -164,6 +164,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         List<PaperQuDTO> radioList = new ArrayList<>();
         List<PaperQuDTO> multiList = new ArrayList<>();
         List<PaperQuDTO> judgeList = new ArrayList<>();
+        List<PaperQuDTO> saqList = new ArrayList<>();
+        List<PaperQuDTO> blankList = new ArrayList<>();
         for(PaperQuDTO item: list){
             if(QuType.RADIO.equals(item.getQuType())){
                 radioList.add(item);
@@ -174,11 +176,19 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             if(QuType.JUDGE.equals(item.getQuType())){
                 judgeList.add(item);
             }
+            if(QuType.SAQ.equals(item.getQuType())){
+                saqList.add(item);
+            }
+            if(QuType.BLANK.equals(item.getQuType())){
+                blankList.add(item);
+            }
         }
 
         respDTO.setRadioList(radioList);
         respDTO.setMultiList(multiList);
         respDTO.setJudgeList(judgeList);
+        respDTO.setSaqList(saqList);
+        respDTO.setBlankList(blankList);
         return respDTO;
     }
 
@@ -269,6 +279,17 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                         excludes.add(qu.getId());
                     }
                 }
+
+                // 操作题
+                if(item.getSaqCount() > 0) {
+                    List<Qu> saqList = quService.listByRandom(item.getRepoId(), QuType.SAQ, level, excludes,
+                            item.getSaqCount());
+                    for (Qu qu : saqList) {
+                        PaperQu paperQu = this.processPaperQu(item, qu);
+                        quList.add(paperQu);
+                        excludes.add(qu.getId());
+                    }
+                }
             }
         }
         return quList;
@@ -322,7 +343,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         // 查找用户
         SysUser user = sysUserService.getById(userId);
-
+        List<ExamRepoDTO> lists = examRepoService.listByExam(exam.getId());
         //保存试卷基本信息
         Paper paper = new Paper();
         paper.setDepartId(user.getDepartId());
@@ -337,6 +358,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paper.setQualifyScore(exam.getQualifyScore());
         paper.setState(PaperState.ING);
         paper.setHasSaq(false);
+        for (ExamRepoDTO list : lists) {
+            if (list.getSaqCount() > 0) {
+                paper.setHasSaq(true);
+                break;
+            }
+        }
 
         // 截止时间
         Calendar cl = Calendar.getInstance();
@@ -408,12 +435,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     public void fillAnswer(PaperAnswerDTO reqDTO) {
 
 
-        // 未作答
-        if(CollectionUtils.isEmpty(reqDTO.getAnswers())
-                && StringUtils.isBlank(reqDTO.getAnswer())){
-            return;
-        }
-
         //查找答案列表
         List<PaperQuAnswer> list = paperQuAnswerService.listForFill(reqDTO.getPaperId(), reqDTO.getQuId());
 
@@ -443,6 +464,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         qu.setIsRight(right);
         qu.setAnswer(reqDTO.getAnswer());
         qu.setAnswered(true);
+
+
+        // 未作答
+        if(CollectionUtils.isEmpty(reqDTO.getAnswers())
+                && StringUtils.isBlank(reqDTO.getAnswer())){
+            qu.setAnswered(false);
+        }
 
         paperQuService.updateByKey(qu);
 
