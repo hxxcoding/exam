@@ -82,6 +82,18 @@ public class UploadServiceImpl implements UploadService {
         }
     }
 
+    @Override
+    public void delete(String url) {
+        String reqUrl = url.substring(url.indexOf(Constant.FILE_PREFIX));
+        String filePath = this.getRealPath(reqUrl);
+        System.out.println("++++需要删除的文件路径为：" + filePath);
+        try {
+            FileUtils.deleteFile(filePath);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
 
     /**
      * 构造返回

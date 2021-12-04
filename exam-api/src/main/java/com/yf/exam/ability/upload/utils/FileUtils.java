@@ -8,6 +8,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Date;
@@ -184,5 +185,14 @@ public class FileUtils {
 		}
 	}
 
+	public static void deleteFile(String filePath) throws IOException {
+		File file = new File(filePath);
+		if (!file.exists() || !file.isFile()) {
+			throw new FileNotFoundException("文件: " + filePath + " 不存在");
+		}
+		if (!file.delete()) {
+			throw new IOException("文件: " + filePath + " 删除失败");
+		}
+	}
 
 }

@@ -2,6 +2,7 @@ package com.yf.exam.ability.upload.controller;
 
 
 import com.yf.exam.ability.Constant;
+import com.yf.exam.ability.upload.dto.DeleteFileReqDTO;
 import com.yf.exam.ability.upload.dto.UploadReqDTO;
 import com.yf.exam.ability.upload.dto.UploadRespDTO;
 import com.yf.exam.ability.upload.service.UploadService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,5 +55,17 @@ public class UploadController extends BaseController {
     @ApiOperation(value = "文件下载", notes = "文件下载")
     public void download(HttpServletRequest request, HttpServletResponse response) {
         uploadService.download(request, response);
+    }
+
+    /**
+     * 文件删除
+     * @param reqDTO
+     * @return
+     */
+    @PostMapping("/common/api/file/delete")
+    @ApiOperation(value = "文件删除", notes = "删除已上传的文件")
+    public ApiRest delete(@RequestBody DeleteFileReqDTO reqDTO) {
+        uploadService.delete(reqDTO.getUrl());
+        return super.success();
     }
 }

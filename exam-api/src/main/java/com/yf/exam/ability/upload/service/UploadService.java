@@ -27,4 +27,5 @@ public interface UploadService {
      */
     void download(HttpServletRequest request, HttpServletResponse response);
 
+    void delete(String url);
 }
