@@ -33,7 +33,6 @@
 <script>
 
 import { getToken } from '@/utils/auth'
-import { deleteFile } from '@/api/file/file'
 
 export default {
   name: 'FileUploadLocal',
@@ -50,7 +49,6 @@ export default {
   data() {
     return {
       server: `${process.env.VUE_APP_BASE_API}/common/api/file/upload`,
-      deleteUrl: `${process.env.VUE_APP_BASE_API}/common/api/file/delete`,
       fileList: [],
       fileUrl: '',
       header: {}
@@ -92,17 +90,6 @@ export default {
 
     // 文件列表移除文件时的钩子
     handleRemove() {
-      deleteFile(this.deleteUrl, this.fileUrl).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(err => {
-        this.$message({
-          type: 'success',
-          message: err
-        })
-      })
       this.$emit('input', '')
       this.fileList = []
     },
