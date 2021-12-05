@@ -3,6 +3,8 @@ package com.yf.exam.modules.qu.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yf.exam.ability.upload.service.UploadService;
+import com.yf.exam.ability.upload.utils.FileUtils;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
@@ -50,6 +52,9 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
     @Autowired
     private RepoService repoService;
 
+    @Autowired
+    private UploadService uploadService;
+
     @Override
     public IPage<QuDTO> paging(PagingReqDTO<QuQueryReqDTO> reqDTO) {
 
@@ -93,6 +98,13 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
 
         Qu qu = new Qu();
         BeanMapper.copy(reqDTO, qu);
+
+        // 如果更新了图片
+        Qu notUpdatedQu = this.getById(qu.getId());
+        if (!notUpdatedQu.getImage().equals(qu.getImage())
+                && !notUpdatedQu.getImage().equals("")) {
+            uploadService.delete(notUpdatedQu.getImage());
+        }
 
         // 更新
         this.saveOrUpdate(qu);

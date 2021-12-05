@@ -6,15 +6,14 @@
 * deal excel 导入导出试题 (setup sql_mode)
 * deal 查询用户的答题记录
 * deal 考试记录选择上级部门 包含 下级部门
-* not complete 考试页面退出提醒
 * deal 考试题暂存
 * deal 如已经开始过当前考试 但未交卷，开始考试后读取已经做过的题（试卷状态 el_paper: state）
 * deal 答题页面文件如果不是图片显示下载链接
+* deal 简答题 支持
+* deal 文件上传，删除文件时删除本地文件和操作题answer
 * 退出考试页面但未提交试卷 到时间自动交卷（计算分数）
 * ？考试次数限制 tryCount >  考试可以重复做吗？
-* deal 简答题 支持
-* 文件上传，删除文件时删除本地文件和操作题answer
-* 上传文件点提交再上传
+* bug TODO 
 * 填空题 支持
 * 考试记录默认查询管理员所属部门的成员成绩
 * 考试结束 自动提交已经保存的题目 如果用户没有点击交卷就退出考试 该怎么办？
@@ -23,6 +22,8 @@
 * 设置logo
 * Redis Config
 * 操作日志 https://exam.yfhl.net/#/admin/sys/admin/sys/log
+* 权限过滤 ShiroConfig.java
+* not complete 考试页面退出提醒
 
 # 项目演示
 开源版本：https://lite.yfhl.net  
