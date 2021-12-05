@@ -46,6 +46,13 @@
             </el-row>
           </div>
 
+          <div v-if="paperData.blankList!==undefined && paperData.blankList.length > 0">
+            <p class="card-title">填空题</p>
+            <el-row :gutter="24" class="card-line">
+              <el-tag v-for="item in paperData.blankList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+            </el-row>
+          </div>
+
           <div v-if="paperData.saqList!==undefined && paperData.saqList.length > 0">
             <p class="card-title">操作题</p>
             <el-row :gutter="24" class="card-line">
@@ -102,6 +109,10 @@
               </el-checkbox>
             </el-checkbox-group>
 
+          </div>
+
+          <div v-if="quData.quType === 5">
+            <el-input v-model="answer" size="large" placeholder="请输入答案" style="width: 50%" clearable />
           </div>
 
           <div v-if="quData.quType === 4">
@@ -165,6 +176,7 @@ export default {
         radioList: [],
         multiList: [],
         judgeList: [],
+        blankList: [],
         saqList: []
       },
       // 单选选定值
@@ -265,6 +277,18 @@ export default {
         }
       })
 
+      this.paperData.saqList.forEach(function(item) {
+        if (!item.answered) {
+          notAnswered += 1
+        }
+      })
+
+      this.paperData.blankList.forEach(function(item) {
+        if (!item.answered) {
+          notAnswered += 1
+        }
+      })
+
       return notAnswered
     },
 
@@ -350,7 +374,7 @@ export default {
         answers.push(this.radioValue)
       }
 
-      const params = { paperId: this.paperId, quId: this.cardItem.quId, answers: answers, answer: this.cardItem.quType === 4 ? this.answer : '' }
+      const params = { paperId: this.paperId, quId: this.cardItem.quId, answers: answers, answer: (this.cardItem.quType === 4 || this.cardItem.quType === 5) ? this.answer : '' }
       fillAnswer(params).then(() => {
         // 必须选择一个值
         if (answers.length > 0) {
@@ -396,7 +420,7 @@ export default {
             this.multiValue.push(item.id)
           }
         })
-        if (this.quData.quType === 4) {
+        if (this.quData.quType === 4 || this.quData.quType === 5) {
           this.answer = this.quData.answer
         }
 
@@ -419,6 +443,8 @@ export default {
           this.cardItem = this.paperData.multiList[0]
         } else if (this.paperData.judgeList) {
           this.cardItem = this.paperData.judgeList[0]
+        } else if (this.paperData.blankList) {
+          this.cardItem = this.paperData.blankList[0]
         } else if (this.paperData.saqList) {
           this.cardItem = this.paperData.saqList[0]
         }
@@ -434,6 +460,10 @@ export default {
         })
 
         this.paperData.judgeList.forEach(function(item) {
+          that.allItem.push(item)
+        })
+
+        this.paperData.blankList.forEach(function(item) {
           that.allItem.push(item)
         })
 

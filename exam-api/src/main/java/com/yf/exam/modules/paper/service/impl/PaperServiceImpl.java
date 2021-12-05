@@ -280,6 +280,17 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     }
                 }
 
+                // 填空题
+                if(item.getBlankCount() > 0) {
+                    List<Qu> blankList = quService.listByRandom(item.getRepoId(), QuType.BLANK, level, excludes,
+                            item.getSaqCount());
+                    for (Qu qu : blankList) {
+                        PaperQu paperQu = this.processPaperQu(item, qu);
+                        quList.add(paperQu);
+                        excludes.add(qu.getId());
+                    }
+                }
+
                 // 操作题
                 if(item.getSaqCount() > 0) {
                     List<Qu> saqList = quService.listByRandom(item.getRepoId(), QuType.SAQ, level, excludes,
@@ -369,7 +380,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         Calendar cl = Calendar.getInstance();
         cl.setTimeInMillis(System.currentTimeMillis());
         cl.add(Calendar.MINUTE, exam.getTotalTime());
-        paper.setLimitTime(cl.getTime().after(exam.getEndTime()) ? exam.getEndTime() : cl.getTime());
+        if (exam.getTimeLimit()) {
+            paper.setLimitTime(cl.getTime().after(exam.getEndTime()) ? exam.getEndTime() : cl.getTime());
+        } else {
+            paper.setLimitTime(cl.getTime());
+        }
 
         paperService.save(paper);
 
@@ -402,7 +417,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             //回答列表
             List<QuAnswer> answerList = quAnswerService.listAnswerByRandom(item.getQuId());
 
-            if (!CollectionUtils.isEmpty(answerList)) {
+            if (!CollectionUtils.isEmpty(answerList) && !item.getQuType().equals(QuType.BLANK)) {
 
                 int ii = 0;
                 for (QuAnswer answer : answerList) {
