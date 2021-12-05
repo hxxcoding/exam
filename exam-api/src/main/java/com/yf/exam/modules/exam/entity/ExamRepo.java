@@ -88,15 +88,15 @@ public class ExamRepo extends Model<ExamRepo> {
     private Integer saqScore;
 
     /**
-    * 填空题数量 TODO 在数据库中新建填空题字段
+    * 填空题数量
     */
-//    @TableField("saq_count")
-//    private Integer blankCount;
+    @TableField("blank_count")
+    private Integer blankCount;
 
     /**
     * 填空题分数
     */
-//    @TableField("saq_score")
-//    private Integer blankScore;
+    @TableField("blank_score")
+    private Integer blankScore;
     
 }

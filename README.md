@@ -13,7 +13,6 @@
 * deal 文件上传，删除文件时删除本地文件和操作题answer
 * 退出考试页面但未提交试卷 到时间自动交卷（计算分数）
 * ？考试次数限制 tryCount >  考试可以重复做吗？
-* bug TODO 
 * 填空题 支持
 * 考试记录默认查询管理员所属部门的成员成绩
 * 考试结束 自动提交已经保存的题目 如果用户没有点击交卷就退出考试 该怎么办？
@@ -24,6 +23,9 @@
 * 操作日志 https://exam.yfhl.net/#/admin/sys/admin/sys/log
 * 权限过滤 ShiroConfig.java
 * not complete 考试页面退出提醒
+
+# bug list
+* 用户在未保存的情况下，重复上传文件导致中间文件不能被删除 a 设置缓存区 提交表单后再copy文件到正式的环境
 
 # 项目演示
 开源版本：https://lite.yfhl.net  

@@ -278,6 +278,17 @@ export default {
         }
       }
 
+      if (this.postForm.quType === 4) {
+        if (rightCount !== 1) {
+          this.$message({
+            message: '填空题只能有一个正确项！', // TODO 填空题只能有一个选项
+            type: 'warning'
+          })
+
+          return
+        }
+      }
+
       this.$refs.postForm.validate((valid) => {
         if (!valid) {
           return

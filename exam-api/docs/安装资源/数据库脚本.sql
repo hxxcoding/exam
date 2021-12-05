@@ -87,6 +87,8 @@ CREATE TABLE `el_exam_repo` (
   `judge_score` int(11) NOT NULL DEFAULT '0' COMMENT '判断题分数',
   `saq_count` int(11) NOT NULL DEFAULT '0' COMMENT '简答题数量',
   `saq_score` int(11) NOT NULL DEFAULT '0' COMMENT '简答题分数',
+  `blank_count` int(11) NOT NULL DEFAULT '0' COMMENT '填空题数量',
+  `blank_score` int(11) NOT NULL DEFAULT '0' COMMENT '填空题分数',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `exam_repo_id` (`exam_id`,`repo_id`),
   KEY `rule_id` (`exam_id`) USING BTREE,

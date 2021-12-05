@@ -71,6 +71,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
                 && reqDTO.getState()!=null
                 && reqDTO.getState() == 2) {
             entity.setState(0);
+            // TODO: Enum Class
         } else {
             entity.setState(reqDTO.getState());
         }
@@ -193,6 +194,12 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
                         && item.getSaqScore() != null
                         && item.getSaqScore() > 0){
                     objScore += item.getSaqCount() * item.getSaqScore();
+                }
+                if(item.getBlankCount() != null
+                        && item.getBlankCount() > 0
+                        && item.getBlankScore() != null
+                        && item.getBlankScore() > 0){
+                    objScore += item.getBlankCount() * item.getBlankScore();
                 }
             }
         }

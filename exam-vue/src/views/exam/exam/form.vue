@@ -120,6 +120,26 @@
           </el-table-column>
 
           <el-table-column
+            label="填空数量"
+            align="center"
+          >
+
+            <template slot-scope="scope">
+              <el-input-number v-model="scope.row.blankCount" :controls="false" style="width: 100%" />
+            </template>
+
+          </el-table-column>
+
+          <el-table-column
+            label="填空分数"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-input-number v-model="scope.row.blankScore" :controls="false" style="width: 100%" />
+            </template>
+          </el-table-column>
+
+          <el-table-column
             label="删除"
             align="center"
             width="80px"
@@ -263,8 +283,8 @@ export default {
       repoList: [],
 
       // 题目列表
-      quList: [[], [], [], []],
-      quEnable: [false, false, false, false],
+      quList: [[], [], [], [], []],
+      quEnable: [false, false, false, false, false],
 
       postForm: {
         // 总分数
@@ -342,6 +362,7 @@ export default {
           that.postForm.totalScore += item.multiCount * item.multiScore
           that.postForm.totalScore += item.judgeCount * item.judgeScore
           that.postForm.totalScore += item.saqCount * item.saqScore
+          that.postForm.totalScore += item.blankCount * item.blankScore
         })
 
         // 赋值
@@ -436,6 +457,16 @@ export default {
               })
               return
             }
+
+            if ((repo.saqCount > 0 && repo.blankScore === 0) || (repo.saqCount === 0 && repo.blankScore > 0)) {
+              this.$notify({
+                title: '提示信息',
+                message: '题库第：[' + (i + 1) + ']项存在无效的操作题配置！',
+                type: 'warning',
+                duration: 2000
+              })
+              return
+            }
           }
         }
 
@@ -462,7 +493,7 @@ export default {
 
     // 添加子项
     handleAdd() {
-      this.repoList.push({ radioCount: 0, radioScore: 0, multiCount: 0, multiScore: 0, judgeCount: 0, judgeScore: 0, saqCount: 0, saqScore: 0 })
+      this.repoList.push({ radioCount: 0, radioScore: 0, multiCount: 0, multiScore: 0, judgeCount: 0, judgeScore: 0, saqCount: 0, saqScore: 0, blankCount: 0, blankScore: 0 })
     },
 
     removeItem(index) {
