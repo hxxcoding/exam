@@ -377,9 +377,11 @@ export default {
       const params = { paperId: this.paperId, quId: this.cardItem.quId, answers: answers, answer: (this.cardItem.quType === 4 || this.cardItem.quType === 5) ? this.answer : '' }
       fillAnswer(params).then(() => {
         // 必须选择一个值
-        if (answers.length > 0) {
+        if (answers.length > 0 || params.answer !== '') {
           // 加入已答列表
           this.cardItem.answered = true
+        } else {
+          this.cardItem.answered = false
         }
 
         // 最后一个动作，交卷
