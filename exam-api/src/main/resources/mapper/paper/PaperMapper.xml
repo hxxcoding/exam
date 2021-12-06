@@ -33,10 +33,11 @@
                extends="BaseResultMap"
                type="com.yf.exam.modules.paper.dto.response.PaperListRespDTO">
         <result column="real_name" property="realName" />
+        <result column="dept_id" property="departId" />
     </resultMap>
 
     <select id="paging" resultMap="ListResultMap">
-        SELECT pp.*,uc.real_name FROM el_paper pp
+        SELECT pp.*,uc.real_name, uc.depart_id dept_id FROM el_paper pp
         LEFT JOIN sys_user uc ON pp.user_id=uc.id
         <where>
             <if test="query!=null">
@@ -49,7 +50,7 @@
                 </if>
 
                 <if test="query.departId!=null and query.departId!=''">
-                    AND pp.depart_id IN (
+                    AND uc.depart_id IN (
                         SELECT id FROM sys_depart
                         WHERE dept_code LIKE CONCAT((
                         SELECT dept_code FROM sys_depart WHERE id=#{query.departId}
