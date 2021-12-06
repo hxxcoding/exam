@@ -417,7 +417,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             //回答列表
             List<QuAnswer> answerList = quAnswerService.listAnswerByRandom(item.getQuId());
 
-            if (!CollectionUtils.isEmpty(answerList) && !item.getQuType().equals(QuType.BLANK)) {
+            if (!CollectionUtils.isEmpty(answerList)) {
 
                 int ii = 0;
                 for (QuAnswer answer : answerList) {

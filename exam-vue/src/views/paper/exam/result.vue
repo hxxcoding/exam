@@ -73,9 +73,7 @@
         </div>
 
         <div v-if="item.quType === 4">
-
           <el-row :gutter="24">
-
             <el-col :span="12">
               回答：
               <div v-if="item.answer!=null && item.answer!==''">
@@ -87,11 +85,22 @@
                   </div>
                 </el-image>
               </div>
-              <!--              TODO-->
             </el-col>
-
           </el-row>
+        </div>
 
+        <div v-if="item.quType === 5">
+          <el-row :gutter="24">
+            <el-col :span="12">
+              回答：
+              <el-input v-model="item.answer" size="large" style="width: 50%" disabled />
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12" style="color: #24da70">
+              正确答案：{{ blankValues[item.id] }}
+            </el-col>
+          </el-row>
         </div>
 
         <div v-if="item.quType === 2">
@@ -152,6 +161,7 @@ export default {
       },
       radioValues: {},
       multiValues: {},
+      blankValues: {},
       radioRights: {},
       multiRights: {},
       myRadio: {},
@@ -181,6 +191,7 @@ export default {
           const multiValue = []
           const multiRight = []
           const myMulti = []
+          let blankValue = ''
 
           item.answerList.forEach((an) => {
             // 用户选定的
@@ -202,6 +213,10 @@ export default {
                 multiRight.push(an.abc)
               }
             }
+
+            if (item.quType === 5) {
+              blankValue = an.content
+            }
           })
 
           this.multiValues[item.id] = multiValue
@@ -212,6 +227,8 @@ export default {
 
           this.myRadio[item.id] = myRadio
           this.myMulti[item.id] = myMulti
+
+          this.blankValues[item.id] = blankValue
         })
 
         console.log(this.multiValues)
