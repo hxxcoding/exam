@@ -374,7 +374,13 @@ export default {
         answers.push(this.radioValue)
       }
 
-      const params = { paperId: this.paperId, quId: this.cardItem.quId, answers: answers, answer: (this.cardItem.quType === 4 || this.cardItem.quType === 5) ? this.answer : '' }
+      const params = {
+        quType: this.cardItem.quType,
+        paperId: this.paperId,
+        quId: this.cardItem.quId,
+        answers: answers,
+        answer: (this.cardItem.quType === 4 || this.cardItem.quType === 5) ? this.answer : ''
+      }
       fillAnswer(params).then(() => {
         // 必须选择一个值
         if (answers.length > 0 || params.answer !== '') {

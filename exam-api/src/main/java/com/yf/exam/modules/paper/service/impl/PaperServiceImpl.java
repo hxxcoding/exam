@@ -326,16 +326,18 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         if (QuType.RADIO.equals(qu.getQuType())) {
             paperQu.setScore(repo.getRadioScore());
             paperQu.setActualScore(repo.getRadioScore());
-        }
-
-        if (QuType.MULTI.equals(qu.getQuType())) {
+        } else if (QuType.MULTI.equals(qu.getQuType())) {
             paperQu.setScore(repo.getMultiScore());
             paperQu.setActualScore(repo.getMultiScore());
-        }
-
-        if (QuType.JUDGE.equals(qu.getQuType())) {
+        } else if (QuType.JUDGE.equals(qu.getQuType())) {
             paperQu.setScore(repo.getJudgeScore());
             paperQu.setActualScore(repo.getJudgeScore());
+        } else if (QuType.SAQ.equals(qu.getQuType())) {
+            paperQu.setScore(repo.getSaqScore());
+            paperQu.setActualScore(repo.getSaqScore());
+        } else if (QuType.BLANK.equals(qu.getQuType())) {
+            paperQu.setScore(repo.getBlankScore());
+            paperQu.setActualScore(repo.getBlankScore());
         }
 
         return paperQu;
@@ -457,20 +459,33 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         boolean right = true;
 
         //更新正确答案
-        for (PaperQuAnswer item : list) {
-
-            if (reqDTO.getAnswers().contains(item.getId())) {
-                item.setChecked(true);
-            } else {
-                item.setChecked(false);
+        if (reqDTO.getQuType().equals(QuType.BLANK)) { // 填空题判题
+            right = false;
+            QuAnswer quAnswer = quAnswerService.getOne(new QueryWrapper<QuAnswer>()
+                    .lambda().eq(QuAnswer::getQuId, reqDTO.getQuId()));
+            String[] answers = quAnswer.getContent().split(";");
+            for (String answer : answers) {
+                if (reqDTO.getAnswer().equals(answer)) {
+                    right = true;
+                    break;
+                }
             }
+        } else {
+            for (PaperQuAnswer item : list) {
 
-            //有一个对不上就是错的
-            if (item.getIsRight()!=null && !item.getIsRight().equals(item.getChecked())) {
-                right = false;
+                if (reqDTO.getAnswers().contains(item.getId())) {
+                    item.setChecked(true);
+                } else {
+                    item.setChecked(false);
+                }
+
+                //有一个对不上就是错的
+                if (item.getIsRight() != null && !item.getIsRight().equals(item.getChecked())) {
+                    right = false;
+                }
+                paperQuAnswerService.updateById(item);
             }
-            paperQuAnswerService.updateById(item);
-        }
+        } // TODO 操作题判分
 
         //修改为已回答
         PaperQu qu = new PaperQu();

@@ -12,6 +12,9 @@ import lombok.Data;
 @ApiModel(value="查找试卷题目详情请求类", description="查找试卷题目详情请求类")
 public class PaperQuQueryDTO extends BaseDTO {
 
+    @ApiModelProperty(value = "题目类型", required = true)
+    private Integer quType;
+
     @ApiModelProperty(value = "试卷ID", required=true)
     private String paperId;
 
