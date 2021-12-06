@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      title: '云帆考试系统',
+      title: '在线考试系统',
       logo: false
     }
   }

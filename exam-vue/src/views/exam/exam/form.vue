@@ -458,10 +458,10 @@ export default {
               return
             }
 
-            if ((repo.saqCount > 0 && repo.blankScore === 0) || (repo.saqCount === 0 && repo.blankScore > 0)) {
+            if ((repo.blankCount > 0 && repo.blankScore === 0) || (repo.blankCount === 0 && repo.blankScore > 0)) {
               this.$notify({
                 title: '提示信息',
-                message: '题库第：[' + (i + 1) + ']项存在无效的操作题配置！',
+                message: '题库第：[' + (i + 1) + ']项存在无效的填空题配置！',
                 type: 'warning',
                 duration: 2000
               })

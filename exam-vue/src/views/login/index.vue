@@ -7,7 +7,7 @@
 
         <div class="login-main">
           <div class="title-container">
-            <h3 class="title">{{siteData.siteName}}</h3>
+            <h3 class="title">{{ siteData.siteName }}</h3>
           </div>
 
           <el-form-item prop="username">
@@ -71,16 +71,12 @@
 
     </el-main>
 
-    <el-footer style="background: #ffffff; text-align: center; line-height: 50px;font-size: 14px" height="50px">
-      <a href="https://lp.yfhl.net" target="_blank" style="margin-left: 10px">©2020 云帆互联</a>
-    </el-footer>
-
   </el-container>
 
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { validUsername } from '@/utils/validate'
 import 'element-ui/lib/theme-chalk/display.css'
 

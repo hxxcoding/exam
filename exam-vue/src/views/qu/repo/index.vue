@@ -46,6 +46,18 @@
       />
 
       <el-table-column
+        label="填空题数量"
+        prop="blankCount"
+        align="center"
+      />
+
+      <el-table-column
+        label="操作题数量"
+        prop="saqCount"
+        align="center"
+      />
+
+      <el-table-column
         label="创建时间"
         align="center"
         prop="createTime"

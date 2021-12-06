@@ -149,6 +149,14 @@ export default {
         {
           value: 3,
           label: '判断题'
+        },
+        {
+          value: 5,
+          label: '填空题'
+        },
+        {
+          value: 4,
+          label: '操作题'
         }
       ],
 
@@ -243,7 +251,6 @@ export default {
 
     doImport(e) {
       const file = e.target.files[0]
-
 
       importExcel(file).then(res => {
         if (res.code !== 0) {

@@ -1,4 +1,3 @@
-# 云帆培训考试系统 开源版
 
 # TODO
 * deal 限时考试按照 limit_time 和 end_time 以最短的为准倒计时 倒计时加上小时
@@ -23,6 +22,7 @@
 * 操作日志 https://exam.yfhl.net/#/admin/sys/admin/sys/log
 * 权限过滤 ShiroConfig.java
 * not complete 考试页面退出提醒
+* 学生导入
 
 # bug list
 * 用户在未保存的情况下，重复上传文件导致中间文件不能被删除 
@@ -37,6 +37,7 @@
 * 考试页面删除文件保存 同步未删除的bug
 * deal 未答题题目数显示错误的bug
 * deal 判断题和简答题的分数数据库记录错误
+* 回车刷新？
 
 # 项目演示
 开源版本：https://lite.yfhl.net  
@@ -66,7 +67,7 @@ SpringBoot / Redis / Shiro / Vue / MySQL
 指定部门：只有选中部门的人员才可以看到考试。    
 
 ## 多题型：常用题型支持    
-支持题型：单选题、多选题、判断题。    
+支持题型：单选题、多选题、判断题 + 判断题 + 操作题(not complete)。    
 难易程度：普通、困难。    
 
 ## 便捷组卷：题库组卷    

@@ -281,7 +281,7 @@ export default {
       if (this.postForm.quType === 4) {
         if (rightCount !== 1) {
           this.$message({
-            message: '填空题只能有一个正确项！', // TODO 填空题只能有一个选项
+            message: '填空题请将答案写在同一个选项中！', // TODO 填空题只能有一个选项
             type: 'warning'
           })
 
