@@ -16,6 +16,7 @@ import com.yf.exam.modules.exam.dto.request.ExamSaveReqDTO;
 import com.yf.exam.modules.exam.dto.response.ExamOnlineRespDTO;
 import com.yf.exam.modules.exam.dto.response.ExamReviewRespDTO;
 import com.yf.exam.modules.exam.entity.Exam;
+import com.yf.exam.modules.exam.enums.ExamState;
 import com.yf.exam.modules.exam.mapper.ExamMapper;
 import com.yf.exam.modules.exam.service.ExamDepartService;
 import com.yf.exam.modules.exam.service.ExamRepoService;
@@ -66,14 +67,15 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
         entity.setId(id);
 
         // 修复状态
-        if (reqDTO.getTimeLimit()!=null
+        Integer actualState = reqDTO.getState();
+        if (reqDTO.getTimeLimit() != null
                 && !reqDTO.getTimeLimit()
-                && reqDTO.getState()!=null
-                && reqDTO.getState() == 2) {
-            entity.setState(0);
-            // TODO: Enum Class
+                && actualState != null
+                && (actualState.equals(ExamState.READY_START)
+                    || actualState.equals(ExamState.OVERDUE))) {
+            entity.setState(ExamState.ENABLE);
         } else {
-            entity.setState(reqDTO.getState());
+            entity.setState(actualState);
         }
 
         // 题库组卷

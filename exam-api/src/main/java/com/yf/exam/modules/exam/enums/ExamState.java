@@ -1,8 +1,8 @@
-package com.yf.exam.modules.paper.enums;
+package com.yf.exam.modules.exam.enums;
 
 
 /**
- * 考试状态
+ * 试卷状态
  * @author bool 
  * @date 2019-10-30 13:11
  */
@@ -10,17 +10,17 @@ public interface ExamState {
 
 
     /**
-     * 考试中
+     * 进行中
      */
     Integer ENABLE = 0;
 
     /**
-     * 待阅卷
+     * 已禁用
      */
     Integer DISABLED = 1;
 
     /**
-     * 已完成
+     * 待开始
      */
     Integer READY_START = 2;
 

@@ -1,7 +1,7 @@
 package com.yf.exam.modules.exam.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.yf.exam.modules.paper.enums.ExamState;
+import com.yf.exam.modules.exam.enums.ExamState;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -85,19 +85,19 @@ public class ExamDTO implements Serializable {
      */
     public Integer getState(){
 
-        if(this.timeLimit!=null && this.timeLimit){
+        if (this.timeLimit != null && this.timeLimit) {
 
-            if(System.currentTimeMillis() < startTime.getTime() ){
+            if (System.currentTimeMillis() < startTime.getTime()) {
                 return ExamState.READY_START;
             }
 
-            if(System.currentTimeMillis() > endTime.getTime()){
+            if (System.currentTimeMillis() > endTime.getTime()) {
                 return ExamState.OVERDUE;
             }
 
-            if(System.currentTimeMillis() > startTime.getTime()
+            if (System.currentTimeMillis() > startTime.getTime()
                     && System.currentTimeMillis() < endTime.getTime()
-                    && !ExamState.DISABLED.equals(this.state)){
+                    && !ExamState.DISABLED.equals(this.state)) {
                 return ExamState.ENABLE;
             }
 

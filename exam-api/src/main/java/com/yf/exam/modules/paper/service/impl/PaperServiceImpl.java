@@ -24,7 +24,7 @@ import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 import com.yf.exam.modules.paper.entity.PaperQu;
 import com.yf.exam.modules.paper.entity.PaperQuAnswer;
-import com.yf.exam.modules.paper.enums.ExamState;
+import com.yf.exam.modules.exam.enums.ExamState;
 import com.yf.exam.modules.paper.enums.PaperState;
 import com.yf.exam.modules.paper.mapper.PaperMapper;
 import com.yf.exam.modules.paper.service.PaperQuAnswerService;
