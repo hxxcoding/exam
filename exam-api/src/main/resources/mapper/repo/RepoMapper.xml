@@ -47,7 +47,7 @@
          multi_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=2),
          judge_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=3),
          saq_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=4),
-         blank_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=5),
+         blank_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=5)
          WHERE a.id=#{repoId}
     </update>
 
