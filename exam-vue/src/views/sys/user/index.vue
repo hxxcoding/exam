@@ -11,7 +11,7 @@
 
       <template slot="filter-content">
 
-        <el-input v-model="listQuery.params.userName" style="width: 200px" placeholder="搜索登录名" class="filter-item" clearable />
+        <el-input v-model="listQuery.params.userName" style="width: 200px" placeholder="搜索学号" class="filter-item" clearable />
         <el-input v-model="listQuery.params.realName" style="width: 200px" placeholder="搜索姓名" class="filter-item" clearable />
         <depart-tree-select
           v-model="listQuery.params.departId"

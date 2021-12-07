@@ -1046,6 +1046,8 @@ CREATE TABLE `el_repo` (
   `radio_count` int(11) NOT NULL DEFAULT '0' COMMENT '单选数量',
   `multi_count` int(11) NOT NULL DEFAULT '0' COMMENT '多选数量',
   `judge_count` int(11) NOT NULL DEFAULT '0' COMMENT '判断数量',
+  `saq_count` int(11) NOT NULL DEFAULT '0' COMMENT '操作数量',
+  `blank_count` int(11) NOT NULL DEFAULT '0' COMMENT '填空数量',
   `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '题库备注',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
