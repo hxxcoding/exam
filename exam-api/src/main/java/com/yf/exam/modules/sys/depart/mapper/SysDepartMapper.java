@@ -25,4 +25,6 @@ public interface SysDepartMapper extends BaseMapper<SysDepart> {
      * @return
      */
     IPage<SysDepartTreeDTO> paging(Page page, @Param("query") SysDepartDTO query);
+
+    SysDepart findChildren(String id);
 }

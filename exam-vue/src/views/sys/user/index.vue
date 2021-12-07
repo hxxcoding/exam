@@ -11,8 +11,16 @@
 
       <template slot="filter-content">
 
-        <el-input v-model="listQuery.params.userName" style="width: 200px" placeholder="搜索登录名" class="filter-item" />
-        <el-input v-model="listQuery.params.realName" style="width: 200px" placeholder="搜索姓名" class="filter-item" />
+        <el-input v-model="listQuery.params.userName" style="width: 200px" placeholder="搜索登录名" class="filter-item" clearable />
+        <el-input v-model="listQuery.params.realName" style="width: 200px" placeholder="搜索姓名" class="filter-item" clearable />
+        <depart-tree-select
+          v-model="listQuery.params.departId"
+          class="el-select filter-item el-select--medium"
+          :options="treeData"
+          :props="defaultProps"
+          placeholder="请选择班级/学院"
+          width="200px"
+        />
 
         <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="handleAdd">
           添加
@@ -42,6 +50,16 @@
           label="姓名"
           prop="realName"
         />
+
+        <el-table-column
+          align="center"
+          label="班级/学院"
+          prop="deptName"
+        >
+          <template slot-scope="scope">
+            <div>{{ queryTree(treeData, scope.row.departId) }}</div>
+          </template>
+        </el-table-column>
 
         <el-table-column
           align="center"
@@ -175,7 +193,9 @@ export default {
             label: '删除'
           }
         ]
-      }
+      },
+
+      deptName: ''
     }
   },
 
@@ -202,8 +222,6 @@ export default {
       this.formData = row
       this.formData.roles = row.roleIds.split(',')
       this.formData.password = null
-
-      console.log(JSON.stringify(this.formData))
     },
 
     departSelected(data) {
@@ -225,6 +243,22 @@ export default {
       if (obj.opt === 'cancel') {
         this.handleCancelOrder(obj.ids)
       }
+    },
+
+    // 搜索树状数据中的 ID
+    queryTree(tree, id) {
+      let stark = []
+      stark = stark.concat(tree)
+      while (stark.length) {
+        const temp = stark.shift()
+        if (temp['children']) {
+          stark = stark.concat(temp['children'])
+        }
+        if (temp['id'] === id) {
+          return temp['deptName']
+        }
+      }
+      return ''
     }
   }
 }

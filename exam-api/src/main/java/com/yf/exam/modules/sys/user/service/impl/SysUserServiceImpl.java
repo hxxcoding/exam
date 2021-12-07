@@ -16,6 +16,7 @@ import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.core.utils.passwd.PassHandler;
 import com.yf.exam.core.utils.passwd.PassInfo;
 import com.yf.exam.modules.shiro.jwt.JwtUtils;
+import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import com.yf.exam.modules.sys.user.dto.SysUserDTO;
 import com.yf.exam.modules.sys.user.dto.request.SysUserSaveReqDTO;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
@@ -46,12 +47,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     private SysUserRoleService sysUserRoleService;
+    @Autowired
+    private SysDepartService sysDepartService;
 
 
     @Override
     public IPage<SysUserDTO> paging(PagingReqDTO<SysUserDTO> reqDTO) {
 
-        //创建分页对象
+        // 创建分页对象
+        // 也可以使用xml直接写 sql 语句实现, 参考 PaperMapper.paging
         IPage<SysUser> query = new Page<>(reqDTO.getCurrent(), reqDTO.getSize());
 
         //查询条件
@@ -66,6 +70,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
             if(!StringUtils.isBlank(params.getRealName())){
                 wrapper.lambda().like(SysUser::getRealName, params.getRealName());
+            }
+
+            if(!StringUtils.isBlank(params.getDepartId())){
+                List<String> ids = sysDepartService.listAllSubIds(params.getDepartId());
+                wrapper.lambda().in(SysUser::getDepartId, ids);
             }
         }
 

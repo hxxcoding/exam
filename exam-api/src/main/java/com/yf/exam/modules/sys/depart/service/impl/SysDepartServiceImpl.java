@@ -269,7 +269,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     /**
-     * 递归所有子级别ID
+     * 递归所有父级别ID
      * @param list
      * @param id
      */
