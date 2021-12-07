@@ -22,7 +22,7 @@
 * 操作日志 https://exam.yfhl.net/#/admin/sys/admin/sys/log
 * 权限过滤 ShiroConfig.java
 * not complete 考试页面退出提醒
-* 学生导入
+* 学生导入 注册时需要选择部门 注册之前要和对数据库是否存在该用户 用户管理增加部门
 
 # bug list
 * 用户在未保存的情况下，重复上传文件导致中间文件不能被删除 
