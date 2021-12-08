@@ -40,6 +40,9 @@ import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.book.service.UserBookService;
 import com.yf.exam.modules.user.exam.service.UserExamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -60,8 +63,8 @@ import java.util.UUID;
 * @since 2020-05-25 16:33
 */
 @Service
+@CacheConfig(cacheNames = "paper", keyGenerator = "keyGenerator")
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements PaperService {
-
 
     @Autowired
     private SysUserService sysUserService;
@@ -100,9 +103,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K","L","M","N","O","P","Q","R","S","T","U","V","W","X"
             ,"Y","Z"
     });
-
-
-
 
 
     @Override
@@ -150,7 +150,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Override
     public ExamDetailRespDTO paperDetail(String paperId) {
-
 
         ExamDetailRespDTO respDTO = new ExamDetailRespDTO();
 

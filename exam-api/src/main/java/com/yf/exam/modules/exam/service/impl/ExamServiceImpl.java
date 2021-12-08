@@ -22,6 +22,9 @@ import com.yf.exam.modules.exam.service.ExamDepartService;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +39,7 @@ import java.util.List;
 * @since 2020-07-25 16:18
 */
 @Service
+@CacheConfig(cacheNames = "exam", keyGenerator = "keyGenerator")
 public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements ExamService {
 
 
@@ -46,6 +50,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
     private ExamDepartService examDepartService;
 
     @Override
+    @CacheEvict(allEntries = true) // 当保存/修改时 删除所有的缓存记录
     public void save(ExamSaveReqDTO reqDTO) {
 
         // ID
@@ -60,7 +65,6 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
 
         // 计算分值
         this.calcScore(reqDTO);
-
 
         // 复制基本数据
         BeanMapper.copy(reqDTO, entity);
@@ -92,13 +96,12 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
             examDepartService.saveAll(id, reqDTO.getDepartIds());
         }
 
-
-
         this.saveOrUpdate(entity);
 
     }
 
     @Override
+    @Cacheable(sync = true)
     public ExamSaveReqDTO findDetail(String id) {
         ExamSaveReqDTO respDTO = new ExamSaveReqDTO();
         Exam exam = this.getById(id);
@@ -116,6 +119,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
     }
 
     @Override
+    @Cacheable(sync = true)
     public ExamDTO findById(String id) {
         ExamDTO respDTO = new ExamDTO();
         Exam exam = this.getById(id);
@@ -124,6 +128,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
     }
 
     @Override
+    @Cacheable(sync = true)
     public IPage<ExamDTO> paging(PagingReqDTO<ExamDTO> reqDTO) {
 
         //创建分页对象
@@ -135,8 +140,8 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
      }
 
     @Override
+    @Cacheable
     public IPage<ExamOnlineRespDTO> onlinePaging(PagingReqDTO<ExamDTO> reqDTO) {
-
 
         // 创建分页对象
         Page page = new Page(reqDTO.getCurrent(), reqDTO.getSize());
@@ -148,7 +153,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
     }
 
     @Override
-    public IPage<ExamReviewRespDTO> reviewPaging(PagingReqDTO<ExamDTO> reqDTO) {
+    public IPage<ExamReviewRespDTO> reviewPaging(PagingReqDTO<ExamDTO> reqDTO) { // 待阅试卷
         // 创建分页对象
         Page page = new Page(reqDTO.getCurrent(), reqDTO.getSize());
 

@@ -140,7 +140,7 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "试题详情")
     @RequestMapping(value = "/qu-detail", method = { RequestMethod.POST})
     public ApiRest<PaperQuDetailDTO> quDetail(@RequestBody PaperQuQueryDTO reqDTO) {
-        //根据ID删除
+        //根据ID查找
         PaperQuDetailDTO respDTO = baseService.findQuDetail(reqDTO.getPaperId(), reqDTO.getQuId());
         return super.success(respDTO);
     }
