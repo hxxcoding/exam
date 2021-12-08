@@ -180,7 +180,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
                 //设置题目
                 qu.setAnswerList(answerList);
                 //设置引用题库
-                qu.setRepoIds(im.getRepoList());
+                qu.setRepoIds(im.getRepoList()); // TODO 可以改为Excel输入题库名称，目前是输入题库ID
                 // 保存答案
                 this.save(qu);
                 count++;

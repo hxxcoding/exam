@@ -2,6 +2,7 @@ package com.yf.exam.ability.upload.utils;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.yf.exam.core.utils.DateUtils;
+import com.yf.exam.modules.user.UserUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -126,7 +127,7 @@ public class FileUtils {
 		String suffix = fileName.substring(fileName.lastIndexOf("."));
 
 		//以系统时间命名
-		return IdWorker.getIdStr() + suffix;
+		return UserUtils.getUserId() + "_" +  IdWorker.getIdStr() + suffix;
 
 	}
 

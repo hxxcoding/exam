@@ -45,11 +45,7 @@ public class SwaggerConfig {
 
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("考试系统接口")
-                .description("考试系统接口")
-                .contact(new Contact("Van", "https://exam.yfhl.net", "18365918@qq.com"))
-                .version("1.0.0")
-                .build();
+        return new ApiInfoBuilder().title("考试系统接口").build();
     }
 
 
