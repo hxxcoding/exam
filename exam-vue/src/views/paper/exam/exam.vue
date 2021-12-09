@@ -148,6 +148,7 @@
 import { paperDetail, quDetail, handExam, fillAnswer } from '@/api/paper/exam'
 import { Loading } from 'element-ui'
 import FileUpload from '@/components/FileUpload'
+import screenfull from 'screenfull'
 
 export default {
   name: 'ExamProcess',
@@ -200,6 +201,7 @@ export default {
   },
   // 回退时无法弹窗
   created() {
+    screenfull.toggle()
     const id = this.$route.params.id
     if (typeof id !== 'undefined') {
       this.paperId = id
@@ -318,7 +320,8 @@ export default {
           message: '试卷提交成功！',
           type: 'success'
         })
-
+        this.isFullscreen = !this.isFullscreen
+        screenfull.toggle()
         this.$router.push({ name: 'ExamOnline' })
       })
     },

@@ -9,6 +9,7 @@ import com.yf.exam.modules.sys.config.entity.SysConfig;
 import com.yf.exam.modules.sys.config.service.SysConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,7 @@ public class SysConfigController extends BaseController {
     */
     @ApiOperation(value = "添加或修改")
     @RequestMapping(value = "/save", method = { RequestMethod.POST})
+    @RequiresRoles("sa")
     public ApiRest<BaseIdRespDTO> save(@RequestBody SysConfigDTO reqDTO) {
         //复制参数
         SysConfig entity = new SysConfig();

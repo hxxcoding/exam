@@ -16,6 +16,7 @@ import com.yf.exam.modules.qu.service.QuRepoService;
 import com.yf.exam.modules.repo.service.RepoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +37,7 @@ import java.util.List;
 @Api(tags={"题库"})
 @RestController
 @RequestMapping("/exam/api/repo")
+@RequiresRoles("sa")
 public class RepoController extends BaseController {
 
     @Autowired

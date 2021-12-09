@@ -22,6 +22,7 @@ import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.user.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -96,6 +97,7 @@ public class PaperController extends BaseController {
      */
     @ApiOperation(value = "分页查找")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
+    @RequiresRoles("sa")
     public ApiRest<IPage<PaperListRespDTO>> paging(@RequestBody PagingReqDTO<PaperListReqDTO> reqDTO) {
 
         //分页查询并转换

@@ -15,6 +15,7 @@ import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ import java.util.List;
 @Api(tags={"部门信息"})
 @RestController
 @RequestMapping("/exam/api/sys/depart")
+@RequiresRoles("sa")
 public class SysDepartController extends BaseController {
 
     @Autowired

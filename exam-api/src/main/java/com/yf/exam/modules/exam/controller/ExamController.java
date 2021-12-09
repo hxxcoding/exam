@@ -16,6 +16,8 @@ import com.yf.exam.modules.exam.entity.Exam;
 import com.yf.exam.modules.exam.service.ExamService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,7 @@ import java.util.Date;
 @Api(tags={"考试"})
 @RestController
 @RequestMapping("/exam/api/exam/exam")
+@RequiresRoles("sa")
 public class ExamController extends BaseController {
 
     @Autowired
@@ -73,6 +76,7 @@ public class ExamController extends BaseController {
     */
     @ApiOperation(value = "查找详情")
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
+    @RequiresRoles(logical = Logical.OR, value = {"sa", "student"})
     public ApiRest<ExamDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         ExamSaveReqDTO dto = baseService.findDetail(reqDTO.getId());
         return super.success(dto);
@@ -105,6 +109,7 @@ public class ExamController extends BaseController {
      */
     @ApiOperation(value = "考试视角")
     @RequestMapping(value = "/online-paging", method = { RequestMethod.POST})
+    @RequiresRoles(logical = Logical.OR, value = {"sa", "student"})
     public ApiRest<IPage<ExamOnlineRespDTO>> myPaging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
 
         //分页查询并转换
