@@ -340,7 +340,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         return paperQu;
     }
 
-
     /**
      * 保存试卷
      * @param userId
@@ -522,16 +521,15 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         // 主观分，因为要阅卷，所以给0
         paper.setSubjScore(0);
 
-
         // 同步保存考试成绩
         userExamService.joinResult(paper.getUserId(), paper.getExamId(), objScore, objScore>=paper.getQualifyScore());
 
         paper.setState(PaperState.FINISHED);
 
         // 待阅卷
-        if(paper.getHasSaq()) {
-            paper.setState(PaperState.WAIT_OPT);
-        }
+//        if(paper.getHasSaq()) {
+//            paper.setState(PaperState.WAIT_OPT);
+//        }
         paper.setUpdateTime(new Date());
 
         //计算考试时长

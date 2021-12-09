@@ -108,7 +108,6 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
 
     @Override
     public boolean isTeacher(String userId) {
-        // 学生角色
         QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(SysUserRole::getUserId, userId)
                 .eq(SysUserRole::getRoleId, "teacher");

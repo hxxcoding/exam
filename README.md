@@ -1,5 +1,17 @@
 
 # TODO
+* 设置考试/练习模式 考试模式没有'我的成绩'权限
+* excel 上传用户
+* 退出考试页面但未提交试卷 到时间自动交卷（计算分数）
+* ？考试次数限制 tryCount >  考试可以重复做吗？
+* 考试记录默认查询管理员所属部门的成员成绩
+* 考试结束 自动提交已经保存的题目 如果用户没有点击交卷就退出考试 该怎么办？
+* 限制考试机器 (IP)
+* 操作日志 https://exam.yfhl.net/#/admin/sys/admin/sys/log
+* 权限过滤 ShiroConfig.java
+* 学生导入 注册时需要选择部门 注册之前要和对数据库是否存在该用户 用户管理增加部门
+* 多图片多文件支持
+* 错题功能是否需要删除
 * deal 限时考试按照 limit_time 和 end_time 以最短的为准倒计时 倒计时加上小时
 * deal 我的成绩中查看试卷
 * deal excel 导入导出试题 (setup sql_mode)
@@ -10,21 +22,10 @@
 * deal 答题页面文件如果不是图片显示下载链接
 * deal 简答题 支持
 * deal 文件上传，删除文件时删除本地文件和操作题answer
-* 退出考试页面但未提交试卷 到时间自动交卷（计算分数）
-* ？考试次数限制 tryCount >  考试可以重复做吗？
-* 填空题 支持
-* 考试记录默认查询管理员所属部门的成员成绩
-* 考试结束 自动提交已经保存的题目 如果用户没有点击交卷就退出考试 该怎么办？
-* 限制考试机器 (IP)
-* excel 上传用户 上传题目
-* 设置logo
-* Redis Config
-* 操作日志 https://exam.yfhl.net/#/admin/sys/admin/sys/log
-* 权限过滤 ShiroConfig.java
-* not complete 考试页面退出提醒
-* 学生导入 注册时需要选择部门 注册之前要和对数据库是否存在该用户 用户管理增加部门
 * deal 文件命名规范  name_time.xxx
-* 多图片多文件支持
+* deal 填空题 支持
+* deal Redis Config
+* not complete 考试页面退出提醒
 
 # bug list
 * deal 按用户的部门查询 而不是按试卷的部门，试卷的部门数据库冗余

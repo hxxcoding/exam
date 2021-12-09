@@ -127,7 +127,7 @@ public class FileUtils {
 		String suffix = fileName.substring(fileName.lastIndexOf("."));
 
 		//以系统时间命名
-		return UserUtils.getUserId() + "_" +  IdWorker.getIdStr() + suffix;
+		return UserUtils.getUsername() + "_" +  IdWorker.getIdStr() + suffix;
 
 	}
 

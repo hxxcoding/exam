@@ -28,8 +28,18 @@ public class UserUtils {
         }
     }
 
+    public static String getUsername(boolean throwable){
+        try {
+            return ((SysUserLoginDTO) SecurityUtils.getSubject().getPrincipal()).getUserName();
+        }catch (Exception e){
+            if(throwable){
+                throw new ServiceException(ApiError.ERROR_10010002);
+            }
+            return null;
+        }
+    }
+
     /**
-     * 获取当前登录用户的ID
      * @param throwable
      * @return
      */
@@ -52,5 +62,9 @@ public class UserUtils {
      */
     public static String getUserId(){
         return getUserId(true);
+    }
+
+    public static String getUsername(){
+        return getUsername(true);
     }
 }
