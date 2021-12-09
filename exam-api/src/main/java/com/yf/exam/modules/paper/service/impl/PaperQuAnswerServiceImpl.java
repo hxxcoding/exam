@@ -41,7 +41,7 @@ public class PaperQuAnswerServiceImpl extends ServiceImpl<PaperQuAnswerMapper, P
         //转换结果
         IPage<PaperQuAnswerDTO> pageData = JSON.parseObject(JSON.toJSONString(page), new TypeReference<Page<PaperQuAnswerDTO>>(){});
         return pageData;
-     }
+    }
 
     @Override
     public List<PaperQuAnswerExtDTO> listForExam(String paperId, String quId) {

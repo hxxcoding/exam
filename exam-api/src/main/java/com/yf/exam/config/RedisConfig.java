@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yf.exam.core.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,8 @@ import java.time.Duration;
 @Configuration
 public class RedisConfig {
 
-    private static final int ttl = 30; // minutes
+    @Value("${spring.cache.redis.time-to-live}")
+    private long ttl; // minutes
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -80,12 +82,20 @@ public class RedisConfig {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
-                .entryTtl(Duration.ofMinutes(ttl)); // 设置缓存过期时间
+                .entryTtl(Duration.ofSeconds(ttl)); // 设置缓存过期时间
 
         RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
                 .cacheDefaults(config)
                 .build();
         return cacheManager;
+    }
+
+    /**
+     * 自定义keyGenerator
+     */
+    @Bean
+    public KeyGenerator keyGenerator() {
+        return new CustomKeyGenerator();
     }
 
     /**
@@ -126,13 +136,5 @@ public class RedisConfig {
     @Bean
     public ZSetOperations<String, Object> zSetOperations(RedisTemplate<String, Object> redisTemplate) {
         return redisTemplate.opsForZSet();
-    }
-
-    /**
-     * 自定义keyGenerator
-     */
-    @Bean
-    public KeyGenerator keyGenerator() {
-        return new CustomKeyGenerator();
     }
 }

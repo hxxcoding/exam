@@ -63,7 +63,7 @@ import java.util.UUID;
 * @since 2020-05-25 16:33
 */
 @Service
-@CacheConfig(cacheNames = "paper", keyGenerator = "keyGenerator")
+@CacheConfig(cacheNames = "paper", keyGenerator = "keyGenerator") // TODO 答题页面的缓存操作
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements PaperService {
 
     @Autowired
@@ -99,10 +99,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     /**
      * 展示的选项，ABC这样
      */
-    private static List<String> ABC = Arrays.asList(new String[]{
-            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K","L","M","N","O","P","Q","R","S","T","U","V","W","X"
-            ,"Y","Z"
-    });
+    private static final List<String> ABC = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H",
+            "I", "J", "K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
 
 
     @Override
@@ -206,6 +204,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         return respDTO;
     }
 
+    //    @Cacheable // 查找题目已选答案 TODO
     @Override
     public PaperQuDetailDTO findQuDetail(String paperId, String quId) {
 
@@ -306,7 +305,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
 
-
     /**
      * 填充试题题目信息
      * @param repo
@@ -397,7 +395,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
 
-
     /**
      * 保存试卷试题列表
      * @param paperId
@@ -448,8 +445,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
+//    @CachePut
     public void fillAnswer(PaperAnswerDTO reqDTO) {
-
 
         //查找答案列表
         List<PaperQuAnswer> list = paperQuAnswerService.listForFill(reqDTO.getPaperId(), reqDTO.getQuId());

@@ -127,7 +127,7 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "试卷详情")
     @RequestMapping(value = "/paper-detail", method = { RequestMethod.POST})
     public ApiRest<ExamDetailRespDTO> paperDetail(@RequestBody BaseIdReqDTO reqDTO) {
-        //根据ID删除
+        //根据ID查找试卷的试题
         ExamDetailRespDTO respDTO = baseService.paperDetail(reqDTO.getId());
         return super.success(respDTO);
     }
@@ -153,7 +153,7 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "填充答案")
     @RequestMapping(value = "/fill-answer", method = { RequestMethod.POST})
     public ApiRest<PaperQuDetailDTO> fillAnswer(@RequestBody PaperAnswerDTO reqDTO) {
-        //根据ID删除
+        //根据ID填充
         baseService.fillAnswer(reqDTO);
         return super.success();
     }
