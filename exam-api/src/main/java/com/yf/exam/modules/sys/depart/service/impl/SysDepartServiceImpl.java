@@ -69,6 +69,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     @Override
+    @Cacheable(sync = true)
     public IPage<SysDepartTreeDTO> paging(PagingReqDTO<SysDepartDTO> reqDTO) {
 
         // 创建分页对象

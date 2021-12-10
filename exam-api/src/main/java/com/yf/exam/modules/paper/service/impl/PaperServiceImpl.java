@@ -196,6 +196,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         // 试题基本信息
         Paper paper = paperService.getById(paperId);
+        if (!paper.getState().equals(PaperState.FINISHED)) { // 试卷未提交
+            throw new ServiceException("试卷未提交,无法查看结果!");
+        }
         BeanMapper.copy(paper, respDTO);
 
         List<PaperQuDetailDTO> quList = paperQuService.listForPaperResult(paperId);
