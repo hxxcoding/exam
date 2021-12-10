@@ -149,6 +149,8 @@
 <script>
 
 import { paperResult } from '@/api/paper/exam'
+import { setWaterMark, removeWatermark } from '@/utils/watermark'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'AuctionGoodsDetail',
@@ -168,12 +170,27 @@ export default {
       myMulti: {}
     }
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+      'avatar',
+      'device',
+      'name',
+      'realName'
+    ])
+  },
   created() {
     const id = this.$route.params.id
     if (typeof id !== 'undefined') {
       this.paperId = id
       this.fetchData(id)
     }
+  },
+  mounted() {
+    setWaterMark(this.realName, this.name)
+  },
+  destroyed() {
+    removeWatermark()
   },
   methods: {
 

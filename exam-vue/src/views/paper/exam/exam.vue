@@ -148,6 +148,8 @@
 import { paperDetail, quDetail, handExam, fillAnswer } from '@/api/paper/exam'
 import { Loading } from 'element-ui'
 import FileUpload from '@/components/FileUpload'
+import { setWaterMark, removeWatermark } from '@/utils/watermark'
+import { mapGetters } from 'vuex'
 import screenfull from 'screenfull'
 
 export default {
@@ -193,10 +195,21 @@ export default {
       sec: '00'
     }
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+      'avatar',
+      'device',
+      'name',
+      'realName'
+    ])
+  },
   mounted() {
+    setWaterMark(this.realName, this.name)
     window.addEventListener('beforeunload', this.beforeUnloadHandler, false)
   },
   destroyed() {
+    removeWatermark()
     window.removeEventListener('beforeunload', this.beforeUnloadHandler, false)
   },
   // 回退时无法弹窗
