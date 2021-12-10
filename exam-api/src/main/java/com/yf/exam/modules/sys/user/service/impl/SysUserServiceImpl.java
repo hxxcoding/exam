@@ -27,11 +27,16 @@ import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.UserUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -43,6 +48,7 @@ import java.util.List;
 * @since 2020-04-13 16:57
 */
 @Service
+@CacheConfig(cacheNames = "sysUser", keyGenerator = "keyGenerator")
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
     @Autowired
@@ -110,6 +116,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    @Cacheable
     public SysUserLoginDTO token(String token) {
 
         // 获得会话
@@ -147,6 +154,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void update(SysUserDTO reqDTO) {
 
 
@@ -162,6 +170,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(allEntries = true)
     public void save(SysUserSaveReqDTO reqDTO) {
 
         List<String> roles = reqDTO.getRoles();
@@ -190,6 +199,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         String roleIds = sysUserRoleService.saveRoles(user.getId(), roles);
         user.setRoleIds(roleIds);
         this.saveOrUpdate(user);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        return super.removeByIds(idList);
     }
 
     @Transactional(rollbackFor = Exception.class)
