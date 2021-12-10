@@ -3,6 +3,9 @@
     <el-form-item label="用户名">
       <el-input v-model.trim="user.name" readonly />
     </el-form-item>
+    <el-form-item label="班级/学院">
+      <el-input v-model.trim="deptName" readonly />
+    </el-form-item>
     <el-form-item label="密码">
       <el-input v-model.trim="user.password" type="password" placeholder="不修改请留空" />
     </el-form-item>
@@ -14,6 +17,7 @@
 
 <script>
 import { updateData } from '@/api/sys/user/user'
+import { fetchDetail } from '@/api/sys/depart/depart'
 
 export default {
   props: {
@@ -25,6 +29,16 @@ export default {
         }
       }
     }
+  },
+  data() {
+    return {
+      deptName: ''
+    }
+  },
+  mounted() {
+    fetchDetail(this.user.departId).then(response => {
+      this.deptName = response.data.deptName
+    })
   },
   methods: {
     async logout() {

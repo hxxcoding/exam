@@ -12,9 +12,13 @@ import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.mapper.SysDepartMapper;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +33,7 @@ import java.util.Map;
 * @since 2020-09-02 17:25
 */
 @Service
+@CacheConfig(cacheNames = "sysDepart", keyGenerator = "keyGenerator")
 public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart> implements SysDepartService {
 
 
@@ -39,6 +44,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 
 
     @Override
+    @CacheEvict(allEntries = true)
     public void save(SysDepartDTO reqDTO) {
 
         if(StringUtils.isBlank(reqDTO.getId())) {
@@ -51,6 +57,18 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         SysDepart entity = new SysDepart();
         BeanMapper.copy(reqDTO, entity);
         this.saveOrUpdate(entity);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        return super.removeByIds(idList);
+    }
+
+    @Override
+    @Cacheable(sync = true)
+    public SysDepart getById(Serializable id) {
+        return super.getById(id);
     }
 
     @Override
@@ -68,13 +86,14 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         return pageData;
      }
 
-
     @Override
+    @Cacheable(sync = true)
     public List<SysDepartTreeDTO> findTree() {
         return this.findTree(null);
     }
 
     @Override
+    @Cacheable(sync = true)
     public List<SysDepartTreeDTO> findTree(List<String> ids) {
 
 
@@ -126,6 +145,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     @Override
+    @Cacheable(sync = true)
     public void sort(String id, Integer sort) {
 
         SysDepart depart = this.getById(id);

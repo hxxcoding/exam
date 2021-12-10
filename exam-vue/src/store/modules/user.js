@@ -9,7 +9,8 @@ const state = {
   realName: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  departId: ''
 }
 
 const mutations = {
@@ -33,6 +34,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_DEPART_ID: (state, departId) => {
+    state.departId = departId
   }
 }
 
@@ -76,7 +80,7 @@ const actions = {
           reject('校验失败，请重新登录！.')
         }
 
-        const { id, roles, userName, realName, avatar, introduction } = data
+        const { id, roles, userName, realName, avatar, introduction, departId } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -89,6 +93,7 @@ const actions = {
         commit('SET_NAME', userName)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
+        commit('SET_DEPART_ID', departId)
         resolve(data)
       }).catch(error => {
         reject(error)

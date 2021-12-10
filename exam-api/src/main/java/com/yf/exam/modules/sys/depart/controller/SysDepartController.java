@@ -15,6 +15,7 @@ import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,7 @@ public class SysDepartController extends BaseController {
     */
     @ApiOperation(value = "查找详情")
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
+    @RequiresRoles(logical = Logical.OR, value = {"student", "sa"})
     public ApiRest<SysDepartDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         SysDepart entity = baseService.getById(reqDTO.getId());
         SysDepartDTO dto = new SysDepartDTO();
