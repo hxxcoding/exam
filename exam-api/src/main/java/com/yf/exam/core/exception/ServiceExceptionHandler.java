@@ -1,7 +1,7 @@
 package com.yf.exam.core.exception;
 
 import com.yf.exam.core.api.ApiRest;
-import com.yf.exam.core.exception.ServiceException;
+import org.apache.shiro.ShiroException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -47,6 +47,12 @@ public class ServiceExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     public ApiRest serviceExceptionHandler(ServiceException e) {
         return new ApiRest(e);
+    }
+
+    @ExceptionHandler(ShiroException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiRest shiroExceptionHandler(ShiroException e) {
+        return new ApiRest(new ServiceException(e.getMessage()));
     }
 
 }

@@ -53,6 +53,7 @@ public class PaperController extends BaseController {
     */
     @ApiOperation(value = "添加或修改")
     @RequestMapping(value = "/save", method = { RequestMethod.POST})
+    @RequiresRoles("sa")
     public ApiRest<BaseIdRespDTO> save(@RequestBody PaperDTO reqDTO) {
         //复制参数
         Paper entity = new Paper();
@@ -68,6 +69,7 @@ public class PaperController extends BaseController {
     */
     @ApiOperation(value = "批量删除")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
+    @RequiresRoles("sa")
     public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
         baseService.removeByIds(reqDTO.getIds());
@@ -97,7 +99,6 @@ public class PaperController extends BaseController {
      */
     @ApiOperation(value = "分页查找")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
-    @RequiresRoles("sa")
     public ApiRest<IPage<PaperListRespDTO>> paging(@RequestBody PagingReqDTO<PaperListReqDTO> reqDTO) {
 
         //分页查询并转换
