@@ -33,7 +33,7 @@ export function importTemplate() {
 }
 
 /**
- * 导出
+ * 导入
  * @param data
  */
 export function importExcel(file) {

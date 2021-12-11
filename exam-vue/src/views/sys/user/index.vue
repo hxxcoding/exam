@@ -26,6 +26,12 @@
           添加
         </el-button>
 
+        <el-button-group class="filter-item" style="float:  right">
+          <el-button size="mini" icon="el-icon-download" @click="downloadTemplate">下载导入模版</el-button>
+          <el-button size="mini" icon="el-icon-upload2" @click="chooseFile">导入</el-button>
+          <input ref="upFile" class="file" name="file" type="file" style="display: none" @change="doImport">
+        </el-button-group>
+
       </template>
 
       <template slot="data-columns">
@@ -136,6 +142,7 @@ import MeetRole from '@/components/MeetRole'
 import { saveData } from '@/api/sys/user/user'
 import DepartTreeSelect from '@/components/DepartTreeSelect'
 import { fetchTree } from '@/api/sys/depart/depart'
+import { importTemplate, importExcel } from '@/api/sys/user/user'
 
 export default {
   name: 'SysUserList',
@@ -259,6 +266,33 @@ export default {
         }
       }
       return ''
+    },
+
+    downloadTemplate() {
+      importTemplate()
+    },
+
+    chooseFile: function() {
+      this.$refs.upFile.dispatchEvent(new MouseEvent('click'))
+    },
+
+    doImport(e) {
+      const file = e.target.files[0]
+
+      importExcel(file).then(res => {
+        if (res.code !== 0) {
+          this.$alert(res.data.msg, '导入信息', {
+            dangerouslyUseHTMLString: true
+          })
+        } else {
+          this.$message({
+            message: '成功导入' + res.data + '条数据',
+            type: 'success'
+          })
+          this.importVisible = false
+          this.$refs.pagingTable.getList()
+        }
+      })
     }
   }
 }

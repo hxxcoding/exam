@@ -133,6 +133,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
     @Override
     public int importExcel(List<QuExportDTO> dtoList) {
 
+        this.checkExcel(dtoList);
         //根据题目名称分组
         Map<Integer, List<QuExportDTO>> anMap = new HashMap<>(16);
 
@@ -274,6 +275,64 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
             throw new ServiceException(1, no + "单选题不能包含多个正确项！");
         }
 
+    }
+
+
+
+    /**
+     * 校验Excel
+     *
+     * @param list
+     * @throws Exception
+     */
+    private void checkExcel(List<QuExportDTO> list) throws ServiceException {
+        // 约定第三行开始导入
+        int line = 3;
+        StringBuffer sb = new StringBuffer();
+        if (CollectionUtils.isEmpty(list)) {
+            throw new ServiceException(1, "您导入的数据似乎是一个空表格！");
+        }
+        Integer quNo = null;
+        for (QuExportDTO item : list) {
+            if (org.apache.commons.lang3.StringUtils.isBlank(item.getNo())) {
+                line++;
+                continue;
+            }
+
+            Integer no;
+            try {
+                no = Integer.parseInt(item.getNo());
+            } catch (Exception e) {
+                line++;
+                continue;
+            }
+            if (no == null) {
+                sb.append("第").append(line).append("行题目序号不能为空/");
+            }
+            if (quNo == null || !quNo.equals(no)) {
+                if (item.getQuType().equals("")) {
+                    sb.append("第").append(line).append("行题目类型不能为空/");
+                }
+                if (org.apache.commons.lang3.StringUtils.isBlank(item.getQContent())) {
+                    sb.append("第").append(line).append("行题目内容不能为空/");
+                }
+                if (CollectionUtils.isEmpty(item.getRepoList())) {
+                    sb.append("第").append(line).append("行题目必须包含一个题库/");
+                }
+            }
+            if (org.apache.commons.lang3.StringUtils.isBlank(item.getAIsRight())) {
+                sb.append("第").append(line).append("行选项是否正确不能为空/");
+            }
+            if (org.apache.commons.lang3.StringUtils.isBlank(item.getAContent()) && org.apache.commons.lang3.StringUtils.isBlank(item.getAImage())) {
+                sb.append("第").append(line).append("行选项内容和选项图片必须有一个不为空/");
+            }
+            quNo = no;
+            line++;
+        }
+        // 存在错误
+        if (!"".equals(sb.toString())) {
+            throw new ServiceException(1, sb.toString());
+        }
     }
 
     @Override

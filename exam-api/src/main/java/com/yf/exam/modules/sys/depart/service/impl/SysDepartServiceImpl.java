@@ -1,5 +1,6 @@
 package com.yf.exam.modules.sys.depart.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -66,6 +67,12 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     @Cacheable(sync = true)
     public SysDepart getById(Serializable id) {
         return super.getById(id);
+    }
+
+    @Override
+    @Cacheable(sync = true)
+    public SysDepart getOne(Wrapper<SysDepart> queryWrapper) {
+        return super.getOne(queryWrapper);
     }
 
     @Override

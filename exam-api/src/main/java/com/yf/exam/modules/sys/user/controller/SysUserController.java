@@ -8,7 +8,10 @@ import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.BaseStateReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
+import com.yf.exam.core.utils.excel.ExportExcel;
+import com.yf.exam.core.utils.excel.ImportExcel;
 import com.yf.exam.modules.sys.user.dto.SysUserDTO;
+import com.yf.exam.modules.sys.user.dto.export.SysUserExportDTO;
 import com.yf.exam.modules.sys.user.dto.request.SysUserLoginReqDTO;
 import com.yf.exam.modules.sys.user.dto.request.SysUserSaveReqDTO;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
@@ -16,16 +19,16 @@ import com.yf.exam.modules.sys.user.entity.SysUser;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>
@@ -179,5 +182,39 @@ public class SysUserController extends BaseController {
     public ApiRest<SysUserLoginDTO> quick(@RequestBody SysUserDTO reqDTO) {
         SysUserLoginDTO respDTO = baseService.quickReg(reqDTO);
         return success(respDTO);
+    }
+
+
+    /**
+     * 下载导入试题数据模板
+     */
+    @ResponseBody
+    @RequestMapping(value = "import/template")
+    public ApiRest importFileTemplate(HttpServletResponse response) {
+        try {
+            String fileName = "用户导入模板.xlsx";
+            new ExportExcel("用户数据", SysUserExportDTO.class, 1).write(response, fileName).dispose();
+            return super.success();
+        } catch (Exception e) {
+            return super.failure("导入模板下载失败！失败信息："+e.getMessage());
+        }
+    }
+
+    /**
+     * 导入Excel
+     *
+     * @param file
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "import")
+    public ApiRest importFile(@RequestParam("file") MultipartFile file) {
+        try {
+            ImportExcel ei = new ImportExcel(file, 1, 0);
+            List<SysUserExportDTO> list = ei.getDataList(SysUserExportDTO.class);
+            return super.success(baseService.importExcel(list));
+        } catch (IOException | InvalidFormatException | IllegalAccessException | InstantiationException e) {
+            return super.failure();
+        }
     }
 }

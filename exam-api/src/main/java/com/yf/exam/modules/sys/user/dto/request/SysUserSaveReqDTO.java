@@ -22,11 +22,8 @@ public class SysUserSaveReqDTO implements Serializable {
     @ApiModelProperty(value = "ID", required=true)
     private String id;
 
-    @ApiModelProperty(value = "用户名", required=true)
+    @ApiModelProperty(value = "学号", required=true)
     private String userName;
-
-    @ApiModelProperty(value = "头像", required=true)
-    private String avatar;
 
     @ApiModelProperty(value = "真实姓名", required=true)
     private String realName;
@@ -34,7 +31,7 @@ public class SysUserSaveReqDTO implements Serializable {
     @ApiModelProperty(value = "密码", required=true)
     private String password;
 
-    @ApiModelProperty(value = "部门", required=true)
+    @ApiModelProperty(value = "班级/学院", required=true)
     private String departId;
 
     @ApiModelProperty(value = "角色列表", required=true)

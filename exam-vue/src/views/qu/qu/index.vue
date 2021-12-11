@@ -259,7 +259,7 @@ export default {
           })
         } else {
           this.$message({
-            message: '数据导入成功！',
+            message: '成功导入' + res.data + '条数据',
             type: 'success'
           })
 

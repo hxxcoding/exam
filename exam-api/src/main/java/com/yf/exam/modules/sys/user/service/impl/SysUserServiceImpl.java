@@ -17,8 +17,10 @@ import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.core.utils.passwd.PassHandler;
 import com.yf.exam.core.utils.passwd.PassInfo;
 import com.yf.exam.modules.shiro.jwt.JwtUtils;
+import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import com.yf.exam.modules.sys.user.dto.SysUserDTO;
+import com.yf.exam.modules.sys.user.dto.export.SysUserExportDTO;
 import com.yf.exam.modules.sys.user.dto.request.SysUserSaveReqDTO;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
 import com.yf.exam.modules.sys.user.entity.SysUser;
@@ -275,4 +277,86 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         return respDTO;
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int importExcel(List<SysUserExportDTO> dtoList) {
+        this.checkExcel(dtoList);
+        int count = 0;
+        SysUser user;
+        try {
+            for (SysUserExportDTO item : dtoList) {
+                user = new SysUser();
+                user.setId(IdWorker.getIdStr());
+                user.setUserName(item.getUserName());
+                user.setRealName(item.getRealName());
+                PassInfo passInfo = PassHandler.buildPassword(item.getPassword());
+                user.setPassword(passInfo.getPassword());
+                user.setSalt(passInfo.getSalt());
+                user.setDepartId(item.getDepartId());
+                // 保存角色
+                List<String> roles = new ArrayList<>();
+                roles.add("student");
+                String roleIds = sysUserRoleService.saveRoles(user.getId(), roles);
+                user.setRoleIds(roleIds);
+                this.save(user);
+                count++;
+            }
+        } catch (ServiceException e) {
+            throw new ServiceException(1, "第" + count + "行导入出现问题: " + e.getMessage());
+        }
+        return count;
+    }
+
+
+
+    /**
+     * 校验Excel
+     * @param list
+     * @throws Exception
+     */
+    private void checkExcel(List<SysUserExportDTO> list) throws ServiceException {
+
+        // 约定第三行开始导入
+        int line = 3;
+        StringBuilder sb = new StringBuilder();
+
+        if (CollectionUtils.isEmpty(list)) {
+            throw new ServiceException(1, "您导入的数据似乎是一个空表格！");
+        }
+
+        for (SysUserExportDTO item : list) {
+            SysUser user = this.getOne(new QueryWrapper<SysUser>()
+                    .lambda().eq(SysUser::getUserName, item.getUserName()));
+            if (user != null) {
+                sb.append("第").append(line).append("行用户名已存在/");
+            }
+            if (org.apache.commons.lang3.StringUtils.isBlank(item.getRealName())) {
+                sb.append("第").append(line).append("行姓名不能为空/");
+            }
+            if (org.apache.commons.lang3.StringUtils.isBlank(item.getDeptName())) {
+                sb.append("第").append(line).append("行班级不能为空/");
+            } else {
+                // 根据 deptName 获取 departId
+                SysDepart depart = sysDepartService.getOne(new QueryWrapper<SysDepart>()
+                        .lambda().eq(SysDepart::getDeptName, item.getDeptName().trim()));
+                if (depart == null) {
+                    sb.append("第").append(line).append("行\"班级\"不存在,请先添加该班级/");
+                } else {
+                    item.setDepartId(depart.getId());
+                }
+            }
+            if (org.apache.commons.lang3.StringUtils.isBlank(item.getUserName())) {
+                sb.append("第").append(line).append("行学号不能为空/");
+            }
+            if (org.apache.commons.lang3.StringUtils.isBlank(item.getPassword())) {
+                sb.append("第").append(line).append("行密码不能为空/");
+            }
+            line++;
+        }
+        if (!"".equals(sb.toString())) {
+            throw new ServiceException(1, sb.toString());
+        }
+    }
+
 }

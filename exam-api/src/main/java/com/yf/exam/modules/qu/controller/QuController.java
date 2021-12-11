@@ -181,103 +181,13 @@ public class QuController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "import")
     public ApiRest importFile(@RequestParam("file") MultipartFile file) {
-
         try {
-
             ImportExcel ei = new ImportExcel(file, 1, 0);
             List<QuExportDTO> list = ei.getDataList(QuExportDTO.class);
-
-            // 校验数据
-            this.checkExcel(list);
-
-            // 导入数据条数
-            baseService.importExcel(list);
-
             // 导入成功
-            return super.success();
-
-        } catch (IOException e) {
-
-        } catch (InvalidFormatException e) {
-
-        } catch (IllegalAccessException e) {
-
-        } catch (InstantiationException e) {
-
-        }
-
-        return super.failure();
-    }
-
-    /**
-     * 校验Excel
-     *
-     * @param list
-     * @throws Exception
-     */
-    private void checkExcel(List<QuExportDTO> list) throws ServiceException {
-
-        // 约定第三行开始导入
-        int line = 3;
-        StringBuffer sb = new StringBuffer();
-
-        if (CollectionUtils.isEmpty(list)) {
-            throw new ServiceException(1, "您导入的数据似乎是一个空表格！");
-        }
-
-        Integer quNo = null;
-        for (QuExportDTO item : list) {
-
-            System.out.println(item.getNo());
-            if (StringUtils.isBlank(item.getNo())) {
-                line++;
-                continue;
-            }
-
-            System.out.println(item.getQContent());
-            Integer no;
-
-            try {
-                no = Integer.parseInt(item.getNo());
-            } catch (Exception e) {
-                line++;
-                continue;
-            }
-
-            if (no == null) {
-                sb.append("第" + line + "行，题目序号不能为空！<br>");
-            }
-
-            if (quNo == null || !quNo.equals(no)) {
-
-                if (item.getQuType() == null) {
-                    sb.append("第" + line + "行，题目类型不能为空<br>");
-                }
-
-                if (StringUtils.isBlank(item.getQContent())) {
-                    sb.append("第" + line + "行，题目内容不能为空<br>");
-                }
-
-                if (CollectionUtils.isEmpty(item.getRepoList())) {
-                    sb.append("第" + line + "行，题目必须包含一个题库<br>");
-                }
-            }
-
-            if (StringUtils.isBlank(item.getAIsRight())) {
-                sb.append("第" + line + "行，选项是否正确不能为空<br>");
-            }
-
-            if (StringUtils.isBlank(item.getAContent()) && StringUtils.isBlank(item.getAImage())) {
-                sb.append("第" + line + "行，选项内容和选项图片必须有一个不为空<br>");
-            }
-
-            quNo = no;
-            line++;
-        }
-
-        // 存在错误
-        if (!"".equals(sb.toString())) {
-            throw new ServiceException(1, sb.toString());
+            return super.success(baseService.importExcel(list));
+        } catch (IOException | InvalidFormatException | IllegalAccessException | InstantiationException e) {
+            return super.failure();
         }
     }
 

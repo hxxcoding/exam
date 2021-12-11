@@ -6,6 +6,7 @@ package com.yf.exam.core.utils.excel;
 import com.google.common.collect.Lists;
 import com.yf.exam.core.utils.Reflections;
 import com.yf.exam.core.utils.excel.annotation.ExcelField;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -35,9 +36,8 @@ import java.util.List;
  * @author jeeplus
  * @version 2016-03-10
  */
+@Slf4j
 public class ImportExcel {
-	
-	private static Logger log = LoggerFactory.getLogger(ImportExcel.class);
 			
 	/**
 	 * 工作薄对象
