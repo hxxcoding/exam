@@ -113,7 +113,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
 		if (cacheToken == null) {
 			throw new AuthenticationException("登陆失效，请重试登陆!");
-		} else if (!cacheToken.toString().equals(token)) {
+		} else if (!cacheToken.toString().equals(token)) { // 缓存中的token已经被更新
 			throw new AuthenticationException("您的账号已在别处登录!");
 		}
 

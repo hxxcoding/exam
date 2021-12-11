@@ -163,20 +163,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         List<PaperQuDTO> judgeList = new ArrayList<>();
         List<PaperQuDTO> saqList = new ArrayList<>();
         List<PaperQuDTO> blankList = new ArrayList<>();
-        for(PaperQuDTO item: list){
-            if(QuType.RADIO.equals(item.getQuType())){
+        for (PaperQuDTO item: list) {
+            if (QuType.RADIO.equals(item.getQuType())) {
                 radioList.add(item);
-            }
-            if(QuType.MULTI.equals(item.getQuType())){
+            } else if (QuType.MULTI.equals(item.getQuType())) {
                 multiList.add(item);
-            }
-            if(QuType.JUDGE.equals(item.getQuType())){
+            } else if (QuType.JUDGE.equals(item.getQuType())) {
                 judgeList.add(item);
-            }
-            if(QuType.SAQ.equals(item.getQuType())){
+            } else if (QuType.SAQ.equals(item.getQuType())) {
                 saqList.add(item);
-            }
-            if(QuType.BLANK.equals(item.getQuType())){
+            } else if (QuType.BLANK.equals(item.getQuType())) {
                 blankList.add(item);
             }
         }
@@ -207,13 +203,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         return respDTO;
     }
 
-    //    @Cacheable // 查找题目已选答案 TODO
     @Override
     public PaperQuDetailDTO findQuDetail(String paperId, String quId) {
 
         PaperQuDetailDTO respDTO = new PaperQuDetailDTO();
         // 问题
-        Qu qu = quService.getById(quId);
+        Qu qu = quService.getById(quId); // cached
 
         // 基本信息
         PaperQu paperQu = paperQuService.findByKey(paperId, quId);
@@ -251,7 +246,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
                 // 单选题
                 if(item.getRadioCount() > 0){
-                    List<Qu> radioList = quService.listByRandom(item.getRepoId(), QuType.RADIO, level, excludes, item.getRadioCount());
+                    List<Qu> radioList = quService.listByRandom(item.getRepoId(), QuType.RADIO, level, excludes,
+                            item.getRadioCount());
                     for (Qu qu : radioList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -447,14 +443,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
-//    @CachePut
     public void fillAnswer(PaperAnswerDTO reqDTO) {
 
         //查找答案列表
         List<PaperQuAnswer> list = paperQuAnswerService.listForFill(reqDTO.getPaperId(), reqDTO.getQuId());
 
         //是否正确
-        boolean right = true;
+        boolean right;
 
         //更新正确答案
         if (reqDTO.getQuType().equals(QuType.BLANK)) { // 填空题判题
@@ -469,6 +464,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 }
             }
         } else {
+            right = true;
             for (PaperQuAnswer item : list) {
 
                 if (reqDTO.getAnswers().contains(item.getId())) {

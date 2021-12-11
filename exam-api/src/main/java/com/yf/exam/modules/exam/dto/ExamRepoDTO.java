@@ -55,7 +55,7 @@ public class ExamRepoDTO implements Serializable {
     private Integer saqScore;
 
     @ApiModelProperty(value = "填空题数量", required=true)
-    private Integer blankCount; // TODO
+    private Integer blankCount;
 
     @ApiModelProperty(value = "填空题分数", required=true)
     private Integer blankScore;
