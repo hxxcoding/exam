@@ -1,6 +1,7 @@
 package com.yf.exam.modules.shiro;
 
 
+import com.yf.exam.core.utils.RedisUtil;
 import com.yf.exam.modules.shiro.jwt.JwtToken;
 import com.yf.exam.modules.shiro.jwt.JwtUtils;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
@@ -105,6 +106,15 @@ public class ShiroRealm extends AuthorizingRealm {
 
 		if (username == null) {
 			throw new AuthenticationException("无效的token");
+		}
+
+		// 从缓存中获取当前登录的用户的token
+		Object cacheToken = RedisUtil.get(username);
+
+		if (cacheToken == null) {
+			throw new AuthenticationException("登陆失效，请重试登陆!");
+		} else if (!cacheToken.toString().equals(token)) {
+			throw new AuthenticationException("您的账号已在别处登录!");
 		}
 
 		// 查找登录用户对象

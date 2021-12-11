@@ -19,7 +19,7 @@ public class JwtUtils {
 	/**
 	 * 有效期24小时
 	 */
-	private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
+	public static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
 
 	/**
 	 * 使用固定的解密秘钥
@@ -46,10 +46,6 @@ public class JwtUtils {
 			return false;
 		}
 	}
-
-
-
-
 
 	/**
 	 * 从Token中解密获得用户名

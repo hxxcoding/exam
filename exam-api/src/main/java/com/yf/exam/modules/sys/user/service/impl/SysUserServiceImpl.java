@@ -12,6 +12,7 @@ import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.api.enums.CommonState;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
+import com.yf.exam.core.utils.RedisUtil;
 import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.core.utils.passwd.PassHandler;
 import com.yf.exam.core.utils.passwd.PassInfo;
@@ -29,7 +30,6 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -107,16 +107,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ServiceException(ApiError.ERROR_90010005);
         }
 
-        boolean check = PassHandler.checkPass(password,user.getSalt(), user.getPassword());
+        boolean check = PassHandler.checkPass(password, user.getSalt(), user.getPassword());
         if(!check){
             throw new ServiceException(ApiError.ERROR_90010002);
         }
-
-        return this.setToken(user);
+        SysUserLoginDTO sysUserLoginDTO = this.setToken(user);
+        RedisUtil.set(sysUserLoginDTO.getUserName(), sysUserLoginDTO.getToken(), JwtUtils.EXPIRE_TIME);
+        return sysUserLoginDTO;
     }
 
     @Override
-    @Cacheable
     public SysUserLoginDTO token(String token) {
 
         // 获得会话
