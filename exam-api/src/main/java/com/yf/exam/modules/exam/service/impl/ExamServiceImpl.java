@@ -1,5 +1,6 @@
 package com.yf.exam.modules.exam.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -213,6 +214,12 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
 
 
         reqDTO.setTotalScore(objScore);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public boolean update(Exam entity, Wrapper<Exam> updateWrapper) {
+        return super.update(entity, updateWrapper);
     }
 
 }

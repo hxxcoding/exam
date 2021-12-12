@@ -158,7 +158,7 @@ export default {
         // 删除请求URL
         deleteUrl: '/exam/api/exam/exam/delete',
         // 状态请求URL
-        stateUrl: '/exam/exam/state',
+        stateUrl: '/exam/api/exam/exam/state',
         addRoute: 'AddExam'
       }
     }

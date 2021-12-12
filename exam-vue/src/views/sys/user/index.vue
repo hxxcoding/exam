@@ -184,7 +184,7 @@ export default {
         // 列表请求URL
         listUrl: '/exam/api/sys/user/paging',
         // 启用禁用
-        stateUrl: '/sys/user/state',
+        stateUrl: '/exam/api/sys/user/state',
         deleteUrl: '/exam/api/sys/user/delete',
         // 批量操作列表
         multiActions: [
