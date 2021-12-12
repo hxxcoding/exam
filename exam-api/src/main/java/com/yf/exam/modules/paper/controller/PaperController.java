@@ -22,6 +22,7 @@ import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.user.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class PaperController extends BaseController {
     */
     @ApiOperation(value = "添加或修改")
     @RequestMapping(value = "/save", method = { RequestMethod.POST})
-    @RequiresRoles("sa")
+    @RequiresRoles(logical = Logical.OR, value = {"sa", "teacher"})
     public ApiRest<BaseIdRespDTO> save(@RequestBody PaperDTO reqDTO) {
         //复制参数
         Paper entity = new Paper();
@@ -69,8 +70,8 @@ public class PaperController extends BaseController {
     */
     @ApiOperation(value = "批量删除")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
-    @RequiresRoles("sa")
-    public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
+    @RequiresRoles(logical = Logical.OR, value = {"sa"})
+    public ApiRest deleteBatch(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
         baseService.removeByIds(reqDTO.getIds());
         return super.success();

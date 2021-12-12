@@ -37,7 +37,6 @@ import java.util.List;
 @Api(tags={"部门信息"})
 @RestController
 @RequestMapping("/exam/api/sys/depart")
-@RequiresRoles("sa")
 public class SysDepartController extends BaseController {
 
     @Autowired
@@ -50,6 +49,7 @@ public class SysDepartController extends BaseController {
     */
     @ApiOperation(value = "添加或修改")
     @RequestMapping(value = "/save", method = { RequestMethod.POST})
+    @RequiresRoles(logical = Logical.OR, value = {"sa", "teacher"})
     public ApiRest save(@RequestBody SysDepartDTO reqDTO) {
         baseService.save(reqDTO);
         return super.success();
@@ -62,6 +62,7 @@ public class SysDepartController extends BaseController {
     */
     @ApiOperation(value = "批量删除")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
+    @RequiresRoles(logical = Logical.OR, value = {"sa", "teacher"})
     public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
         baseService.removeByIds(reqDTO.getIds());
@@ -75,7 +76,6 @@ public class SysDepartController extends BaseController {
     */
     @ApiOperation(value = "查找详情")
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
-    @RequiresRoles(logical = Logical.OR, value = {"student", "sa"})
     public ApiRest<SysDepartDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         SysDepart entity = baseService.getById(reqDTO.getId());
         SysDepartDTO dto = new SysDepartDTO();

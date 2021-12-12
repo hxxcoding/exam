@@ -37,7 +37,7 @@ import java.util.Date;
 @Api(tags={"考试"})
 @RestController
 @RequestMapping("/exam/api/exam/exam")
-@RequiresRoles("sa")
+@RequiresRoles(logical = Logical.OR, value = {"sa", "teacher"})
 public class ExamController extends BaseController {
 
     @Autowired
@@ -49,7 +49,7 @@ public class ExamController extends BaseController {
     * @return
     */
     @ApiOperation(value = "添加或修改")
-    @RequestMapping(value = "/save", method = { RequestMethod.POST})
+    @RequestMapping(value = "/save", method = { RequestMethod.POST })
     public ApiRest save(@RequestBody ExamSaveReqDTO reqDTO) {
         //复制参数
         baseService.save(reqDTO);
@@ -62,7 +62,7 @@ public class ExamController extends BaseController {
     * @return
     */
     @ApiOperation(value = "批量删除")
-    @RequestMapping(value = "/delete", method = { RequestMethod.POST})
+    @RequestMapping(value = "/delete", method = { RequestMethod.POST })
     public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
         baseService.removeByIds(reqDTO.getIds());
@@ -76,18 +76,18 @@ public class ExamController extends BaseController {
     */
     @ApiOperation(value = "查找详情")
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
-    @RequiresRoles(logical = Logical.OR, value = {"sa", "student"})
+    @RequiresRoles(logical = Logical.OR, value = {"sa", "student", "teacher"})
     public ApiRest<ExamDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         ExamSaveReqDTO dto = baseService.findDetail(reqDTO.getId());
         return super.success(dto);
     }
 
     /**
-     * 查找详情
+     * 修改考试状态
      * @param reqDTO
      * @return
      */
-    @ApiOperation(value = "查找详情")
+    @ApiOperation(value = "修改考试状态")
     @RequestMapping(value = "/state", method = { RequestMethod.POST})
     public ApiRest state(@RequestBody BaseStateReqDTO reqDTO) {
 
@@ -109,7 +109,7 @@ public class ExamController extends BaseController {
      */
     @ApiOperation(value = "考试视角")
     @RequestMapping(value = "/online-paging", method = { RequestMethod.POST})
-    @RequiresRoles(logical = Logical.OR, value = {"sa", "student"})
+    @RequiresRoles(logical = Logical.OR, value = {"sa", "student", "teacher"})
     public ApiRest<IPage<ExamOnlineRespDTO>> myPaging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
 
         //分页查询并转换

@@ -23,6 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -50,7 +51,7 @@ import java.util.List;
 @Api(tags={"问题题目"})
 @RestController
 @RequestMapping("/exam/api/qu/qu")
-@RequiresRoles("sa")
+@RequiresRoles(logical = Logical.OR, value = {"sa", "teacher"})
 public class QuController extends BaseController {
 
     @Autowired

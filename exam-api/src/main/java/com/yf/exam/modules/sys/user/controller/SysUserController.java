@@ -162,27 +162,27 @@ public class SysUserController extends BaseController {
     }
 
 
-    /**
-     * 保存或修改系统用户
-     * @return
-     */
-    @ApiOperation(value = "学员注册")
-    @RequestMapping(value = "/reg", method = {RequestMethod.POST})
-    public ApiRest<SysUserLoginDTO> reg(@RequestBody SysUserDTO reqDTO) {
-        SysUserLoginDTO respDTO = baseService.reg(reqDTO);
-        return success(respDTO);
-    }
-
-    /**
-     * 快速注册，如果手机号存在则登录，不存在就注册
-     * @return
-     */
-    @ApiOperation(value = "快速注册")
-    @RequestMapping(value = "/quick-reg", method = {RequestMethod.POST})
-    public ApiRest<SysUserLoginDTO> quick(@RequestBody SysUserDTO reqDTO) {
-        SysUserLoginDTO respDTO = baseService.quickReg(reqDTO);
-        return success(respDTO);
-    }
+//    /**
+//     * 保存或修改系统用户
+//     * @return
+//     */
+//    @ApiOperation(value = "学员注册")
+//    @RequestMapping(value = "/reg", method = {RequestMethod.POST})
+//    public ApiRest<SysUserLoginDTO> reg(@RequestBody SysUserDTO reqDTO) {
+//        SysUserLoginDTO respDTO = baseService.reg(reqDTO);
+//        return success(respDTO);
+//    }
+//
+//    /**
+//     * 快速注册，如果手机号存在则登录，不存在就注册
+//     * @return
+//     */
+//    @ApiOperation(value = "快速注册")
+//    @RequestMapping(value = "/quick-reg", method = {RequestMethod.POST})
+//    public ApiRest<SysUserLoginDTO> quick(@RequestBody SysUserDTO reqDTO) {
+//        SysUserLoginDTO respDTO = baseService.quickReg(reqDTO);
+//        return success(respDTO);
+//    }
 
 
     /**
