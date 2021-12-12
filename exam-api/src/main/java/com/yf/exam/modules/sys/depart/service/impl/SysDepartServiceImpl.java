@@ -12,6 +12,7 @@ import com.yf.exam.modules.sys.depart.dto.response.SysDepartTreeDTO;
 import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.mapper.SysDepartMapper;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -61,6 +62,12 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     @CacheEvict(allEntries = true)
     public boolean removeByIds(Collection<? extends Serializable> idList) {
         return super.removeByIds(idList);
+    }
+
+    @Override
+    @Cacheable(sync = true)
+    public SysDepart getById(Serializable id) {
+        return super.getById(id);
     }
 
     @Override
