@@ -65,18 +65,6 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 
     @Override
     @Cacheable(sync = true)
-    public SysDepart getById(Serializable id) {
-        return super.getById(id);
-    }
-
-    @Override
-    @Cacheable(sync = true)
-    public SysDepart getOne(Wrapper<SysDepart> queryWrapper) {
-        return super.getOne(queryWrapper);
-    }
-
-    @Override
-    @Cacheable(sync = true)
     public IPage<SysDepartTreeDTO> paging(PagingReqDTO<SysDepartDTO> reqDTO) {
 
         // 创建分页对象

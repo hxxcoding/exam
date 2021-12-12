@@ -324,10 +324,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (CollectionUtils.isEmpty(list)) {
             throw new ServiceException(1, "您导入的数据似乎是一个空表格！");
         }
-
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         for (SysUserExportDTO item : list) {
-            SysUser user = this.getOne(new QueryWrapper<SysUser>()
-                    .lambda().eq(SysUser::getUserName, item.getUserName()));
+            wrapper.lambda().eq(SysUser::getUserName, item.getUserName());
+            SysUser user = this.getOne(wrapper);
             if (user != null) {
                 sb.append("第").append(line).append("行用户名已存在/");
             }

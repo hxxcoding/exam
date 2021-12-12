@@ -336,12 +336,6 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
     }
 
     @Override
-    @Cacheable
-    public Qu getById(Serializable id) {
-        return super.getById(id);
-    }
-
-    @Override
     @CacheEvict(allEntries = true)
     public boolean removeByIds(Collection<? extends Serializable> idList) {
         return super.removeByIds(idList);
