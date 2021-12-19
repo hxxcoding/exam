@@ -1,20 +1,20 @@
 
 # TODO
-* ExamController 考试的禁用和启用
-* wrapper 缓存失效j
+* wrapper 缓存失效
 * excel题型和题库设置成名称导入
 * 数据库 UNIQUE 字段
 * 设置考试/练习模式 考试模式没有'我的成绩'权限
 * 退出考试页面但未提交试卷 到时间自动交卷（计算分数）
 * ？考试次数限制 tryCount >  考试可以重复做吗？
-* 考试记录默认查询管理员所属部门的成员成绩
+* 考试记录默认查询管理员所属部门的成员成绩gg
 * 考试结束 自动提交已经保存的题目 如果用户没有点击交卷就退出考试 该怎么办？
-* 限制考试机器 (IP)
+* 限制考试机器 (IP) 通过日志系统
 * 操作日志 https://exam.yfhl.net/#/admin/sys/admin/sys/log
-* 权限过滤 ShiroConfig.java
-* 学生导入 注册时需要选择部门 注册之前要和对数据库是否存在该用户 用户管理增加部门
+* deal 权限过滤 ShiroConfig.java
+* deal 学生导入 注册时需要选择部门 注册之前要和对数据库是否存在该用户 用户管理增加部门
 * 多图片多文件支持
 * 错题功能是否需要删除
+* deal 后台定时任务自动交卷  
 * deal 考试页面水印
 * deal 个人信息显示所属部门
 * deal 开始考试全屏 bug 上传文件时退出全屏
@@ -87,9 +87,7 @@ SpringBoot / Redis / Shiro / Vue / MySQL
 
 
 # 环境要求
-JDK 1.8+  [点此下载](https://cdn.yfhl.net/java-win/jdk-8u181-windows-x64.exe)        
-Mysql5.7+  [点此下载](https://cdn.yfhl.net/java-win/mysql-installer-community-5.7.31.0.msi)  
-sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION    _BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 
 
 
@@ -99,36 +97,4 @@ sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION    
 3、请修改外置配置文件：application.properties 改成您自己的MySQL配置、上传文件的路径
 4、Windows通过start.bat运行，Linux运行start.sh运行    
 5、如果无意外，可通过：http://localhost:8101 访问到项目了    
-6、管理员账号密码：admin/admin 学员账号：person/person    
-
-
-# 其它支持
-
-网站：https://lp-exam.yfhl.net 
-
-QQ交流群：865330294 
-
-杨经理：     
-    邮箱：626264481@qq.com   
-    手机：18710213152 
-
-郭经理：     
-    邮箱：835487894@qq.com   
-    手机：18603038204
-
-
-
-
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1207/173238_e6c22c67_2189748.jpeg "17-32-10.jpg")
-![主界面](https://images.gitee.com/uploads/images/2020/1019/182239_4a87af30_2189748.jpeg "222.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/182532_04c42741_2189748.jpeg "444.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/182543_44dcc2d7_2189748.jpeg "555.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/182551_4d404492_2189748.jpeg "666.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/183109_fdc30de8_2189748.jpeg "777.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/183117_30b44530_2189748.jpeg "888.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/183023_2f3baeb9_2189748.jpeg "999.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/183032_f5016335_2189748.jpeg "1010.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/183040_38fd74ed_2189748.jpeg "1111.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1019/183047_a31619cd_2189748.jpeg "1212.jpg")
-
- 
+6、管理员账号密码：admin/admin 学员账号：person/person

@@ -53,6 +53,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
 * <p>
@@ -95,6 +97,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Autowired
     private UserExamService userExamService;
+
+    private static final Timer timer = new Timer();
+    private static final int delayMinutes = 1; // 默认考试结束后3分钟提交未交卷的试卷
 
     /**
      * 展示的选项，ABC这样
@@ -141,9 +146,20 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         }
 
         //保存试卷内容
-        String paperId = this.savePaper(userId, exam, quList);
-
-        return paperId;
+        Paper savedPaper = this.savePaper(userId, exam, quList);
+        String paperId = savedPaper.getId();
+        Calendar executeTime = Calendar.getInstance();
+        executeTime.setTime(savedPaper.getLimitTime());
+        executeTime.add(Calendar.MINUTE, delayMinutes);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    paperService.handExam(paperId);
+                } catch (ServiceException ignored) {}
+            }
+        }, executeTime.getTime());
+        return savedPaper.getId();
     }
 
     @Override
@@ -192,7 +208,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         // 试题基本信息
         Paper paper = paperService.getById(paperId);
-        if (!paper.getState().equals(PaperState.FINISHED)) { // 试卷未提交
+        if (paper.getState().equals(PaperState.ING)) { // 试卷未提交
             throw new ServiceException("试卷未提交,无法查看结果!");
         }
         BeanMapper.copy(paper, respDTO);
@@ -346,7 +362,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
      * @param quList
      * @return
      */
-    private String savePaper(String userId, ExamDTO exam, List<PaperQu> quList) {
+    private Paper savePaper(String userId, ExamDTO exam, List<PaperQu> quList) {
 
 
         // 查找用户
@@ -389,7 +405,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             this.savePaperQu(paper.getId(), quList);
         }
 
-        return paper.getId();
+        return paper;
     }
 
 
@@ -544,15 +560,15 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paperService.updateById(paper);
 
         //把打错的问题加入错题本
-        List<PaperQuDTO> list = paperQuService.listByPaper(paperId);
-        for(PaperQuDTO qu: list){
-            // 主观题和对的都不加入错题库
-            if(qu.getIsRight()){
-                continue;
-            }
-            //加入错题本
-            userBookService.addBook(paper.getExamId(), qu.getQuId());
-        }
+//        List<PaperQuDTO> list = paperQuService.listByPaper(paperId);
+//        for(PaperQuDTO qu: list){
+//            // 主观题和对的都不加入错题库
+//            if(qu.getIsRight()){
+//                continue;
+//            }
+//            //加入错题本
+//            userBookService.addBook(paper.getExamId(), qu.getQuId());
+//        }
     }
 
     @Transactional(rollbackFor = Exception.class)

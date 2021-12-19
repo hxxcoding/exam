@@ -552,4 +552,20 @@ public final class RedisUtil {
         }
 
     }
+
+    /**
+     * 移除key
+     *
+     * @param key   键
+     * @return 是否成功
+     */
+
+    public static boolean delete(String key) {
+        try {
+            return Boolean.TRUE.equals(redisTemplate.delete(key));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

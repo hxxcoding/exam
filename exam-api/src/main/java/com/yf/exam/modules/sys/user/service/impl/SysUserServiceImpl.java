@@ -114,7 +114,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ServiceException(ApiError.ERROR_90010002);
         }
         SysUserLoginDTO sysUserLoginDTO = this.setToken(user);
-        RedisUtil.set(sysUserLoginDTO.getUserName(), sysUserLoginDTO.getToken(), JwtUtils.EXPIRE_TIME);
+        RedisUtil.set(sysUserLoginDTO.getUserName(), sysUserLoginDTO.getToken(), JwtUtils.EXPIRE_TIME / 1000);
         return sysUserLoginDTO;
     }
 

@@ -64,11 +64,10 @@ public class SysUserController extends BaseController {
      * @return
      */
     @CrossOrigin
-    @ApiOperation(value = "用户登录")
+    @ApiOperation(value = "用户退出登录")
     @RequestMapping(value = "/logout", method = {RequestMethod.POST})
     public ApiRest logout(HttpServletRequest request) {
         String token = request.getHeader("token");
-        System.out.println("+++++当前会话为："+token);
         baseService.logout(token);
         return super.success();
     }
