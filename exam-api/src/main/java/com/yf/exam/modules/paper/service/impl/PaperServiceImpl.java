@@ -151,6 +151,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         Calendar executeTime = Calendar.getInstance();
         executeTime.setTime(savedPaper.getLimitTime());
         executeTime.add(Calendar.MINUTE, delayMinutes);
+
+        // 向timer队列中添加一个交卷任务 在executeTime执行
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -159,6 +161,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 } catch (ServiceException ignored) {}
             }
         }, executeTime.getTime());
+
         return savedPaper.getId();
     }
 

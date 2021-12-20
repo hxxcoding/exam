@@ -29,6 +29,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -222,4 +224,9 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
         return super.update(entity, updateWrapper);
     }
 
+    @Override
+    @CacheEvict(allEntries = true)
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        return super.removeByIds(idList);
+    }
 }

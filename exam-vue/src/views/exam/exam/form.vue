@@ -100,26 +100,6 @@
           </el-table-column>
 
           <el-table-column
-            label="操作题数量"
-            align="center"
-          >
-
-            <template slot-scope="scope">
-              <el-input-number v-model="scope.row.saqCount" :controls="false" style="width: 100%" />
-            </template>
-
-          </el-table-column>
-
-          <el-table-column
-            label="操作题分数"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <el-input-number v-model="scope.row.saqScore" :controls="false" style="width: 100%" />
-            </template>
-          </el-table-column>
-
-          <el-table-column
             label="填空数量"
             align="center"
           >
@@ -136,6 +116,26 @@
           >
             <template slot-scope="scope">
               <el-input-number v-model="scope.row.blankScore" :controls="false" style="width: 100%" />
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            label="操作数量"
+            align="center"
+          >
+
+            <template slot-scope="scope">
+              <el-input-number v-model="scope.row.saqCount" :controls="false" style="width: 100%" />
+            </template>
+
+          </el-table-column>
+
+          <el-table-column
+            label="操作分数"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-input-number v-model="scope.row.saqScore" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
 
@@ -184,7 +184,7 @@
           <el-checkbox v-model="postForm.timeLimit" />
         </el-form-item>
 
-        <el-form-item v-if="postForm.timeLimit" label="考试时间" prop="totalTime">
+        <el-form-item v-if="postForm.timeLimit" label="考试时间" prop="timeLimit">
 
           <el-date-picker
             v-model="dateValues"
@@ -196,6 +196,14 @@
             end-placeholder="结束时间"
           />
 
+        </el-form-item>
+
+        <el-form-item label="是否限次">
+          <el-checkbox v-model="postForm.tryLimit" />
+        </el-form-item>
+
+        <el-form-item v-if="postForm.tryLimit" label="限制次数" prop="tryLimit">
+          <el-input-number v-model="postForm.limitTimes" :min="1" :max="100" />
         </el-form-item>
 
       </el-form>
@@ -307,7 +315,7 @@ export default {
         ],
 
         content: [
-          { required: true, message: '考试名称不能为空！' }
+          { required: true, message: '考试内容不能为空！' }
         ],
 
         open: [
@@ -323,12 +331,21 @@ export default {
         ],
 
         totalTime: [
+          { required: true, message: '考试时长不能为空！' }
+        ],
+
+        timeLimit: [
           { required: true, message: '考试时间不能为空！' }
+        ],
+
+        tryLimit: [
+          { required: true, message: '次数限制不能为空！' }
         ],
 
         ruleId: [
           { required: true, message: '考试规则不能为空' }
         ],
+
         password: [
           { required: true, message: '考试口令不能为空！' }
         ]
