@@ -55,6 +55,20 @@
       </el-table-column>
 
       <el-table-column
+        label="次数限制"
+        align="center"
+      >
+
+        <template slot-scope="scope">
+          <span v-if="scope.row.tryLimit">
+            {{ scope.row.limitTimes }}
+          </span>
+          <span v-else>不限次</span>
+        </template>
+
+      </el-table-column>
+
+      <el-table-column
         label="考试时长"
         align="center"
       >
