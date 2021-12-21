@@ -79,6 +79,18 @@ public class Exam extends Model<Exam> {
     private Date endTime;
 
     /**
+     * 是否限次
+     */
+    @TableField("try_limit")
+    private Boolean tryLimit;
+
+    /**
+     * 限制次数
+     */
+    @TableField("limit_times")
+    private Integer limitTimes;
+
+    /**
      * 创建时间
      */
     @TableField("create_time")

@@ -15,7 +15,14 @@
 
           <div><strong>考试名称：</strong>{{ detailData.title }}</div>
           <div><strong>考试时长：</strong>{{ detailData.totalTime }}分钟</div>
-          <div><strong>考试时段：</strong>{{ detailData.startTime }} ~ {{ detailData.endTime }}</div>
+          <div><strong>考试时段：</strong>
+            <span v-if="detailData.timeLimit">{{ detailData.startTime }} ~ {{ detailData.endTime }}</span>
+            <span v-else>不限时</span>
+          </div>
+          <div><strong>次数限制：</strong>
+            <span v-if="detailData.tryLimit">{{ detailData.limitTimes }}</span>
+            <span v-else>不限次</span>
+          </div>
           <div><strong>试卷总分：</strong>{{ detailData.totalScore }}分</div>
           <div><strong>及格分数：</strong>{{ detailData.qualifyScore }}分</div>
           <div><strong>考试描述：</strong>{{ detailData.content }}</div>

@@ -61,6 +61,12 @@ public class ExamDTO implements Serializable {
     @ApiModelProperty(value = "结束时间", required=true)
     private Date endTime;
 
+    @ApiModelProperty(value = "是否限次", required=true)
+    private Boolean tryLimit;
+
+    @ApiModelProperty(value = "限制次数", required=true)
+    private Integer limitTimes;
+
     @ApiModelProperty(value = "创建时间", required=true)
     private Date createTime;
 

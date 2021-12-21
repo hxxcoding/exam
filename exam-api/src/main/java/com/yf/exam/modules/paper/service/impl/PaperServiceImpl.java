@@ -38,6 +38,7 @@ import com.yf.exam.modules.qu.service.QuService;
 import com.yf.exam.modules.sys.user.entity.SysUser;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.book.service.UserBookService;
+import com.yf.exam.modules.user.exam.entity.UserExam;
 import com.yf.exam.modules.user.exam.service.UserExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -124,6 +125,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 .eq(Paper::getExamId, examId)
                 .eq(Paper::getState, 0));
 
+        // 判断考试次数是否达到上限
+        if (exam.getTryLimit()) {
+            UserExam userExam = userExamService.getOne(new QueryWrapper<UserExam>()
+                    .lambda()
+                    .eq(UserExam::getExamId, exam.getId())
+                    .eq(UserExam::getUserId, userId));
+            if (userExam.getTryCount() >= exam.getLimitTimes()) {
+                throw new ServiceException(1, "考试次数达到上限！");
+            }
+        }
         if (paper != null) {
             return paper.getId();
         }
