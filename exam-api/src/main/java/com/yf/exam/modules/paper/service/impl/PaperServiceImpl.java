@@ -131,7 +131,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     .lambda()
                     .eq(UserExam::getExamId, exam.getId())
                     .eq(UserExam::getUserId, userId));
-            if (userExam.getTryCount() >= exam.getLimitTimes()) {
+            if (userExam != null && userExam.getTryCount() >= exam.getLimitTimes()) {
                 throw new ServiceException(1, "考试次数达到上限！");
             }
         }

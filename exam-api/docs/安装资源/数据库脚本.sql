@@ -32,8 +32,6 @@ CREATE TABLE `el_exam` (
   `time_limit` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否限时',
   `start_time` datetime DEFAULT NULL COMMENT '开始时间',
   `end_time` datetime DEFAULT NULL COMMENT '结束时间',
-  `try_limit` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否限次',
-  `limit_times` int(11) DEFAULT NULL COMMENT '限制次数',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `total_score` int(11) NOT NULL DEFAULT '0' COMMENT '总分数',
