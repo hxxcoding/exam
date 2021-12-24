@@ -1,13 +1,13 @@
 <template>
 
-  <div v-visibility-change="visibleChange" class="app-container">
+  <div class="app-container">
 
     <el-row :gutter="24">
 
       <el-col :span="24">
         <el-card style="margin-bottom: 10px">
 
-          距离考试结束还有：<span style="color: #ff0000;">{{ hour }}时{{ min }}分{{ sec }}秒</span>
+          距离考试结束还有：<exam-timer v-model="paperData.leftSeconds" @timeout="doHandler()" />
           <el-button style="float: right; margin-top: -10px" type="warning" icon="el-icon-plus" :loading="loading" @click="handHandExam()">
             {{ handleText }}
           </el-button>
@@ -148,13 +148,14 @@
 import { paperDetail, quDetail, handExam, fillAnswer } from '@/api/paper/exam'
 import { Loading } from 'element-ui'
 import FileUpload from '@/components/FileUpload'
+import ExamTimer from '@/components/ExamTimer'
 import { setWaterMark, removeWatermark } from '@/utils/watermark'
 import { mapGetters } from 'vuex'
 import screenfull from 'screenfull'
 
 export default {
   name: 'ExamProcess',
-  components: { FileUpload },
+  components: { FileUpload, ExamTimer },
   data() {
     return {
       // 全屏/不全屏
@@ -189,10 +190,7 @@ export default {
       // 操作题答案（文件路径）
       answer: '',
       // 已答ID
-      answeredIds: [],
-      hour: '00',
-      min: '00',
-      sec: '00'
+      answeredIds: []
     }
   },
   computed: {
@@ -226,30 +224,6 @@ export default {
 
     beforeUnloadHandler(e) {
       e.returnValue = '离开此页面？' // 此处返回任意字符串，不返回null即可，不能修改默认提示内容
-    },
-    // 倒计时
-    countdown() {
-      const leftSeconds = this.paperData.leftSeconds
-
-      // 强制交卷
-      if (leftSeconds < 0) {
-        this.doHandler()
-        return
-      }
-
-      // 时
-      const hour = parseInt(leftSeconds / 3600)
-      const min = parseInt(leftSeconds / 60 % 60)
-      const sec = parseInt(leftSeconds % 60)
-
-      this.hour = hour > 9 ? hour : '0' + hour
-      this.min = min > 9 ? min : '0' + min
-      this.sec = sec > 9 ? sec : '0' + sec
-      const that = this
-      this.paperData.leftSeconds -= 1
-      setTimeout(function() {
-        that.countdown()
-      }, 1000)
     },
 
     // 答题卡样式
@@ -497,9 +471,6 @@ export default {
 
         // 当前选定
         this.fetchQuData(this.cardItem)
-
-        // 倒计时
-        this.countdown()
       })
     }
 
