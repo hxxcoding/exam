@@ -20,6 +20,7 @@ public class MybatisConfig {
      */
     @Bean
     public QueryInterceptor queryInterceptor() {
+        // setLimit(500L) 设置最大单页限制数量，默认 500 条，-1 不受限制
         return new QueryInterceptor();
     }
 
