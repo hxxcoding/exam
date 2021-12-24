@@ -11,6 +11,7 @@ import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.modules.enums.JoinType;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.ExamRepoDTO;
+import com.yf.exam.modules.exam.dto.ext.ExamRepoExtDTO;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
 import com.yf.exam.modules.paper.dto.PaperQuDTO;
@@ -262,7 +263,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     private List<PaperQu> generateByRepo(String examId, Integer level){
 
         // 查找规则指定的题库
-        List<ExamRepoDTO> list = examRepoService.listByExam(examId);
+        List<ExamRepoExtDTO> list = examRepoService.listByExam(examId);
 
         //最终的题目列表
         List<PaperQu> quList = new ArrayList<>();
@@ -272,7 +273,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         excludes.add("none");
 
         if (!CollectionUtils.isEmpty(list)) {
-            for (ExamRepoDTO item : list) {
+            for (ExamRepoExtDTO item : list) {
 
                 // 单选题
                 if(item.getRadioCount() > 0){
@@ -381,7 +382,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         // 查找用户
         SysUser user = sysUserService.getById(userId);
-        List<ExamRepoDTO> lists = examRepoService.listByExam(exam.getId());
         //保存试卷基本信息
         Paper paper = new Paper();
         paper.setDepartId(user.getDepartId());
@@ -396,12 +396,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paper.setQualifyScore(exam.getQualifyScore());
         paper.setState(PaperState.ING);
         paper.setHasSaq(false);
-        for (ExamRepoDTO list : lists) {
-            if (list.getSaqCount() > 0) {
-                paper.setHasSaq(true);
-                break;
-            }
-        }
 
         // 截止时间
         Calendar cl = Calendar.getInstance();

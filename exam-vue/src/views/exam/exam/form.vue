@@ -8,17 +8,17 @@
 
       <div>
 
-        <div style="margin-bottom: 20px">
-          <el-select v-model="postForm.level" class="filter-item" placeholder="选择难度等级" clearable="">
-            <el-option
-              v-for="item in levels"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+        <!--        <div style="margin-bottom: 20px">-->
+        <!--          <el-select v-model="postForm.level" class="filter-item" placeholder="选择难度等级" clearable="">-->
+        <!--            <el-option-->
+        <!--              v-for="item in levels"-->
+        <!--              :key="item.value"-->
+        <!--              :label="item.label"-->
+        <!--              :value="item.value"-->
+        <!--            />-->
+        <!--          </el-select>-->
 
-        </div>
+        <!--        </div>-->
 
         <el-button class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleAdd">
           添加题库
@@ -35,7 +35,7 @@
             width="200"
           >
             <template slot-scope="scope">
-              <repo-select v-model="scope.row.repoId" :multi="false" />
+              <repo-select v-model="scope.row.repoId" :multi="false" @change="repoChange($event, scope.row)" />
             </template>
 
           </el-table-column>
@@ -45,7 +45,7 @@
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.radioCount" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.radioCount" :min="0" :max="scope.row.totalRadio" :controls="false" style="width: 100%" :placeholder="scope.row.totalRadio" />
             </template>
 
           </el-table-column>
@@ -55,7 +55,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.radioScore" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.radioScore" :min="0" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
 
@@ -65,7 +65,7 @@
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.multiCount" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.multiCount" :min="0" :max="scope.row.totalMulti" :controls="false" style="width: 100%" :placeholder="scope.row.totalMulti" />
             </template>
 
           </el-table-column>
@@ -75,7 +75,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.multiScore" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.multiScore" :min="0" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
 
@@ -85,7 +85,7 @@
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.judgeCount" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.judgeCount" :min="0" :max="scope.row.totalJudge" :controls="false" style="width: 100%" :placeholder="scope.row.totalJudge" />
             </template>
 
           </el-table-column>
@@ -95,7 +95,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.judgeScore" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.judgeScore" :min="0" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
 
@@ -105,7 +105,7 @@
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.blankCount" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.blankCount" :min="0" :max="scope.row.totalBlank" :controls="false" style="width: 100%" :placeholder="scope.row.totalBlank" />
             </template>
 
           </el-table-column>
@@ -115,7 +115,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.blankScore" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.blankScore" :min="0" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
 
@@ -125,7 +125,7 @@
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.saqCount" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.saqCount" :min="0" :max="scope.row.totalSaq" :controls="false" style="width: 100%" :placeholder="scope.row.totalSaq" />
             </template>
 
           </el-table-column>
@@ -135,7 +135,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.saqScore" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.saqScore" :min="0" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
 
@@ -510,7 +510,7 @@ export default {
 
     // 添加子项
     handleAdd() {
-      this.repoList.push({ radioCount: 0, radioScore: 0, multiCount: 0, multiScore: 0, judgeCount: 0, judgeScore: 0, saqCount: 0, saqScore: 0, blankCount: 0, blankScore: 0 })
+      this.repoList.push({ rowId: new Date().getTime(), radioCount: 0, radioScore: 0, multiCount: 0, multiScore: 0, judgeCount: 0, judgeScore: 0, saqCount: 0, saqScore: 0, blankCount: 0, blankScore: 0 })
     },
 
     removeItem(index) {
@@ -562,6 +562,22 @@ export default {
     filterNode(value, data) {
       if (!value) return true
       return data.deptName.indexOf(value) !== -1
+    },
+
+    repoChange(e, row) {
+      if (e != null) {
+        row.totalRadio = e.radioCount
+        row.totalMulti = e.multiCount
+        row.totalJudge = e.judgeCount
+        row.totalBlank = e.blankCount
+        row.totalSaq = e.saqCount
+      } else {
+        row.totalRadio = 0
+        row.totalMulti = 0
+        row.totalJudge = 0
+        row.totalBlank = 0
+        row.totalSaq = 0
+      }
     }
 
   }

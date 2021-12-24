@@ -77,7 +77,7 @@ public class ExamController extends BaseController {
     @ApiOperation(value = "查找详情")
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
     @RequiresRoles(logical = Logical.OR, value = {"sa", "student", "teacher"})
-    public ApiRest<ExamDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
+    public ApiRest<ExamSaveReqDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         ExamSaveReqDTO dto = baseService.findDetail(reqDTO.getId());
         return super.success(dto);
     }
