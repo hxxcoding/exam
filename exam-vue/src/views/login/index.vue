@@ -149,18 +149,6 @@ export default {
       this.$router.push({ name: 'Register' })
     },
 
-    studentLogin() {
-      this.loginForm.username = 'person'
-      this.loginForm.password = 'person'
-      this.handleLogin()
-    },
-
-    adminLogin() {
-      this.loginForm.username = 'admin'
-      this.loginForm.password = 'admin'
-      this.handleLogin()
-    },
-
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {

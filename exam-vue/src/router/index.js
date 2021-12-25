@@ -81,14 +81,6 @@ export const constantRoutes = [
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: '控制台', icon: 'dashboard', affix: true }
-      },
-
-      {
-        path: 'qu/view/:id',
-        component: () => import('@/views/qu/qu/view'),
-        name: 'ViewQu',
-        meta: { title: '题目详情', noCache: true, activeMenu: '/manage/qu' },
-        hidden: true
       }
     ]
   },
