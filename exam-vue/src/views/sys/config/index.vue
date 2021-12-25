@@ -11,13 +11,13 @@
 
         <!-- 有需求可自行重构、接口有前后端LOGO -->
 
-<!--        <el-form-item label="后台LOGO">-->
-<!--          <single-upload v-model="postForm.backLogo" />-->
-<!--        </el-form-item>-->
+        <el-form-item label="系统LOGO">
+          <file-upload v-model="postForm.backLogo" />
+        </el-form-item>
 
-<!--        <el-form-item label="前端LOGO">-->
-<!--          <single-upload v-model="postForm.frontLogo" />-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="前端LOGO">-->
+        <!--          <single-upload v-model="postForm.frontLogo" />-->
+        <!--        </el-form-item>-->
 
         <el-row>
           <el-button type="primary" @click="submitForm">保存</el-button>
@@ -32,9 +32,11 @@
 
 <script>
 import { fetchDetail, saveData } from '@/api/sys/config/config'
+import FileUpload from '@/components/FileUpload'
 
 export default {
   name: 'Config',
+  components: { FileUpload },
   data() {
     return {
       postForm: {
