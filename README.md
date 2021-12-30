@@ -51,15 +51,8 @@
 * 事务支持
 * 试卷创建页面 表单提交 限时 / 次数bug
 
-# 项目演示
-开源版本：https://lite.yfhl.net  
-管理账号：admin/admin ~~~~学员账号：person/person   
-
-商业版本：https://lp-exam.yfhl.net
-
 # 介绍
 一款多角色在线培训考试系统，系统集成了用户管理、角色管理、部门管理、题库管理、试题管理、试题导入导出、考试管理、在线考试、错题训练等功能，考试流程完善。
-
 
 # 技术栈
 SpringBoot / Redis / Shiro / Vue / MySQL
@@ -80,21 +73,14 @@ SpringBoot / Redis / Shiro / Vue / MySQL
 
 ## 多题型：常用题型支持    
 支持题型：单选题、多选题、判断题 + 判断题 + 操作题(not complete)。    
-难易程度：普通、困难。    
-
-## 便捷组卷：题库组卷    
-题库组卷：指定题库、分数、数量；题目、选项随机排序、杜绝作弊    
-
 
 # 环境要求
 sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 
-
-
 # 快速运行
-1、自行安装MySQL数据库（版本最好大于5.7），将`安装资源中`的`数据库初始化.sql`导入到安装好的数据库    
-2、安装Java环境，要求JDK版本大于1.7    
-3、请修改外置配置文件：application.properties 改成您自己的MySQL配置、上传文件的路径
-4、Windows通过start.bat运行，Linux运行start.sh运行    
+1、自行安装MySQL数据库（版本5.7），将`安装资源中`的`数据库初始化.sql`导入到安装好的数据库    
+2、安装Java环境，要求JDK版本1.8   
+3、请修改外置配置文件：application.properties 上传文件的路径
+4、添加环境变量 MYSQL_PASSWORD  
 5、如果无意外，可通过：http://localhost:8101 访问到项目了    
 6、管理员账号密码：admin/admin 学员账号：person/person
