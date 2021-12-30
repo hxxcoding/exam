@@ -19,7 +19,7 @@ public class JwtUtils {
 	/**
 	 * 有效期24小时
 	 */
-	public static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
+	private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
 
 	/**
 	 * 使用固定的解密秘钥
@@ -83,5 +83,9 @@ public class JwtUtils {
 	 */
 	private static String encryptSecret(String userName){
 		return  MD5Util.MD5(userName + "&" + SECRET);
+	}
+
+	public static long getExpireTime() {
+		return EXPIRE_TIME;
 	}
 }
