@@ -67,7 +67,7 @@
       <el-col :span="18" :xs="24">
 
         <el-card class="qu-content">
-          <p v-if="quData.content">{{ quData.sort + 1 }}.{{ quData.content }}</p>
+          <p v-if="quData.content">{{ quData.sort + 1 }}.<span v-html="quData.content" /></p>
           <div v-if="quData.image!=null && quData.image!==''">
             <el-image :src="quData.image" style="max-width:100%;">
               <div slot="error" class="image-slot">

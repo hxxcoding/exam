@@ -38,7 +38,7 @@
         </el-form-item>
 
         <el-form-item label="题目内容" prop="content">
-          <el-input v-model="postForm.content" type="textarea" />
+          <tinymce-editor v-model="postForm.content" />
         </el-form-item>
 
         <el-form-item label="试题图片(附件)">
@@ -134,10 +134,11 @@
 import { fetchDetail, saveData } from '@/api/qu/qu'
 import RepoSelect from '@/components/RepoSelect'
 import FileUpload from '@/components/FileUpload'
+import TinymceEditor from '@/components/TinymceEditor'
 
 export default {
   name: 'QuDetail',
-  components: { FileUpload, RepoSelect },
+  components: { FileUpload, RepoSelect, TinymceEditor },
   data() {
     return {
 
