@@ -4,17 +4,21 @@
     <h2 class="text-center">{{ paperData.title }}</h2>
     <p class="text-center" style="color: #666">{{ paperData.createTime }}</p>
 
-    <el-row :gutter="24" style="margin-top: 50px">
+    <el-row :gutter="24" style="margin-top: 30px">
 
-      <el-col :span="8" class="text-center">
+      <el-col :span="6" class="text-center">
         考生姓名：{{ paperData.userId_dictText }}
       </el-col>
 
-      <el-col :span="8" class="text-center">
+      <el-col :span="6" class="text-center">
+        考生班级：{{ paperData.departId_dictText }}
+      </el-col>
+
+      <el-col :span="6" class="text-center">
         考试用时：{{ paperData.userTime }}分钟
       </el-col>
 
-      <el-col :span="8" class="text-center">
+      <el-col :span="6" class="text-center">
         考试得分：{{ paperData.userScore }}
       </el-col>
 
@@ -199,6 +203,7 @@ export default {
       paperResult(params).then(response => {
         // 试卷内容
         this.paperData = response.data
+        console.log(this.paperData)
 
         // 填充该题目的答案
         this.paperData.quList.forEach((item) => {
