@@ -31,17 +31,24 @@ export default {
         language_url: '/tinymce/langs/zh_CN.js', // 语言包的路径
         language: 'zh_CN', // 语言
         skin_url: '/tinymce/skins/ui/oxide', // skin路径
-        height: 250, // 编辑器高度
+        height: 150, // 编辑器高度
         branding: false, // 是否禁用“Powered by TinyMCE”
-        menubar: false, // 顶部菜单栏显示
-        elementpath: false, // 禁用编辑器底部的状态栏
         paste_data_images: true, // 允许粘贴图像
-        plugins: ['image', 'link', 'code', 'preview'],
-        toolbar: ['formatselect | bold italic | alignleft aligncenter alignright alignjustify |bullist numlist outdent indent | lists image media table | removeformat link | code preview'],
+        plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media kityformula-editor template code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount imagetools textpattern help emoticons autosave bdmap indent2em autoresize formatpainter axupimgs',
+        toolbar: 'code preview |' +
+          ' fullscreen |' +
+          ' forecolor backcolor bold italic underline strikethrough link anchor |' +
+          ' alignleft aligncenter alignright alignjustify outdent indent |' +
+          ' table image link |' +
+          ' styleselect formatselect fontselect fontsizeselect |' +
+          ' bullist numlist |' +
+          ' blockquote subscript superscript removeformat |' +
+          ' kityformula-editor charmap emoticons hr pagebreak insertdatetime print |' +
+          ' bdmap indent2em lineheight formatpainter axupimgs',
         images_upload_handler: (blobInfo, success, failure) => {
-          const formdata = new FormData()
-          formdata.set('file', blobInfo.blob())
-          uploadFile(formdata).then(res => {
+          const formData = new FormData()
+          formData.set('file', blobInfo.blob())
+          uploadFile(formData).then(res => {
             success(res.data.url)
           }).catch(res => {
             failure('error')

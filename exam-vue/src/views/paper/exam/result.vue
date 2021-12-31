@@ -24,7 +24,7 @@
 
       <div v-for="item in paperData.quList" :key="item.id" class="qu-content">
 
-        <p>{{ item.sort + 1 }}.{{ item.content }}（分值：{{ item.score }}）</p>
+        <p>{{ item.sort + 1 }}.<span v-html="item.content" />（分值：{{ item.score }}）</p>
         <div v-if="item.image!=null && item.image!=''">
           <el-image :src="item.image" style="max-width:100%;">
             <div slot="error" class="image-slot">
