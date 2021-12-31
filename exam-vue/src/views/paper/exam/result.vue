@@ -2,7 +2,7 @@
   <div class="app-container">
 
     <h2 class="text-center">{{ paperData.title }}</h2>
-    <p class="text-center" style="color: #666">{{ paperData.createTime }}</p>
+    <p class="text-center" style="color: #666">{{ paperData.createTime }} ~ {{ paperData.updateTime }}</p>
 
     <el-row :gutter="24" style="margin-top: 30px">
 
