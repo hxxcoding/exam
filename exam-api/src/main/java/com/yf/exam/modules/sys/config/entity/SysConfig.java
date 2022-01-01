@@ -44,5 +44,11 @@ public class SysConfig extends Model<SysConfig> {
      */
     @TableField("back_logo")
     private String backLogo;
+
+    /**
+     * 系统通知
+     */
+    @TableField("site_notice")
+    private String siteNotice;
     
 }

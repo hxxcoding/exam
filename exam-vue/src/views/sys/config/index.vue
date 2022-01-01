@@ -9,6 +9,10 @@
           <el-input v-model="postForm.siteName" placeholder="系统显示名称" />
         </el-form-item>
 
+        <el-form-item label="系统通知">
+          <tinymce-editor v-model="postForm.siteNotice" />
+        </el-form-item>
+
         <!-- 有需求可自行重构、接口有前后端LOGO -->
 
         <el-form-item label="系统LOGO">
@@ -33,10 +37,11 @@
 <script>
 import { fetchDetail, saveData } from '@/api/sys/config/config'
 import FileUpload from '@/components/FileUpload'
+import TinymceEditor from '@/components/TinymceEditor'
 
 export default {
   name: 'Config',
-  components: { FileUpload },
+  components: { TinymceEditor, FileUpload },
   data() {
     return {
       postForm: {
