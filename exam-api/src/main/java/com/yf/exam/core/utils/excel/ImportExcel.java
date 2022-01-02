@@ -11,13 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -133,7 +128,7 @@ public class ImportExcel {
 		try {
 			Cell cell = row.getCell(column);
 			if (cell != null) {
-				if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+				if (cell.getCellType() == CellType.NUMERIC) {
 					// 当excel 中的数据为数值或日期是需要特殊处理
 					if (HSSFDateUtil.isCellDateFormatted(cell)) {
 						double d = cell.getNumericCellValue();
@@ -146,13 +141,13 @@ public class ImportExcel {
 						nf.setGroupingUsed(false);// true时的格式：1,234,567,890
 						val = nf.format(cell.getNumericCellValue());// 数值类型的数据为double，所以需要转换一下
 					}
-				} else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+				} else if (cell.getCellType() == CellType.STRING) {
 					val = cell.getStringCellValue();
-				} else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+				} else if (cell.getCellType() == CellType.FORMULA) {
 					val = cell.getCellFormula();
-				} else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
+				} else if (cell.getCellType() == CellType.BOOLEAN) {
 					val = cell.getBooleanCellValue();
-				} else if (cell.getCellType() == Cell.CELL_TYPE_ERROR) {
+				} else if (cell.getCellType() == CellType.ERROR) {
 					val = cell.getErrorCellValue();
 				}
 			}
