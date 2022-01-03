@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yf.exam.ability.Constant;
+import com.yf.exam.ability.upload.service.UploadService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.StringUtils;
+import com.yf.exam.core.utils.poi.WordUtils;
 import com.yf.exam.modules.enums.JoinType;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.ExamRepoDTO;
@@ -33,7 +36,9 @@ import com.yf.exam.modules.paper.service.PaperQuService;
 import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.qu.entity.Qu;
 import com.yf.exam.modules.qu.entity.QuAnswer;
+import com.yf.exam.modules.qu.entity.QuAnswerOffice;
 import com.yf.exam.modules.qu.enums.QuType;
+import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuAnswerService;
 import com.yf.exam.modules.qu.service.QuService;
 import com.yf.exam.modules.sys.user.entity.SysUser;
@@ -92,13 +97,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     private PaperQuAnswerService paperQuAnswerService;
 
     @Autowired
-    private UserBookService userBookService;
+    private UploadService uploadService;
 
     @Autowired
     private ExamRepoService examRepoService;
 
     @Autowired
     private UserExamService userExamService;
+
+    @Autowired
+    private QuAnswerOfficeService quAnswerOfficeService;
 
     private static final Timer timer = new Timer();
     private static final int delayMinutes = 1; // 默认考试结束后3分钟提交未交卷的试卷
@@ -473,11 +481,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         List<PaperQuAnswer> list = paperQuAnswerService.listForFill(reqDTO.getPaperId(), reqDTO.getQuId());
 
         //是否正确
-        boolean right;
+        boolean right = false;
 
+        PaperQu paperQu = paperQuService.getOne(new QueryWrapper<PaperQu>().lambda()
+                .eq(PaperQu::getPaperId, reqDTO.getPaperId())
+                .eq(PaperQu::getQuId, reqDTO.getQuId()));
         //更新正确答案
         if (reqDTO.getQuType().equals(QuType.BLANK)) { // 填空题判题
-            right = false;
             QuAnswer quAnswer = quAnswerService.getOne(new QueryWrapper<QuAnswer>()
                     .lambda().eq(QuAnswer::getQuId, reqDTO.getQuId()));
             String[] answers = quAnswer.getContent().split(";");
@@ -487,40 +497,50 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     break;
                 }
             }
+        } else if (reqDTO.getQuType().equals(QuType.SAQ)) {
+            // 操作题判分
+            right = true;
+            String answerFileUrl = reqDTO.getAnswer();
+            String realPath = uploadService.getRealPath(answerFileUrl.substring(answerFileUrl.indexOf(Constant.FILE_PREFIX)));
+            WordUtils docx = new WordUtils(realPath);
+            List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list();
+            int totalScore = 0;
+            for (QuAnswerOffice officeAnswer : officeAnswers) {
+                Object userAnswer = docx.executeMethod(officeAnswer.getMethod(), officeAnswer.getPos());
+                if (userAnswer != null && officeAnswer.getAnswer().equals(userAnswer.toString())) {
+                    totalScore += officeAnswer.getScore();
+                }
+            }
+            paperQu.setActualScore(totalScore);
         } else {
             right = true;
             for (PaperQuAnswer item : list) {
 
-                if (reqDTO.getAnswers().contains(item.getId())) {
-                    item.setChecked(true);
-                } else {
-                    item.setChecked(false);
-                }
+                item.setChecked(reqDTO.getAnswers().contains(item.getId()));
 
                 //有一个对不上就是错的
                 if (item.getIsRight() != null && !item.getIsRight().equals(item.getChecked())) {
                     right = false;
-                }
+                } // TODO 少选得一半 错选不得分
                 paperQuAnswerService.updateById(item);
             }
-        } // TODO 操作题判分
+        }
 
         //修改为已回答
-        PaperQu qu = new PaperQu();
-        qu.setQuId(reqDTO.getQuId());
-        qu.setPaperId(reqDTO.getPaperId());
-        qu.setIsRight(right);
-        qu.setAnswer(reqDTO.getAnswer());
-        qu.setAnswered(true);
+        paperQu.setQuId(reqDTO.getQuId());
+        paperQu.setPaperId(reqDTO.getPaperId());
+        paperQu.setIsRight(right);
+        paperQu.setAnswer(reqDTO.getAnswer());
+        paperQu.setAnswered(true);
 
 
         // 未作答
         if(CollectionUtils.isEmpty(reqDTO.getAnswers())
                 && StringUtils.isBlank(reqDTO.getAnswer())){
-            qu.setAnswered(false);
+            paperQu.setAnswered(false);
         }
 
-        paperQuService.updateByKey(qu);
+        paperQuService.updateById(paperQu);
 
     }
 

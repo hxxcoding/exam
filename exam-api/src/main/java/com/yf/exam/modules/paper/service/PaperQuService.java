@@ -42,12 +42,6 @@ public interface PaperQuService extends IService<PaperQu> {
     PaperQu findByKey(String paperId, String quId);
 
     /**
-     * 根据组合索引更新
-     * @param qu
-     */
-    void updateByKey(PaperQu qu);
-
-    /**
      * 统计客观分
      * @param paperId
      * @return

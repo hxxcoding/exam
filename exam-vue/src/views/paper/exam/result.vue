@@ -79,7 +79,7 @@
         <div v-if="item.quType === 4">
           <el-row :gutter="24">
             <el-col :span="12">
-              回答：
+              回答：<span>(得分: {{ item.actualScore }}分)</span>
               <div v-if="item.answer!=null && item.answer!==''">
                 <el-image :src="item.answer" style="max-width:100%;">
                   <div slot="error" class="image-slot">

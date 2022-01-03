@@ -115,6 +115,7 @@ public class UploadServiceImpl implements UploadService {
      * @param uri
      * @return
      */
+    @Override
     public String getRealPath(String uri){
 
         String regx = Constant.FILE_PREFIX+"(.*)";

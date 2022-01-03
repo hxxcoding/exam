@@ -1,5 +1,7 @@
 
 # TODO
+* excel ppt 判分
+* 操作题的上传
 * wrapper 缓存失效
 * excel题型和题库设置成名称导入
 * 数据库 UNIQUE 字段

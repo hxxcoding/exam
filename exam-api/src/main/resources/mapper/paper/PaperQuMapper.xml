@@ -28,7 +28,6 @@
 		FROM el_paper_qu
 		WHERE paper_id=#{paperId}
 		AND is_right=true
-		AND qu_type &lt;&gt; 4
 	</select>
 
     <select id="sumSubjective" resultType="int">

@@ -67,17 +67,6 @@ public class PaperQuServiceImpl extends ServiceImpl<PaperQuMapper, PaperQu> impl
     }
 
     @Override
-    public void updateByKey(PaperQu qu) {
-
-        //查询条件
-        QueryWrapper<PaperQu> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(PaperQu::getPaperId, qu.getPaperId())
-                .eq(PaperQu::getQuId, qu.getQuId());
-
-        this.update(qu, wrapper);
-    }
-
-    @Override
     public int sumObjective(String paperId) {
         return baseMapper.sumObjective(paperId);
     }
