@@ -4,9 +4,6 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 public class WordUtils {
 
@@ -14,7 +11,9 @@ public class WordUtils {
 
     public WordUtils(String filePath) {
         try {
-            xwpfDocument = new XWPFDocument(new FileInputStream(filePath));
+            FileInputStream fis = new FileInputStream(filePath);
+            xwpfDocument = new XWPFDocument(fis);
+            fis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
