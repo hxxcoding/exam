@@ -11,16 +11,10 @@ import java.util.Map;
 public class WordUtils {
 
     private XWPFDocument xwpfDocument;
-    private Map<String, Method> methodMap;
 
     public WordUtils(String filePath) {
         try {
             xwpfDocument = new XWPFDocument(new FileInputStream(filePath));
-            methodMap = new HashMap<>();
-            Method[] methods = this.getClass().getMethods();
-            for (Method method : methods) {
-                methodMap.put(method.getName(), method);
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
