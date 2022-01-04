@@ -69,6 +69,24 @@ public class Repo extends Model<Repo> {
     @TableField("blank_count")
     private Integer blankCount;
 
+    /**
+     * 填空数量
+     */
+    @TableField("word_count")
+    private Integer wordCount;
+
+    /**
+     * 填空数量
+     */
+    @TableField("excel_count")
+    private Integer excelCount;
+
+    /**
+     * 填空数量
+     */
+    @TableField("ppt_count")
+    private Integer pptCount;
+
 
     /**
      * 题库备注

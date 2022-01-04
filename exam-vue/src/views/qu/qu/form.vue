@@ -18,18 +18,18 @@
 
         </el-form-item>
 
-        <el-form-item label="难度等级 " prop="level">
+        <!--        <el-form-item label="难度等级 " prop="level">-->
 
-          <el-select v-model="postForm.level" class="filter-item">
-            <el-option
-              v-for="item in levels"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+        <!--          <el-select v-model="postForm.level" class="filter-item">-->
+        <!--            <el-option-->
+        <!--              v-for="item in levels"-->
+        <!--              :key="item.value"-->
+        <!--              :label="item.label"-->
+        <!--              :value="item.value"-->
+        <!--            />-->
+        <!--          </el-select>-->
 
-        </el-form-item>
+        <!--        </el-form-item>-->
 
         <el-form-item label="归属题库" prop="repoIds">
 
@@ -41,7 +41,7 @@
           <tinymce-editor v-model="postForm.content" />
         </el-form-item>
 
-        <el-form-item label="试题图片(附件)">
+        <el-form-item label="试题附件">
           <file-upload v-model="postForm.image" />
         </el-form-item>
 
@@ -51,7 +51,7 @@
 
       </el-card>
 
-      <div v-if="postForm.quType!==4" class="filter-container" style="margin-top: 25px">
+      <div v-if="postForm.quType < 10" class="filter-container" style="margin-top: 25px">
 
         <el-button class="filter-item" type="primary" icon="el-icon-plus" size="small" plain @click="handleAdd">
           添加
@@ -145,30 +145,43 @@ export default {
       quTypeDisabled: false,
       itemImage: true,
 
-      levels: [
-        { value: 1, label: '普通' },
-        { value: 2, label: '较难' }
-      ],
+      // levels: [
+      //   { value: 1, label: '普通' },
+      //   { value: 2, label: '较难' }
+      // ],
 
-      quTypes: [{
-        value: 1,
-        label: '单选题'
-      }, {
-        value: 2,
-        label: '多选题'
-      },
-      {
-        value: 3,
-        label: '判断题'
-      },
-      {
-        value: 4,
-        label: '操作题'
-      },
-      {
-        value: 5,
-        label: '填空题'
-      }
+      quTypes: [
+        {
+          value: 1,
+          label: '单选题'
+        }, {
+          value: 2,
+          label: '多选题'
+        },
+        {
+          value: 3,
+          label: '判断题'
+        },
+        // {
+        //   value: 4,
+        //   label: '操作题'
+        // },
+        {
+          value: 5,
+          label: '填空题'
+        },
+        {
+          value: 10,
+          label: 'Word操作题'
+        },
+        {
+          value: 11,
+          label: 'Excel操作题'
+        },
+        {
+          value: 12,
+          label: 'PPT操作题'
+        }
       ],
 
       postForm: {
@@ -185,9 +198,9 @@ export default {
           { required: true, message: '题目类型不能为空！' }
         ],
 
-        level: [
-          { required: true, message: '必须选择难度等级！' }
-        ],
+        // level: [
+        //   { required: true, message: '必须选择难度等级！' }
+        // ],
 
         repoIds: [
           { required: true, message: '至少要选择一个题库！' }
@@ -282,7 +295,7 @@ export default {
       if (this.postForm.quType === 5) {
         if (rightCount !== 1) {
           this.$message({
-            message: '填空题请务增加选项框！', // TODO 填空题只能有一个选项
+            message: '填空题请勿增加选项框！', // TODO 填空题只能有一个选项
             type: 'warning'
           })
 

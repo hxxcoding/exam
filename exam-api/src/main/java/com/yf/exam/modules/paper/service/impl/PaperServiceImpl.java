@@ -202,6 +202,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         List<PaperQuDTO> judgeList = new ArrayList<>();
         List<PaperQuDTO> saqList = new ArrayList<>();
         List<PaperQuDTO> blankList = new ArrayList<>();
+        List<PaperQuDTO> wordList = new ArrayList<>();
+        List<PaperQuDTO> excelList = new ArrayList<>();
+        List<PaperQuDTO> pptList = new ArrayList<>();
         for (PaperQuDTO item: list) {
             if (QuType.RADIO.equals(item.getQuType())) {
                 radioList.add(item);
@@ -213,6 +216,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 saqList.add(item);
             } else if (QuType.BLANK.equals(item.getQuType())) {
                 blankList.add(item);
+            } else if (QuType.WORD.equals(item.getQuType())) {
+                wordList.add(item);
+            } else if (QuType.EXCEL.equals(item.getQuType())) {
+                saqList.add(item);
+            } else if (QuType.PPT.equals(item.getQuType())) {
+                blankList.add(item);
             }
         }
 
@@ -221,6 +230,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         respDTO.setJudgeList(judgeList);
         respDTO.setSaqList(saqList);
         respDTO.setBlankList(blankList);
+        respDTO.setWordList(wordList);
+        respDTO.setExcelList(excelList);
+        respDTO.setPptList(pptList);
         return respDTO;
     }
 
@@ -319,7 +331,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 // 填空题
                 if(item.getBlankCount() > 0) {
                     List<Qu> blankList = quService.listByRandom(item.getRepoId(), QuType.BLANK, level, excludes,
-                            item.getSaqCount());
+                            item.getBlankCount());
                     for (Qu qu : blankList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -327,11 +339,44 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     }
                 }
 
-                // 操作题
+                // 简答
                 if(item.getSaqCount() > 0) {
                     List<Qu> saqList = quService.listByRandom(item.getRepoId(), QuType.SAQ, level, excludes,
                             item.getSaqCount());
                     for (Qu qu : saqList) {
+                        PaperQu paperQu = this.processPaperQu(item, qu);
+                        quList.add(paperQu);
+                        excludes.add(qu.getId());
+                    }
+                }
+
+                // word
+                if(item.getWordCount() > 0) {
+                    List<Qu> wordList = quService.listByRandom(item.getRepoId(), QuType.WORD, level, excludes,
+                            item.getWordCount());
+                    for (Qu qu : wordList) {
+                        PaperQu paperQu = this.processPaperQu(item, qu);
+                        quList.add(paperQu);
+                        excludes.add(qu.getId());
+                    }
+                }
+
+                // excel
+                if(item.getExcelCount() > 0) {
+                    List<Qu> excelList = quService.listByRandom(item.getRepoId(), QuType.EXCEL, level, excludes,
+                            item.getExcelCount());
+                    for (Qu qu : excelList) {
+                        PaperQu paperQu = this.processPaperQu(item, qu);
+                        quList.add(paperQu);
+                        excludes.add(qu.getId());
+                    }
+                }
+
+                // ppt
+                if(item.getPptCount() > 0) {
+                    List<Qu> pptList = quService.listByRandom(item.getRepoId(), QuType.PPT, level, excludes,
+                            item.getPptCount());
+                    for (Qu qu : pptList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
                         excludes.add(qu.getId());
@@ -373,6 +418,15 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         } else if (QuType.BLANK.equals(qu.getQuType())) {
             paperQu.setScore(repo.getBlankScore());
             paperQu.setActualScore(repo.getBlankScore());
+        } else if (QuType.WORD.equals(qu.getQuType())) {
+            paperQu.setScore(repo.getWordScore());
+            paperQu.setActualScore(0);
+        } else if (QuType.EXCEL.equals(qu.getQuType())) {
+            paperQu.setScore(repo.getExcelScore());
+            paperQu.setActualScore(0);
+        } else if (QuType.PPT.equals(qu.getQuType())) {
+            paperQu.setScore(repo.getPptScore());
+            paperQu.setActualScore(0);
         }
 
         return paperQu;
@@ -488,30 +542,35 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 .eq(PaperQu::getQuId, reqDTO.getQuId()));
         //更新正确答案
         if (reqDTO.getQuType().equals(QuType.BLANK)) { // 填空题判题
-            QuAnswer quAnswer = quAnswerService.getOne(new QueryWrapper<QuAnswer>()
-                    .lambda().eq(QuAnswer::getQuId, reqDTO.getQuId()));
-            String[] answers = quAnswer.getContent().split(";");
-            for (String answer : answers) {
-                if (reqDTO.getAnswer().equals(answer)) {
-                    right = true;
-                    break;
+            if (!StringUtils.isBlank(reqDTO.getAnswer())) {
+                QuAnswer quAnswer = quAnswerService.getOne(new QueryWrapper<QuAnswer>()
+                        .lambda().eq(QuAnswer::getQuId, reqDTO.getQuId()));
+                String[] answers = quAnswer.getContent().split(";");
+                for (String answer : answers) {
+                    if (reqDTO.getAnswer().equals(answer)) {
+                        right = true;
+                        break;
+                    }
                 }
             }
-        } else if (reqDTO.getQuType().equals(QuType.SAQ)) {
-            // 操作题判分
-            right = true;
+        } else if (reqDTO.getQuType().equals(QuType.WORD)) {
+            // word操作题判分
             String answerFileUrl = reqDTO.getAnswer();
-            String realPath = uploadService.getRealPath(answerFileUrl.substring(answerFileUrl.indexOf(Constant.FILE_PREFIX)));
-            WordUtils docx = new WordUtils(realPath);
-            List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list();
-            int totalScore = 0;
-            for (QuAnswerOffice officeAnswer : officeAnswers) {
-                Object userAnswer = docx.executeMethod(officeAnswer.getMethod(), officeAnswer.getPos());
-                if (userAnswer != null && officeAnswer.getAnswer().equals(userAnswer.toString())) {
-                    totalScore += officeAnswer.getScore();
+            if (!StringUtils.isBlank(answerFileUrl) && answerFileUrl.endsWith(".docx")) {
+                right = true; // 设置为true 实际的分看actualScore 与is_right无关
+                String realPath = uploadService.getRealPath(answerFileUrl.substring(answerFileUrl.indexOf(Constant.FILE_PREFIX)));
+                WordUtils docx = new WordUtils(realPath);
+                List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
+                        .lambda().eq(QuAnswerOffice::getQuId, reqDTO.getQuId()));
+                int totalScore = 0;
+                for (QuAnswerOffice officeAnswer : officeAnswers) {
+                    Object userAnswer = docx.executeMethod(officeAnswer.getMethod(), officeAnswer.getPos());
+                    if (userAnswer != null && officeAnswer.getAnswer().equals(userAnswer.toString())) {
+                        totalScore += officeAnswer.getScore();
+                    }
                 }
+                paperQu.setActualScore(totalScore);
             }
-            paperQu.setActualScore(totalScore);
         } else {
             right = true;
             for (PaperQuAnswer item : list) {

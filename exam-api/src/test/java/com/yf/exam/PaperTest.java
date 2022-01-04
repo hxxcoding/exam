@@ -64,7 +64,7 @@ public class PaperTest {
 
     @Test
     public void testOfficeSave() {
-        Qu qu = quService.getOne(new QueryWrapper<Qu>().lambda().eq(Qu::getQuType, QuType.SAQ));
+        Qu qu = quService.getOne(new QueryWrapper<Qu>().lambda().eq(Qu::getQuType, QuType.WORD));
         quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
                 .setMethod("getIndentationHanging").setPos(2).setAnswer("420").setScore(3));
         quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())

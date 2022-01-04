@@ -53,10 +53,12 @@
             </el-row>
           </div>
 
-          <div v-if="paperData.saqList!==undefined && paperData.saqList.length > 0">
+          <div v-if="paperData.wordList!==undefined && paperData.wordList.length > 0">
             <p class="card-title">操作题</p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.saqList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.wordList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.excelList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.pptList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
@@ -69,13 +71,9 @@
         <el-card class="qu-content">
           <p v-if="quData.content">{{ quData.sort + 1 }}.<span v-html="quData.content" /></p>
           <div v-if="quData.image!=null && quData.image!==''">
-            <el-image :src="quData.image" style="max-width:100%;">
-              <div slot="error" class="image-slot">
-                <el-link :href="quData.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
-                  下载附件
-                </el-link>
-              </div>
-            </el-image>
+            <el-link :href="quData.image" type="primary" target="_blank" icon="el-icon-files" :underline="true" style="margin-bottom: 10px">
+              点击下载附件
+            </el-link>
           </div>
           <div v-if="quData.quType === 1 || quData.quType===3">
             <el-radio-group v-model="radioValue">
@@ -84,7 +82,7 @@
                   <el-image :src="item.image" style="max-width:100%;">
                     <div slot="error" class="image-slot">
                       <el-link :href="item.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
-                        下载附件
+                        点击下载附件
                       </el-link>
                     </div>
                   </el-image>
@@ -94,14 +92,13 @@
           </div>
 
           <div v-if="quData.quType === 2">
-
             <el-checkbox-group v-model="multiValue">
               <el-checkbox v-for="item in quData.answerList" :key="item.id" :label="item.id">{{ item.abc }}.{{ item.content }}
                 <div v-if="item.image!=null && item.image!==''" style="clear: both">
                   <el-image :src="item.image" style="max-width:100%;">
                     <div slot="error" class="image-slot">
                       <el-link :href="item.image" type="success" target="_blank" icon="el-icon-files" :underline="true">
-                        下载附件
+                        点击下载附件
                       </el-link>
                     </div>
                   </el-image>
@@ -115,12 +112,12 @@
             <el-input v-model="answer" size="large" placeholder="请输入答案" style="width: 50%" clearable />
           </div>
 
-          <div v-if="quData.quType === 4">
+          <div v-if="quData.quType >= 10">
             <file-upload
               v-model="answer"
               list-type="office-file"
-              tips="只能上传.xlsx/.docx/.pptx文件"
-              accept=".xlsx, .docx, .pptx, application/msword, application/pdf"
+              tips="请仔细读题,根据题目要求上传.xlsx/.docx/.pptx文件"
+              accept=".xlsx, .docx, .pptx"
             />
           </div>
 
@@ -181,7 +178,10 @@ export default {
         multiList: [],
         judgeList: [],
         blankList: [],
-        saqList: []
+        // saqList: []
+        wordList: [],
+        excelList: [],
+        pptList: []
       },
       // 单选选定值
       radioValue: '',
@@ -266,13 +266,31 @@ export default {
         }
       })
 
-      this.paperData.saqList.forEach(function(item) {
+      // this.paperData.saqList.forEach(function(item) {
+      //   if (!item.answered) {
+      //     notAnswered += 1
+      //   }
+      // })
+
+      this.paperData.blankList.forEach(function(item) {
         if (!item.answered) {
           notAnswered += 1
         }
       })
 
-      this.paperData.blankList.forEach(function(item) {
+      this.paperData.wordList.forEach(function(item) {
+        if (!item.answered) {
+          notAnswered += 1
+        }
+      })
+
+      this.paperData.excelList.forEach(function(item) {
+        if (!item.answered) {
+          notAnswered += 1
+        }
+      })
+
+      this.paperData.pptList.forEach(function(item) {
         if (!item.answered) {
           notAnswered += 1
         }
@@ -369,7 +387,7 @@ export default {
         paperId: this.paperId,
         quId: this.cardItem.quId,
         answers: answers,
-        answer: (this.cardItem.quType === 4 || this.cardItem.quType === 5) ? this.answer : ''
+        answer: (this.cardItem.quType >= 10 || this.cardItem.quType === 5) ? this.answer : ''
       }
       fillAnswer(params).then(() => {
         // 必须选择一个值
@@ -418,7 +436,7 @@ export default {
             this.multiValue.push(item.id)
           }
         })
-        if (this.quData.quType === 4 || this.quData.quType === 5) {
+        if (this.quData.quType >= 10 || this.quData.quType === 5) { // 操作题 或 填空题
           this.answer = this.quData.answer
         }
 
@@ -443,9 +461,16 @@ export default {
           this.cardItem = this.paperData.judgeList[0]
         } else if (this.paperData.blankList) {
           this.cardItem = this.paperData.blankList[0]
-        } else if (this.paperData.saqList) {
-          this.cardItem = this.paperData.saqList[0]
+        } else if (this.paperData.wordList) {
+          this.cardItem = this.paperData.wordList[0]
+        } else if (this.paperData.excelList) {
+          this.cardItem = this.paperData.excelList[0]
+        } else if (this.paperData.pptList) {
+          this.cardItem = this.paperData.pptList[0]
         }
+        // else if (this.paperData.saqList) {
+        //   this.cardItem = this.paperData.saqList[0]
+        // }
 
         const that = this
 
@@ -465,9 +490,21 @@ export default {
           that.allItem.push(item)
         })
 
-        this.paperData.saqList.forEach(function(item) {
+        this.paperData.wordList.forEach(function(item) {
           that.allItem.push(item)
         })
+
+        this.paperData.excelList.forEach(function(item) {
+          that.allItem.push(item)
+        })
+
+        this.paperData.pptList.forEach(function(item) {
+          that.allItem.push(item)
+        })
+
+        // this.paperData.saqList.forEach(function(item) {
+        //   that.allItem.push(item)
+        // })
 
         // 当前选定
         this.fetchQuData(this.cardItem)

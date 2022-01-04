@@ -46,6 +46,15 @@ public class RepoDTO implements Serializable {
     @ApiModelProperty(value = "填空数量", required=true)
     private Integer blankCount;
 
+    @ApiModelProperty(value = "word操作题数量", required=true)
+    private Integer wordCount;
+
+    @ApiModelProperty(value = "excel操作题数量", required=true)
+    private Integer excelCount;
+
+    @ApiModelProperty(value = "ppt操作题数量", required=true)
+    private Integer pptCount;
+
 
     @ApiModelProperty(value = "题库备注", required=true)
     private String remark;

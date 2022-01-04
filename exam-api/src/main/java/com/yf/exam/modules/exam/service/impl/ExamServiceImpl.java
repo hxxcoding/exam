@@ -212,6 +212,24 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
                         && item.getBlankScore() > 0){
                     objScore += item.getBlankCount() * item.getBlankScore();
                 }
+                if(item.getWordCount() != null
+                        && item.getWordCount() > 0
+                        && item.getWordScore() != null
+                        && item.getWordScore() > 0){
+                    objScore += item.getWordCount() * item.getWordScore();
+                }
+                if(item.getExcelCount() != null
+                        && item.getExcelCount() > 0
+                        && item.getExcelScore() != null
+                        && item.getExcelScore() > 0){
+                    objScore += item.getExcelCount() * item.getExcelScore();
+                }
+                if(item.getPptCount() != null
+                        && item.getPptCount() > 0
+                        && item.getPptScore() != null
+                        && item.getPptScore() > 0){
+                    objScore += item.getPptCount() * item.getPptScore();
+                }
             }
         }
 

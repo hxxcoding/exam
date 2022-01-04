@@ -24,7 +24,7 @@ public interface QuType {
     Integer JUDGE = 3;
 
     /**
-     * 操作题
+     * 简答题
      */
     Integer SAQ = 4;
 
@@ -32,4 +32,19 @@ public interface QuType {
      * 填空题
      */
     Integer BLANK = 5;
+
+    /**
+     * Word操作题
+     */
+    Integer WORD = 10;
+
+    /**
+     * Excel操作题
+     */
+    Integer EXCEL = 11;
+
+    /**
+     * PowerPoint操作题
+     */
+    Integer PPT = 12;
 }

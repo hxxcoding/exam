@@ -77,7 +77,7 @@ public class QuAnswerServiceImpl extends ServiceImpl<QuAnswerMapper, QuAnswer> i
         //返回结果
         List<String> ids = new ArrayList<>();
 
-        QueryWrapper<QuAnswer> wrapper = new QueryWrapper();
+        QueryWrapper<QuAnswer> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(QuAnswer::getQuId, quId);
         List<QuAnswer> list = this.list(wrapper);
 
@@ -108,9 +108,7 @@ public class QuAnswerServiceImpl extends ServiceImpl<QuAnswerMapper, QuAnswer> i
                 answer.setQuId(quId);
 
                 //补全ID避免新增
-                if(ids.contains(id)){
-                    ids.remove(id);
-                }
+                ids.remove(id);
 
                 saveList.add(answer);
             }

@@ -120,22 +120,22 @@
           </el-table-column>
 
           <el-table-column
-            label="操作数量"
+            label="Word数量"
             align="center"
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.saqCount" :min="0" :max="scope.row.totalSaq" :controls="false" style="width: 100%" :placeholder="scope.row.totalSaq" />
+              <el-input-number v-model="scope.row.wordCount" :min="0" :max="scope.row.totalWord" :controls="false" style="width: 100%" :placeholder="scope.row.totalWord" />
             </template>
 
           </el-table-column>
 
           <el-table-column
-            label="操作分数"
+            label="Word分数"
             align="center"
           >
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.saqScore" :min="0" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.wordScore" :min="0" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
 
@@ -272,11 +272,6 @@ export default {
       defaultProps: {
         label: 'deptName'
       },
-      levels: [
-        { value: 0, label: '不限' },
-        { value: 1, label: '普通' },
-        { value: 2, label: '较难' }
-      ],
       filterText: '',
       treeLoading: false,
       dateValues: [],
@@ -291,8 +286,8 @@ export default {
       repoList: [],
 
       // 题目列表
-      quList: [[], [], [], [], []],
-      quEnable: [false, false, false, false, false],
+      quList: [[], [], [], [], [], [], []],
+      quEnable: [false, false, false, false, false, false, false],
 
       postForm: {
         // 总分数
@@ -378,8 +373,11 @@ export default {
           that.postForm.totalScore += item.radioCount * item.radioScore
           that.postForm.totalScore += item.multiCount * item.multiScore
           that.postForm.totalScore += item.judgeCount * item.judgeScore
-          that.postForm.totalScore += item.saqCount * item.saqScore
+          // that.postForm.totalScore += item.saqCount * item.saqScore
           that.postForm.totalScore += item.blankCount * item.blankScore
+          that.postForm.totalScore += item.wordCount * item.wordScore
+          that.postForm.totalScore += item.excelCount * item.excelScore
+          that.postForm.totalScore += item.pptCount * item.pptScore
         })
 
         // 赋值
@@ -465,17 +463,37 @@ export default {
               return
             }
 
-            if ((repo.saqCount > 0 && repo.saqScore === 0) || (repo.saqCount === 0 && repo.saqScore > 0)) {
+            if ((repo.blankCount > 0 && repo.blankScore === 0) || (repo.blankCount === 0 && repo.blankScore > 0)) {
               this.$notify({
                 title: '提示信息',
-                message: '题库第：[' + (i + 1) + ']项存在无效的操作题配置！',
+                message: '题库第：[' + (i + 1) + ']项存在无效的填空题配置！',
                 type: 'warning',
                 duration: 2000
               })
               return
             }
 
-            if ((repo.blankCount > 0 && repo.blankScore === 0) || (repo.blankCount === 0 && repo.blankScore > 0)) {
+            if ((repo.wordCount > 0 && repo.wordScore === 0) || (repo.wordCount === 0 && repo.wordScore > 0)) {
+              this.$notify({
+                title: '提示信息',
+                message: '题库第：[' + (i + 1) + ']项存在无效的填空题配置！',
+                type: 'warning',
+                duration: 2000
+              })
+              return
+            }
+
+            if ((repo.excelCount > 0 && repo.excelScore === 0) || (repo.excelCount === 0 && repo.excelScore > 0)) {
+              this.$notify({
+                title: '提示信息',
+                message: '题库第：[' + (i + 1) + ']项存在无效的填空题配置！',
+                type: 'warning',
+                duration: 2000
+              })
+              return
+            }
+
+            if ((repo.pptCount > 0 && repo.pptScore === 0) || (repo.pptCount === 0 && repo.pptScore > 0)) {
               this.$notify({
                 title: '提示信息',
                 message: '题库第：[' + (i + 1) + ']项存在无效的填空题配置！',
@@ -510,7 +528,9 @@ export default {
 
     // 添加子项
     handleAdd() {
-      this.repoList.push({ rowId: new Date().getTime(), radioCount: 0, radioScore: 0, multiCount: 0, multiScore: 0, judgeCount: 0, judgeScore: 0, saqCount: 0, saqScore: 0, blankCount: 0, blankScore: 0 })
+      this.repoList.push({ rowId: new Date().getTime(), radioCount: 0, radioScore: 0,
+        multiCount: 0, multiScore: 0, judgeCount: 0, judgeScore: 0, blankCount: 0, blankScore: 0,
+        wordCount: 0, wordScore: 0, excelCount: 0, excelScore: 0, pptCount: 0, pptScore: 0 })
     },
 
     removeItem(index) {
@@ -570,13 +590,17 @@ export default {
         row.totalMulti = e.multiCount
         row.totalJudge = e.judgeCount
         row.totalBlank = e.blankCount
-        row.totalSaq = e.saqCount
+        row.totalWord = e.wordCount
+        row.totalExcel = e.excelCount
+        row.totalPPT = e.pptCount
       } else {
         row.totalRadio = 0
         row.totalMulti = 0
         row.totalJudge = 0
         row.totalBlank = 0
-        row.totalSaq = 0
+        row.totalWord = 0
+        row.totalExcel = 0
+        row.totalPPT = 0
       }
     }
 

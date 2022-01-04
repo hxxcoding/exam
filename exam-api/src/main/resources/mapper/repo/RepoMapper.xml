@@ -12,6 +12,9 @@
         <result column="judge_count" property="judgeCount" />
         <result column="saq_count" property="saqCount" />
         <result column="blank_count" property="blankCount" />
+        <result column="word_count" property="wordCount" />
+        <result column="excel_count" property="excelCount" />
+        <result column="ppt_count" property="pptCount" />
         <result column="remark" property="remark" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -19,7 +22,9 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        `id`,`code`,`title`,`radio_count`,`multi_count`,`judge_count`, `saq_count`,`blank_count`,`remark`,`create_time`,`update_time`
+        `id`,`code`,`title`,`radio_count`,`multi_count`,`judge_count`, `saq_count`,
+        `blank_count`,`word_count`,`excel_count`,`ppt_count`,```remark`,`create_time`,
+        `update_time`
     </sql>
 
 
@@ -47,7 +52,10 @@
          multi_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=2),
          judge_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=3),
          saq_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=4),
-         blank_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=5)
+         blank_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=5),
+         word_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=10),
+         excel_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=11),
+         ppt_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=12)
          WHERE a.id=#{repoId}
     </update>
 

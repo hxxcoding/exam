@@ -76,7 +76,7 @@
 
         </div>
 
-        <div v-if="item.quType === 4">
+        <div v-if="item.quType >= 10">
           <el-row :gutter="24">
             <el-col :span="12">
               回答：<span>(得分: {{ item.actualScore }}分)</span>

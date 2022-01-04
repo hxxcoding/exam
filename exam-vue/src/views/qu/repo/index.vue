@@ -58,8 +58,20 @@
       />
 
       <el-table-column
-        label="操作题数量"
-        prop="saqCount"
+        label="Word数量"
+        prop="wordCount"
+        align="center"
+      />
+
+      <el-table-column
+        label="Excel数量"
+        prop="excelCount"
+        align="center"
+      />
+
+      <el-table-column
+        label="PPT题数量"
+        prop="pptCount"
         align="center"
       />
 

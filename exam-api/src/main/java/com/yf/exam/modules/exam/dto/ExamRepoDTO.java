@@ -59,5 +59,23 @@ public class ExamRepoDTO implements Serializable {
 
     @ApiModelProperty(value = "填空题分数", required=true)
     private Integer blankScore;
+
+    @ApiModelProperty(value = "word操作题数量", required=true)
+    private Integer wordCount;
+
+    @ApiModelProperty(value = "word操作题分数", required=true)
+    private Integer wordScore;
+
+    @ApiModelProperty(value = "excel操作题数量", required=true)
+    private Integer excelCount;
+
+    @ApiModelProperty(value = "excel操作题分数", required=true)
+    private Integer excelScore;
+
+    @ApiModelProperty(value = "ppt操作题数量", required=true)
+    private Integer pptCount;
+
+    @ApiModelProperty(value = "ppt操作题分数", required=true)
+    private Integer pptScore;
     
 }

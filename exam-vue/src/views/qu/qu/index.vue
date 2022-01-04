@@ -154,9 +154,21 @@ export default {
           value: 5,
           label: '填空题'
         },
+        // {
+        //   value: 4,
+        //   label: '简答题'
+        // }
         {
-          value: 4,
-          label: '操作题'
+          value: 10,
+          label: 'Word操作题'
+        },
+        {
+          value: 11,
+          label: 'Excel操作题'
+        },
+        {
+          value: 12,
+          label: 'PPT操作题'
         }
       ],
 
@@ -170,17 +182,10 @@ export default {
           {
             value: 'delete',
             label: '删除'
-          }, {
-            value: 'enable',
-            label: '启用'
           },
           {
-            value: 'disable',
-            label: '禁用'
-          },
-          {
-            value: 'add-repo',
-            label: '加入题库..'
+            value: 'update-repo',
+            label: '修改所属题库..'
           },
           {
             value: 'remove-repo',
@@ -191,8 +196,6 @@ export default {
         listUrl: '/exam/api/qu/qu/paging',
         // 删除请求URL
         deleteUrl: '/exam/api/qu/qu/delete',
-        // 启用禁用
-        stateUrl: '/exam/api/qu/qu//state',
         // 添加数据路由
         addRoute: 'AddQu'
       }
@@ -201,8 +204,8 @@ export default {
   methods: {
 
     handleMultiAction(obj) {
-      if (obj.opt === 'add-repo') {
-        this.dialogTitle = '加入题库'
+      if (obj.opt === 'update-repo') {
+        this.dialogTitle = '修改所属题库'
         this.dialogFlag = false
       }
 

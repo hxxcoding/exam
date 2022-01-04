@@ -20,7 +20,13 @@ public class WordUtils {
         }
     }
 
-    public Object executeMethod(String methodName, Object... args){
+    /**
+     * 通过方法名和参数获取方法并执行
+     * @param methodName
+     * @param args
+     * @return
+     */
+    public Object executeMethod(String methodName, Object... args) {
         try {
             Class<?>[] classes = null;
             if (args[0] == null) {
@@ -28,7 +34,7 @@ public class WordUtils {
             } else {
                 classes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
             }
-            return WordUtils.class.getDeclaredMethod(methodName, classes).invoke(this, args);
+            return WordUtils.class.getMethod(methodName, classes).invoke(this, args);
         } catch (Exception e) {
             return null;
         }

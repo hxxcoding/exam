@@ -17,11 +17,19 @@
         <result column="saq_score" property="saqScore" />
         <result column="blank_count" property="blankCount" />
         <result column="blank_score" property="blankScore" />
+        <result column="word_count" property="wordCount" />
+        <result column="word_score" property="wordScore" />
+        <result column="excel_count" property="excelCount" />
+        <result column="excel_score" property="excelScore" />
+        <result column="ppt_count" property="pptCount" />
+        <result column="ppt_score" property="pptScore" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        `id`,`exam_id`,`repo_id`,`radio_count`,`radio_score`,`multi_count`,`multi_score`,`judge_count`,`judge_score`,`saq_count`,`saq_score`,`blank_count`,`blank_score`
+        `id`,`exam_id`,`repo_id`,`radio_count`,`radio_score`,`multi_count`,`multi_score`,
+        `judge_count`,`judge_score`,`saq_count`,`saq_score`,`blank_count`,`blank_score`,
+        `word_count`,`word_score`,`excel_count`,`excel_score`,`ppt_count`,`ppt_score`
     </sql>
 
     <resultMap id="ExamRepoExtResultMap" type="com.yf.exam.modules.exam.dto.ext.ExamRepoExtDTO" extends="BaseResultMap">
@@ -30,6 +38,9 @@
         <result column="totalJudge" property="totalJudge" />
         <result column="totalSaq" property="totalSaq" />
         <result column="totalBlank" property="totalBlank" />
+        <result column="totalWord" property="totalWord" />
+        <result column="totalExcel" property="totalExcel" />
+        <result column="totalPPT" property="totalPPT" />
     </resultMap>
 
     <select id="listByExam" resultMap="ExamRepoExtResultMap">
@@ -38,7 +49,11 @@
                repo.multi_count AS totalMulti,
                repo.judge_count AS totalJudge,
                repo.saq_count AS totalSaq,
-               repo.blank_count AS totalBlank
+               repo.blank_count AS totalBlank,
+               repo.word_count AS totalWord,
+               repo.excel_count AS totalExcel,
+               repo.ppt_count AS totalPPT
+
         FROM el_exam_repo ep
                  LEFT JOIN el_repo repo ON ep.repo_id=repo.id
         WHERE ep.exam_id=#{examId}

@@ -76,13 +76,13 @@ public class ExamRepo extends Model<ExamRepo> {
     private Integer judgeScore;
 
     /**
-    * 操作题数量
+    * 简答题数量
     */
     @TableField("saq_count")
     private Integer saqCount;
 
     /**
-    * 操作题分数
+    * 简答题分数
     */
     @TableField("saq_score")
     private Integer saqScore;
@@ -98,5 +98,41 @@ public class ExamRepo extends Model<ExamRepo> {
     */
     @TableField("blank_score")
     private Integer blankScore;
+
+    /**
+    * word操作题数量
+    */
+    @TableField("word_count")
+    private Integer wordCount;
+
+    /**
+    * word操作题分数
+    */
+    @TableField("word_score")
+    private Integer wordScore;
+
+    /**
+    * excel操作题数量
+    */
+    @TableField("excel_count")
+    private Integer excelCount;
+
+    /**
+    * excel操作题分数
+    */
+    @TableField("excel_score")
+    private Integer excelScore;
+
+    /**
+    * ppt操作题数量
+    */
+    @TableField("ppt_count")
+    private Integer pptCount;
+
+    /**
+    * ppt操作题分数
+    */
+    @TableField("ppt_score")
+    private Integer pptScore;
     
 }

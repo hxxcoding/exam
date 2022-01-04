@@ -14,13 +14,17 @@ import com.yf.exam.modules.qu.entity.QuRepo;
 import com.yf.exam.modules.qu.mapper.QuMapper;
 import com.yf.exam.modules.qu.mapper.QuRepoMapper;
 import com.yf.exam.modules.qu.service.QuRepoService;
+import com.yf.exam.modules.qu.service.QuService;
 import com.yf.exam.modules.repo.service.RepoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
 * <p>
@@ -35,7 +39,7 @@ public class QuRepoServiceImpl extends ServiceImpl<QuRepoMapper, QuRepo> impleme
 
 
     @Autowired
-    private QuMapper quMapper;
+    private QuService quService;
 
     @Autowired
     private RepoService repoService;
@@ -61,6 +65,8 @@ public class QuRepoServiceImpl extends ServiceImpl<QuRepoMapper, QuRepo> impleme
         // 先删除
         QueryWrapper<QuRepo> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(QuRepo::getQuId, quId);
+        List<String> oldRepoIds = this.list(wrapper).stream()
+                .map(QuRepo::getRepoId).collect(Collectors.toList());
         this.remove(wrapper);
 
         // 保存全部
@@ -75,9 +81,14 @@ public class QuRepoServiceImpl extends ServiceImpl<QuRepoMapper, QuRepo> impleme
             }
             this.saveBatch(list);
 
-
-            for(String id: ids){
+            List<String> changedRepoIds = Stream.of(oldRepoIds, ids)
+                    .flatMap(Collection::stream).distinct().collect(Collectors.toList());
+            for(String id: changedRepoIds){
                 this.sortRepo(id);
+            }
+        } else {
+            for (String oldRepoId : oldRepoIds) {
+                this.sortRepo(oldRepoId);
             }
         }
 
@@ -130,16 +141,18 @@ public class QuRepoServiceImpl extends ServiceImpl<QuRepoMapper, QuRepo> impleme
 
         // 移除的
         if(reqDTO.getRemove()!=null &&  reqDTO.getRemove()){
-            QueryWrapper<QuRepo> wrapper = new QueryWrapper<>();
-            wrapper.lambda()
-                    .in(QuRepo::getRepoId, reqDTO.getRepoIds())
-                    .in(QuRepo::getQuId, reqDTO.getQuIds());
-            this.remove(wrapper);
-        }else{
+            if (reqDTO.getRepoIds().size() != 0) {
+                QueryWrapper<QuRepo> wrapper = new QueryWrapper<>();
+                wrapper.lambda()
+                        .in(QuRepo::getRepoId, reqDTO.getRepoIds())
+                        .in(QuRepo::getQuId, reqDTO.getQuIds());
+                this.remove(wrapper);
+            }
+        } else {
 
             // 新增的
             for(String quId : reqDTO.getQuIds()){
-                Qu q = quMapper.selectById(quId);
+                Qu q = quService.getById(quId);
                 this.saveAll(quId, q.getQuType(), reqDTO.getRepoIds());
             }
         }
@@ -161,16 +174,14 @@ public class QuRepoServiceImpl extends ServiceImpl<QuRepoMapper, QuRepo> impleme
         wrapper.lambda().eq(QuRepo::getRepoId, repoId);
 
         List<QuRepo> list = this.list(wrapper);
-        if(CollectionUtils.isEmpty(list)){
-            return;
+        if(!CollectionUtils.isEmpty(list)){
+            int sort = 1;
+            for(QuRepo item: list){
+                item.setSort(sort);
+                sort++;
+            }
+            this.updateBatchById(list);
         }
-
-        int sort = 1;
-        for(QuRepo item: list){
-            item.setSort(sort);
-            sort++;
-        }
-        this.updateBatchById(list);
 
         // 更新统计数量
         repoService.refreshStat(repoId);
