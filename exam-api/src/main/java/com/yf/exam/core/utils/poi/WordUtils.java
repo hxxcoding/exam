@@ -4,6 +4,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class WordUtils {
 
@@ -25,10 +26,7 @@ public class WordUtils {
             if (args[0] == null) {
                 args = null;
             } else {
-                classes = new Class[args.length];
-                for (int i = 0; i < args.length; i++) {
-                    classes[i] = args[i].getClass();
-                }
+                classes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
             }
             return WordUtils.class.getDeclaredMethod(methodName, classes).invoke(this, args);
         } catch (Exception e) {
