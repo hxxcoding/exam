@@ -119,6 +119,30 @@
         </el-table>
 
       </div>
+      <div v-else-if="postForm.quType >= 10" class="app-container" style="margin-top: 25px">
+        <el-form ref="postForm" :model="postForm" :rules="rules" label-position="left" label-width="150px">
+          <el-alert
+            title="如无解析按钮,请检查附件格式是否正确！"
+            type="error"
+            style="margin-bottom: 10px"
+          />
+          <el-card>
+            <el-form-item label="题目附件" prop="image">
+              <span>{{ postForm.image }}</span>
+            </el-form-item>
+            <el-form-item
+              v-if="postForm.image != null
+                && ( postForm.quType === 10 && postForm.image.endsWith('.docx')
+                || postForm.quType === 11 && postForm.image.endsWith('.xlsx')
+                || postForm.quType === 12 && postForm.image.endsWith('.pptx'))"
+              label="解析附件"
+              prop="image"
+            >
+              <el-button>解析</el-button>
+            </el-form-item>
+          </el-card>
+        </el-form>
+      </div>
 
       <div style="margin-top: 20px">
         <el-button type="primary" @click="submitForm">保存</el-button>
