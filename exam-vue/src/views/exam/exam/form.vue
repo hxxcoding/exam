@@ -40,103 +40,95 @@
 
           </el-table-column>
           <el-table-column
-            label="单选数量"
+            label="选项"
+            align="center"
+          >
+            <div>题目数量</div>
+            <div style="margin-top: 20px">每题分数</div>
+          </el-table-column>
+
+          <el-table-column
+            label="单选题"
             align="center"
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.radioCount" :min="0" :max="scope.row.totalRadio" :controls="false" style="width: 100%" :placeholder="scope.row.totalRadio" />
+              <el-input-number v-model="scope.row.radioCount" :min="0" :max="scope.row.totalRadio" :controls="false" style="width: 100%" :placeholder="'总' + scope.row.totalRadio + '题'" />
+              <el-input-number v-model="scope.row.radioScore" :min="0" :controls="false" style="width: 100%; margin-top: 10px" />
             </template>
 
           </el-table-column>
 
           <el-table-column
-            label="单选分数"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <el-input-number v-model="scope.row.radioScore" :min="0" :controls="false" style="width: 100%" />
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            label="多选数量"
+            label="多选题"
             align="center"
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.multiCount" :min="0" :max="scope.row.totalMulti" :controls="false" style="width: 100%" :placeholder="scope.row.totalMulti" />
+              <el-input-number v-model="scope.row.multiCount" :min="0" :max="scope.row.totalMulti" :controls="false" style="width: 100%" :placeholder="'总' + scope.row.totalMulti + '题'" />
+              <el-input-number v-model="scope.row.multiScore" :min="0" :controls="false" style="width: 100%; margin-top: 10px" />
             </template>
 
           </el-table-column>
 
           <el-table-column
-            label="多选分数"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <el-input-number v-model="scope.row.multiScore" :min="0" :controls="false" style="width: 100%" />
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            label="判断数量"
+            label="判断题"
             align="center"
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.judgeCount" :min="0" :max="scope.row.totalJudge" :controls="false" style="width: 100%" :placeholder="scope.row.totalJudge" />
+              <el-input-number v-model="scope.row.judgeCount" :min="0" :max="scope.row.totalJudge" :controls="false" style="width: 100%" :placeholder="'总' + scope.row.totalJudge + '题'" />
+              <el-input-number v-model="scope.row.judgeScore" :min="0" :controls="false" style="width: 100%; margin-top: 10px" />
             </template>
 
           </el-table-column>
 
           <el-table-column
-            label="判断分数"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <el-input-number v-model="scope.row.judgeScore" :min="0" :controls="false" style="width: 100%" />
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            label="填空数量"
+            label="填空题"
             align="center"
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.blankCount" :min="0" :max="scope.row.totalBlank" :controls="false" style="width: 100%" :placeholder="scope.row.totalBlank" />
+              <el-input-number v-model="scope.row.blankCount" :min="0" :max="scope.row.totalBlank" :controls="false" style="width: 100%" :placeholder="'总' + scope.row.totalBlank + '题'" />
+              <el-input-number v-model="scope.row.blankScore" :min="0" :controls="false" style="width: 100%; margin-top: 10px" />
             </template>
 
           </el-table-column>
 
           <el-table-column
-            label="填空分数"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <el-input-number v-model="scope.row.blankScore" :min="0" :controls="false" style="width: 100%" />
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            label="Word数量"
+            label="Word题"
             align="center"
           >
 
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.wordCount" :min="0" :max="scope.row.totalWord" :controls="false" style="width: 100%" :placeholder="scope.row.totalWord" />
+              <el-input-number v-model="scope.row.wordCount" :min="0" :max="scope.row.totalWord" :controls="false" style="width: 100%" :placeholder="'总' + scope.row.totalWord + '题'" />
+              <el-input-number v-model="scope.row.wordScore" :min="0" :controls="false" style="width: 100%; margin-top: 10px" />
             </template>
 
           </el-table-column>
 
           <el-table-column
-            label="Word分数"
+            label="Excel题"
             align="center"
           >
+
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.wordScore" :min="0" :controls="false" style="width: 100%" />
+              <el-input-number v-model="scope.row.excelCount" :min="0" :max="scope.row.totalExcel" :controls="false" style="width: 100%" :placeholder="'总' + scope.row.totalExcel + '题'" />
+              <el-input-number v-model="scope.row.excelScore" :min="0" :controls="false" style="width: 100%; margin-top: 10px" />
             </template>
+
+          </el-table-column>
+
+          <el-table-column
+            label="PPT题"
+            align="center"
+          >
+
+            <template slot-scope="scope">
+              <el-input-number v-model="scope.row.pptCount" :min="0" :max="scope.row.totalPPT" :controls="false" style="width: 100%" :placeholder="'总' + scope.row.totalPPT + '题'" />
+              <el-input-number v-model="scope.row.pptScore" :min="0" :controls="false" style="width: 100%; margin-top: 10px" />
+            </template>
+
           </el-table-column>
 
           <el-table-column
