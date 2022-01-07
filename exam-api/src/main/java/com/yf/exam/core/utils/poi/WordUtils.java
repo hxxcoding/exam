@@ -1,10 +1,17 @@
 package com.yf.exam.core.utils.poi;
 
+import com.yf.exam.core.exception.ServiceException;
+import com.yf.exam.core.utils.StringUtils;
+import com.yf.exam.modules.qu.dto.response.AnalyzeWordRespDTO;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class WordUtils {
 
@@ -37,6 +44,30 @@ public class WordUtils {
             return WordUtils.class.getMethod(methodName, classes).invoke(this, args);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * 分析word文件段落
+     * @param filePath
+     * @return
+     */
+    public static List<AnalyzeWordRespDTO> analyzeWord(String filePath) {
+        try {
+            FileInputStream fis = new FileInputStream(filePath);
+            XWPFDocument xwpfDocument = new XWPFDocument(fis);
+            List<XWPFParagraph> paragraphs = xwpfDocument.getParagraphs();
+            List<AnalyzeWordRespDTO> paragraphText = new ArrayList<>();
+            for (int i = 0; i < paragraphs.size(); i++) {
+                if (!StringUtils.isBlank(paragraphs.get(i).getText().trim())) {
+                    paragraphText.add(new AnalyzeWordRespDTO(i, paragraphs.get(i).getText()));
+                }
+            }
+            return paragraphText;
+        } catch (FileNotFoundException e) {
+            throw new ServiceException("文件不存在！");
+        } catch (IOException e) {
+            throw new ServiceException("文件解析失败！");
         }
     }
 
@@ -90,6 +121,8 @@ public class WordUtils {
 
     /**
      * 获取某个段落的分栏数
+     * 分栏之后该段落的 前后各增加 一个paragraph
+     * 原文字在段1, 分栏后文字在段2, 分栏数据在段3
      * @param pos
      * @return
      */
@@ -104,6 +137,8 @@ public class WordUtils {
 
     /**
      * 获取某个段落的是否存在分栏分隔符
+     * 默认原始文件未分栏之后该段落的 前后各增加 一个paragraph
+     * 原文字在段1, 分栏后文字在段2, 分栏数据在段3
      * @param pos
      * @return
      */

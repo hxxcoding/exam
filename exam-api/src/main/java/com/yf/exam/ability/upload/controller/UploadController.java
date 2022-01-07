@@ -2,7 +2,7 @@ package com.yf.exam.ability.upload.controller;
 
 
 import com.yf.exam.ability.Constant;
-import com.yf.exam.ability.upload.dto.DeleteFileReqDTO;
+import com.yf.exam.ability.upload.dto.FileUrlReqDTO;
 import com.yf.exam.ability.upload.dto.UploadReqDTO;
 import com.yf.exam.ability.upload.dto.UploadRespDTO;
 import com.yf.exam.ability.upload.service.UploadService;
@@ -64,7 +64,7 @@ public class UploadController extends BaseController {
      */
     @PostMapping("/common/api/file/delete")
     @ApiOperation(value = "文件删除", notes = "删除已上传的文件")
-    public ApiRest delete(@RequestBody DeleteFileReqDTO reqDTO) {
+    public ApiRest delete(@RequestBody FileUrlReqDTO reqDTO) {
         uploadService.delete(reqDTO.getUrl());
         return super.success();
     }

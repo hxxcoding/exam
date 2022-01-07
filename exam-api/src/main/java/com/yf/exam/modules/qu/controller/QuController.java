@@ -3,6 +3,7 @@ package com.yf.exam.modules.qu.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
+import com.yf.exam.ability.upload.dto.FileUrlReqDTO;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
@@ -17,7 +18,9 @@ import com.yf.exam.modules.qu.dto.QuDTO;
 import com.yf.exam.modules.qu.dto.export.QuExportDTO;
 import com.yf.exam.modules.qu.dto.ext.QuDetailDTO;
 import com.yf.exam.modules.qu.dto.request.QuQueryReqDTO;
+import com.yf.exam.modules.qu.dto.response.AnalyzeWordRespDTO;
 import com.yf.exam.modules.qu.entity.Qu;
+import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,6 +59,8 @@ public class QuController extends BaseController {
 
     @Autowired
     private QuService baseService;
+    @Autowired
+    private QuAnswerOfficeService quAnswerOfficeService;
 
     /**
      * 添加或修改
@@ -133,6 +138,17 @@ public class QuController extends BaseController {
         List<QuDTO> dtoList = BeanMapper.mapList(list, QuDTO.class);
 
         return super.success(dtoList);
+    }
+
+    /**
+     * Office文件提取段落和索引
+     * @param reqDTO
+     * @return
+     */
+    @RequestMapping(value = "office/analyse")
+    public ApiRest<Object> officeAnalyse(@RequestBody FileUrlReqDTO reqDTO) {
+        List<AnalyzeWordRespDTO> list = quAnswerOfficeService.officeAnalyze(reqDTO.getUrl());
+        return super.success(list);
     }
 
 

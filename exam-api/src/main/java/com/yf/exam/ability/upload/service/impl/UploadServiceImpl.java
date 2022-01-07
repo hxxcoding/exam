@@ -7,7 +7,7 @@ import com.yf.exam.ability.upload.dto.UploadRespDTO;
 import com.yf.exam.ability.upload.service.UploadService;
 import com.yf.exam.ability.upload.utils.FileUtils;
 import com.yf.exam.core.exception.ServiceException;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * @author bool 
  * @date 2019-07-30 21:02
  */
-@Log4j2
+@Slf4j
 @Service
 public class UploadServiceImpl implements UploadService {
 
