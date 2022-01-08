@@ -2,7 +2,7 @@ package com.yf.exam.core.utils.poi;
 
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.StringUtils;
-import com.yf.exam.modules.qu.dto.response.AnalyzeWordRespDTO;
+import com.yf.exam.modules.qu.dto.WordParagraphDTO;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
@@ -49,14 +49,14 @@ public class WordUtils {
      * 分析word文件段落
      * @return
      */
-    public static List<AnalyzeWordRespDTO> analyzeWord(String filePath) {
+    public static List<WordParagraphDTO> analyzeWord(String filePath) {
         try (FileInputStream fis = new FileInputStream(filePath)) {
             XWPFDocument xwpfDocument = new XWPFDocument(fis);
             List<XWPFParagraph> paragraphs = xwpfDocument.getParagraphs();
-            List<AnalyzeWordRespDTO> paragraphText = new ArrayList<>();
+            List<WordParagraphDTO> paragraphText = new ArrayList<>();
             for (int i = 0; i < paragraphs.size(); i++) {
                 if (!StringUtils.isBlank(paragraphs.get(i).getText().trim())) {
-                    paragraphText.add(new AnalyzeWordRespDTO(i, paragraphs.get(i).getText()));
+                    paragraphText.add(new WordParagraphDTO(i, paragraphs.get(i).getText()));
                 }
             }
             return paragraphText;
@@ -248,10 +248,6 @@ public class WordUtils {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public XWPFDocument getXwpfDocument() {
-        return xwpfDocument;
     }
 
 }

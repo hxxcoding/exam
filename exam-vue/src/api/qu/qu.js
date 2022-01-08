@@ -25,6 +25,18 @@ export function officeAnalyze(data) {
 }
 
 /**
+ * office题 答案查询
+ * @param data
+ */
+export function fetchOfficeAnswer(data) {
+  return post('/exam/api/qu/qu/office/answer/detail', data)
+}
+
+export function readAnswer(data) {
+  return post('/exam/api/qu/qu/office/read-answer', data)
+}
+
+/**
  * 导出
  * @param data
  */

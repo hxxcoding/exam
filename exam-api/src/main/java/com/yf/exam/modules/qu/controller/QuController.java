@@ -10,7 +10,6 @@ import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdRespDTO;
 import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
-import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.excel.ExportExcel;
 import com.yf.exam.core.utils.excel.ImportExcel;
@@ -18,18 +17,18 @@ import com.yf.exam.modules.qu.dto.QuDTO;
 import com.yf.exam.modules.qu.dto.export.QuExportDTO;
 import com.yf.exam.modules.qu.dto.ext.QuDetailDTO;
 import com.yf.exam.modules.qu.dto.request.QuQueryReqDTO;
-import com.yf.exam.modules.qu.dto.response.AnalyzeWordRespDTO;
+import com.yf.exam.modules.qu.dto.WordParagraphDTO;
+import com.yf.exam.modules.qu.dto.response.WordAnalyzeRespDTO;
 import com.yf.exam.modules.qu.entity.Qu;
+import com.yf.exam.modules.qu.entity.QuAnswerOffice;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -141,13 +140,13 @@ public class QuController extends BaseController {
     }
 
     /**
-     * Office文件提取段落和索引
+     * Office文件提取段落,索引,方法
      * @param reqDTO
      * @return
      */
-    @RequestMapping(value = "office/analyse")
-    public ApiRest<Object> officeAnalyse(@RequestBody FileUrlReqDTO reqDTO) {
-        List<AnalyzeWordRespDTO> list = quAnswerOfficeService.officeAnalyze(reqDTO.getUrl());
+    @RequestMapping(value = "/office/analyse", method = { RequestMethod.POST })
+    public ApiRest<WordAnalyzeRespDTO> officeAnalyse(@RequestBody FileUrlReqDTO reqDTO) {
+        WordAnalyzeRespDTO list = quAnswerOfficeService.officeAnalyze(reqDTO.getUrl());
         return super.success(list);
     }
 

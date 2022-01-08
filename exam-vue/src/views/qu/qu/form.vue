@@ -119,6 +119,7 @@
         </el-table>
 
       </div>
+
       <div v-if="postForm.quType >= 10" class="app-container" style="margin-top: 25px">
         <el-form ref="postForm" :model="postForm" :rules="rules" label-position="left" label-width="150px">
           <el-alert
@@ -128,29 +129,78 @@
           />
           <el-card>
             <el-form-item label="答案附件" prop="image">
-              <file-upload v-model="postForm.remark" list-type="file" />
+              <file-upload v-model="postForm.remark" list-type="file" accept=".docx, .xlsx, .pptx" />
             </el-form-item>
             <el-form-item
-              v-if="postForm.image != null
-                && ( postForm.quType === 10 && postForm.image.endsWith('.docx')
-                || postForm.quType === 11 && postForm.image.endsWith('.xlsx')
-                || postForm.quType === 12 && postForm.image.endsWith('.pptx'))"
-              label="解析附件"
+              v-if="(postForm.quType === 10 && postForm.remark != null && postForm.remark.endsWith('.docx'))
+                || (postForm.quType === 11 && postForm.remark != null && postForm.remark.endsWith('.xlsx'))
+                || (postForm.quType === 12 && postForm.remark != null && postForm.remark.endsWith('.pptx'))"
+              label="操作"
               prop="image"
             >
-              <el-button @click="officeAnalyze">解析</el-button>
+              <el-button class="filter-item" size="small" type="primary" @click="officeAnalyze">
+                解析答案附件
+              </el-button>
+              <el-button v-if="wordData.paragraphs.length !== 0" class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
+                添加判分点
+              </el-button>
             </el-form-item>
-            <el-form-item v-if="paragraphs.length !== 0" label="选择段落">
-              <el-select v-model="officeAnswer.index" clearable placeholder="请选择">
-                <el-option
-                  v-for="item in paragraphs"
-                  :key="item.index"
-                  style="width: 500px;"
-                  :label="item.paragraph"
-                  :value="item.index"
-                />
-              </el-select>
-            </el-form-item>
+
+            <el-table
+              v-if="wordData.paragraphs.length !== 0"
+              :data="officeAnswerList"
+              :border="false"
+              empty-text="请点击上面的`解析`进行设置"
+              style="width: 100%; margin-top: 15px"
+            >
+              <el-table-column label="选择段落" align="center">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.pos" clearable placeholder="请选择">
+                    <el-option
+                      v-for="item in wordData.paragraphs"
+                      :key="item.pos"
+                      style="width: 500px;"
+                      :label="item.paragraph"
+                      :value="item.pos"
+                    />
+                  </el-select>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="选择方法" align="center">
+                <template slot-scope="scope">
+                  <el-select
+                    v-model="scope.row.method"
+                  >
+                    <el-option
+                      v-for="item in wordData.methods"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    />
+                  </el-select>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="设置答案" align="center">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.answer" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="设置得分" align="center">
+                <template slot-scope="scope">
+                  <el-input-number v-model="scope.row.score" :min="0" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="删除" align="center" width="80px">
+                <template slot-scope="scope">
+                  <el-button type="danger" icon="el-icon-delete" circle @click="removeOfficeAnswerItem(scope.$index)" />
+                </template>
+              </el-table-column>
+            </el-table>
+
           </el-card>
         </el-form>
       </div>
@@ -166,7 +216,7 @@
 </template>
 
 <script>
-import { fetchDetail, saveData, officeAnalyze } from '@/api/qu/qu'
+import { fetchDetail, saveData, officeAnalyze, fetchOfficeAnswer } from '@/api/qu/qu'
 import RepoSelect from '@/components/RepoSelect'
 import FileUpload from '@/components/FileUpload'
 import TinymceEditor from '@/components/TinymceEditor'
@@ -179,6 +229,12 @@ export default {
 
       quTypeDisabled: false,
       itemImage: true,
+      officeAnswerList: [],
+
+      wordData: {
+        paragraphs: [],
+        methods: []
+      },
 
       // levels: [
       //   { value: 1, label: '普通' },
@@ -224,8 +280,6 @@ export default {
         tagList: [],
         answerList: []
       },
-
-      paragraphs: [],
 
       rules: {
         content: [
@@ -286,6 +340,10 @@ export default {
     fetchData(id) {
       fetchDetail(id).then(response => {
         this.postForm = response.data
+        if (this.postForm.quType >= 10 && this.postForm.id !== null && this.postForm.id !== '') {
+          this.officeAnalyze()
+          this.fetchOfficeAnswer()
+        }
       })
     },
     submitForm() {
@@ -367,12 +425,11 @@ export default {
       officeAnalyze({
         url: this.postForm.remark
       }).then(response => {
-        this.paragraphs = response.data
-        this.paragraphs[this.paragraphs.length] = {
+        this.wordData = response.data
+        this.wordData.paragraphs[this.wordData.paragraphs.length] = {
           paragraph: '全文格式',
           index: null
         }
-        console.log(this.paragraphs)
         this.$notify({
           title: '成功',
           message: '解析文件成功！',
@@ -380,6 +437,25 @@ export default {
           duration: 2000
         })
       })
+    },
+
+    fetchOfficeAnswer() {
+      fetchOfficeAnswer({
+        id: this.postForm.id
+      }).then(response => {
+        this.officeAnswerList = response.data
+      })
+    },
+
+    handleOfficeAnswerAdd() {
+      this.officeAnswerList.push({
+        index: null,
+        method: null
+      })
+    },
+
+    removeOfficeAnswerItem(index) {
+      this.officeAnswerList.splice(index, 1)
     }
 
   }
