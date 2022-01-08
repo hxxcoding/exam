@@ -8,4 +8,5 @@ public interface QuAnswerOfficeService extends IService<QuAnswerOffice> {
 
     WordAnalyzeRespDTO officeAnalyze(String url);
 
+    String readWordFormat(String url, String method, Integer pos);
 }

@@ -17,8 +17,8 @@ import com.yf.exam.modules.qu.dto.QuDTO;
 import com.yf.exam.modules.qu.dto.export.QuExportDTO;
 import com.yf.exam.modules.qu.dto.ext.QuDetailDTO;
 import com.yf.exam.modules.qu.dto.request.QuQueryReqDTO;
-import com.yf.exam.modules.qu.dto.WordParagraphDTO;
 import com.yf.exam.modules.qu.dto.response.WordAnalyzeRespDTO;
+import com.yf.exam.modules.qu.dto.request.WordReadFormatReqDTO;
 import com.yf.exam.modules.qu.entity.Qu;
 import com.yf.exam.modules.qu.entity.QuAnswerOffice;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
@@ -160,6 +160,12 @@ public class QuController extends BaseController {
         List<QuAnswerOffice> answers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
                 .lambda().eq(QuAnswerOffice::getQuId, reqDTO.getId()));
         return super.success(answers);
+    }
+
+    @RequestMapping(value = "/office/word/read-format", method = { RequestMethod.POST })
+    public ApiRest<String> readWordFormat(@RequestBody WordReadFormatReqDTO reqDTO) {
+        String format = quAnswerOfficeService.readWordFormat(reqDTO.getUrl(), reqDTO.getMethod(), reqDTO.getPos());
+        return super.success(format);
     }
 
     /**

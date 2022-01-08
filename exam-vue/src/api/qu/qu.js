@@ -32,8 +32,8 @@ export function fetchOfficeAnswer(data) {
   return post('/exam/api/qu/qu/office/answer/detail', data)
 }
 
-export function readAnswer(data) {
-  return post('/exam/api/qu/qu/office/read-answer', data)
+export function readWordFormat(data) {
+  return post('/exam/api/qu/qu/office/word/read-format', data)
 }
 
 /**

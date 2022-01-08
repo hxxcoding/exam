@@ -182,7 +182,15 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="设置答案" align="center">
+              <el-table-column label="提取格式" align="center" width="120">
+                <template slot-scope="scope">
+                  <el-button size="small" @click="readWordFormat(scope.row)">
+                    提取格式
+                  </el-button>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="设置答案">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.answer" />
                 </template>
@@ -216,7 +224,7 @@
 </template>
 
 <script>
-import { fetchDetail, saveData, officeAnalyze, fetchOfficeAnswer } from '@/api/qu/qu'
+import { fetchDetail, saveData, officeAnalyze, fetchOfficeAnswer, readWordFormat } from '@/api/qu/qu'
 import RepoSelect from '@/components/RepoSelect'
 import FileUpload from '@/components/FileUpload'
 import TinymceEditor from '@/components/TinymceEditor'
@@ -447,10 +455,28 @@ export default {
       })
     },
 
+    readWordFormat(row) {
+      readWordFormat({
+        pos: row.pos,
+        method: row.method,
+        url: this.postForm.remark
+      }).then(response => {
+        row.answer = response.data
+        this.$notify({
+          title: '成功',
+          message: '读取格式为:' + response.data,
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+
     handleOfficeAnswerAdd() {
       this.officeAnswerList.push({
-        index: null,
-        method: null
+        pos: null,
+        method: null,
+        answer: null,
+        score: 0
       })
     },
 

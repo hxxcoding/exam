@@ -40,4 +40,15 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
             throw new ServiceException("文件不支持");
         }
     }
+
+    @Override
+    public String readWordFormat(String url, String method, Integer pos) {
+        String realPath = uploadService.getRealPath(url.substring(url.indexOf(Constant.FILE_PREFIX)));
+        if (url.endsWith(".docx")) {
+            WordUtils word = new WordUtils(realPath);
+            return word.executeMethod(method, pos).toString();
+        } else {
+            throw new ServiceException("文件不支持");
+        }
+    }
 }
