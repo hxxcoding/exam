@@ -150,6 +150,17 @@ public class QuController extends BaseController {
         return super.success(list);
     }
 
+    /**
+     * Office题答案获取
+     * @param reqDTO
+     * @return
+     */
+    @RequestMapping(value = "/office/answer/detail", method = { RequestMethod.POST })
+    public ApiRest<List<QuAnswerOffice>> officeAnswerDetail(@RequestBody BaseIdReqDTO reqDTO) {
+        List<QuAnswerOffice> answers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
+                .lambda().eq(QuAnswerOffice::getQuId, reqDTO.getId()));
+        return super.success(answers);
+    }
 
     /**
      * 导出excel文件
