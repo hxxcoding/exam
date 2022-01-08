@@ -1,5 +1,6 @@
 package com.yf.exam.modules.qu.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,13 +10,16 @@ import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.modules.qu.dto.QuAnswerDTO;
+import com.yf.exam.modules.qu.dto.QuAnswerOfficeDTO;
 import com.yf.exam.modules.qu.dto.QuDTO;
 import com.yf.exam.modules.qu.dto.export.QuExportDTO;
 import com.yf.exam.modules.qu.dto.ext.QuDetailDTO;
 import com.yf.exam.modules.qu.dto.request.QuQueryReqDTO;
 import com.yf.exam.modules.qu.entity.Qu;
+import com.yf.exam.modules.qu.entity.QuAnswerOffice;
 import com.yf.exam.modules.qu.enums.QuType;
 import com.yf.exam.modules.qu.mapper.QuMapper;
+import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuAnswerService;
 import com.yf.exam.modules.qu.service.QuRepoService;
 import com.yf.exam.modules.qu.service.QuService;
@@ -53,6 +57,9 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
     private QuAnswerService quAnswerService;
 
     @Autowired
+    private QuAnswerOfficeService quAnswerOfficeService;
+
+    @Autowired
     private QuRepoService quRepoService;
 
     @Autowired
@@ -84,8 +91,15 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
         Qu qu = this.getById(id);
         BeanMapper.copy(qu, respDTO);
 
-        List<QuAnswerDTO> answerList = quAnswerService.listByQu(id);
-        respDTO.setAnswerList(answerList);
+        if (qu.getQuType() < 10) {
+            List<QuAnswerDTO> answerList = quAnswerService.listByQu(id);
+            respDTO.setAnswerList(answerList);
+        }
+
+        if (qu.getQuType() >= 10) {
+            List<QuAnswerOfficeDTO> officeAnswerList = quAnswerOfficeService.listByQu(id);
+            respDTO.setOfficeAnswerList(officeAnswerList);
+        }
 
         List<String> repoIds = quRepoService.listByQu(id);
         respDTO.setRepoIds(repoIds);
@@ -117,7 +131,13 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
         this.saveOrUpdate(qu);
 
         // 保存全部answerList
-        quAnswerService.saveAll(qu.getId(), reqDTO.getAnswerList());
+        if (qu.getQuType() < 10) {
+            quAnswerService.saveAll(qu.getId(), reqDTO.getAnswerList());
+        }
+
+        if (qu.getQuType() >= 10) {
+            quAnswerOfficeService.saveAll(qu.getId(), reqDTO.getOfficeAnswerList());
+        }
 
         // 保存到题库
         quRepoService.saveAll(qu.getId(), qu.getQuType(), reqDTO.getRepoIds());

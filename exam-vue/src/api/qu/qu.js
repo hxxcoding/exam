@@ -24,14 +24,6 @@ export function officeAnalyze(data) {
   return post('/exam/api/qu/qu/office/analyse', data)
 }
 
-/**
- * office题 答案查询
- * @param data
- */
-export function fetchOfficeAnswer(data) {
-  return post('/exam/api/qu/qu/office/answer/detail', data)
-}
-
 export function readWordFormat(data) {
   return post('/exam/api/qu/qu/office/word/read-format', data)
 }

@@ -151,17 +151,10 @@ public class QuController extends BaseController {
     }
 
     /**
-     * Office题答案获取
+     * 读取word格式
      * @param reqDTO
      * @return
      */
-    @RequestMapping(value = "/office/answer/detail", method = { RequestMethod.POST })
-    public ApiRest<List<QuAnswerOffice>> officeAnswerDetail(@RequestBody BaseIdReqDTO reqDTO) {
-        List<QuAnswerOffice> answers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
-                .lambda().eq(QuAnswerOffice::getQuId, reqDTO.getId()));
-        return super.success(answers);
-    }
-
     @RequestMapping(value = "/office/word/read-format", method = { RequestMethod.POST })
     public ApiRest<String> readWordFormat(@RequestBody WordReadFormatReqDTO reqDTO) {
         String format = quAnswerOfficeService.readWordFormat(reqDTO.getUrl(), reqDTO.getMethod(), reqDTO.getPos());

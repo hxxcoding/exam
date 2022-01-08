@@ -1,6 +1,7 @@
 package com.yf.exam.modules.qu.dto.ext;
 
 import com.yf.exam.modules.qu.dto.QuAnswerDTO;
+import com.yf.exam.modules.qu.dto.QuAnswerOfficeDTO;
 import com.yf.exam.modules.qu.dto.QuDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,6 +26,9 @@ public class QuDetailDTO extends QuDTO {
     
     @ApiModelProperty(value = "备选项列表", required=true)
     private List<QuAnswerDTO> answerList;
+
+    @ApiModelProperty(value = "office题答案列表", required = true)
+    private List<QuAnswerOfficeDTO> officeAnswerList;
 
     @ApiModelProperty(value = "题库列表", required=true)
     private List<String> repoIds;

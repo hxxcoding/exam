@@ -148,14 +148,14 @@
 
             <el-table
               v-if="wordData.paragraphs.length !== 0"
-              :data="officeAnswerList"
+              :data="postForm.officeAnswerList"
               :border="false"
               empty-text="请点击上面的`解析`进行设置"
               style="width: 100%; margin-top: 15px"
             >
               <el-table-column label="选择段落" align="center">
                 <template slot-scope="scope">
-                  <el-select v-model="scope.row.pos" clearable placeholder="请选择">
+                  <el-select v-model="scope.row.pos" placeholder="请选择">
                     <el-option
                       v-for="item in wordData.paragraphs"
                       :key="item.pos"
@@ -190,9 +190,9 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="设置答案">
+              <el-table-column label="设置答案" align="center">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.answer" />
+                  <el-input v-model="scope.row.answer" disabled />
                 </template>
               </el-table-column>
 
@@ -224,7 +224,7 @@
 </template>
 
 <script>
-import { fetchDetail, saveData, officeAnalyze, fetchOfficeAnswer, readWordFormat } from '@/api/qu/qu'
+import { fetchDetail, saveData, officeAnalyze, readWordFormat } from '@/api/qu/qu'
 import RepoSelect from '@/components/RepoSelect'
 import FileUpload from '@/components/FileUpload'
 import TinymceEditor from '@/components/TinymceEditor'
@@ -237,7 +237,6 @@ export default {
 
       quTypeDisabled: false,
       itemImage: true,
-      officeAnswerList: [],
 
       wordData: {
         paragraphs: [],
@@ -286,7 +285,8 @@ export default {
       postForm: {
         repoIds: [],
         tagList: [],
-        answerList: []
+        answerList: [],
+        officeAnswerList: []
       },
 
       rules: {
@@ -350,7 +350,6 @@ export default {
         this.postForm = response.data
         if (this.postForm.quType >= 10 && this.postForm.id !== null && this.postForm.id !== '') {
           this.officeAnalyze()
-          this.fetchOfficeAnswer()
         }
       })
     },
@@ -436,7 +435,7 @@ export default {
         this.wordData = response.data
         this.wordData.paragraphs[this.wordData.paragraphs.length] = {
           paragraph: '全文格式',
-          index: null
+          pos: undefined
         }
         this.$notify({
           title: '成功',
@@ -444,14 +443,6 @@ export default {
           type: 'success',
           duration: 2000
         })
-      })
-    },
-
-    fetchOfficeAnswer() {
-      fetchOfficeAnswer({
-        id: this.postForm.id
-      }).then(response => {
-        this.officeAnswerList = response.data
       })
     },
 
@@ -472,8 +463,8 @@ export default {
     },
 
     handleOfficeAnswerAdd() {
-      this.officeAnswerList.push({
-        pos: null,
+      this.postForm.officeAnswerList.push({
+        pos: undefined,
         method: null,
         answer: null,
         score: 0
@@ -481,7 +472,7 @@ export default {
     },
 
     removeOfficeAnswerItem(index) {
-      this.officeAnswerList.splice(index, 1)
+      this.postForm.officeAnswerList.splice(index, 1)
     }
 
   }
