@@ -18,10 +18,8 @@ public class WordUtils {
     private XWPFDocument xwpfDocument;
 
     public WordUtils(String filePath) {
-        try {
-            FileInputStream fis = new FileInputStream(filePath);
+        try (FileInputStream fis = new FileInputStream(filePath)) { // 自动关闭
             xwpfDocument = new XWPFDocument(fis);
-            fis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,12 +47,10 @@ public class WordUtils {
 
     /**
      * 分析word文件段落
-     * @param filePath
      * @return
      */
     public static List<AnalyzeWordRespDTO> analyzeWord(String filePath) {
-        try {
-            FileInputStream fis = new FileInputStream(filePath);
+        try (FileInputStream fis = new FileInputStream(filePath)) {
             XWPFDocument xwpfDocument = new XWPFDocument(fis);
             List<XWPFParagraph> paragraphs = xwpfDocument.getParagraphs();
             List<AnalyzeWordRespDTO> paragraphText = new ArrayList<>();

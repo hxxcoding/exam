@@ -119,7 +119,7 @@
         </el-table>
 
       </div>
-      <div v-else-if="postForm.quType >= 10" class="app-container" style="margin-top: 25px">
+      <div v-if="postForm.quType >= 10" class="app-container" style="margin-top: 25px">
         <el-form ref="postForm" :model="postForm" :rules="rules" label-position="left" label-width="150px">
           <el-alert
             title="如无解析按钮,请检查附件格式是否正确！"
@@ -127,8 +127,8 @@
             style="margin-bottom: 10px"
           />
           <el-card>
-            <el-form-item label="题目附件" prop="image">
-              <span>{{ postForm.image }}</span>
+            <el-form-item label="答案附件" prop="image">
+              <file-upload v-model="postForm.remark" list-type="file" />
             </el-form-item>
             <el-form-item
               v-if="postForm.image != null
@@ -138,7 +138,18 @@
               label="解析附件"
               prop="image"
             >
-              <el-button>解析</el-button>
+              <el-button @click="officeAnalyze">解析</el-button>
+            </el-form-item>
+            <el-form-item v-if="paragraphs.length !== 0" label="选择段落">
+              <el-select v-model="officeAnswer.index" clearable placeholder="请选择">
+                <el-option
+                  v-for="item in paragraphs"
+                  :key="item.index"
+                  style="width: 500px;"
+                  :label="item.paragraph"
+                  :value="item.index"
+                />
+              </el-select>
             </el-form-item>
           </el-card>
         </el-form>
@@ -155,7 +166,7 @@
 </template>
 
 <script>
-import { fetchDetail, saveData } from '@/api/qu/qu'
+import { fetchDetail, saveData, officeAnalyze } from '@/api/qu/qu'
 import RepoSelect from '@/components/RepoSelect'
 import FileUpload from '@/components/FileUpload'
 import TinymceEditor from '@/components/TinymceEditor'
@@ -213,6 +224,9 @@ export default {
         tagList: [],
         answerList: []
       },
+
+      paragraphs: [],
+
       rules: {
         content: [
           { required: true, message: '题目内容不能为空！' }
@@ -347,6 +361,25 @@ export default {
     },
     onCancel() {
       this.$router.push({ name: 'ListQu' })
+    },
+
+    officeAnalyze() {
+      officeAnalyze({
+        url: this.postForm.remark
+      }).then(response => {
+        this.paragraphs = response.data
+        this.paragraphs[this.paragraphs.length] = {
+          paragraph: '全文格式',
+          index: null
+        }
+        console.log(this.paragraphs)
+        this.$notify({
+          title: '成功',
+          message: '解析文件成功！',
+          type: 'success',
+          duration: 2000
+        })
+      })
     }
 
   }

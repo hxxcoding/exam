@@ -17,6 +17,14 @@ export function saveData(data) {
 }
 
 /**
+ * office文件分析
+ * @param data
+ */
+export function officeAnalyze(data) {
+  return post('/exam/api/qu/qu/office/analyse', data)
+}
+
+/**
  * 导出
  * @param data
  */
