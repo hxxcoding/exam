@@ -113,10 +113,14 @@ public class ShiroRealm extends AuthorizingRealm {
 
 		if (cacheToken == null) {
 			throw new AuthenticationException("登陆失效，请重试登陆!");
-		} else if (!cacheToken.toString().equals(token)) { // 缓存中的token已经被更新
+		}
+
+		if (!cacheToken.toString().equals(token)) { // 缓存中的token已经被更新
 			throw new AuthenticationException("您的账号已在别处登录!");
 		}
 
+		// 重新设定expireTime
+		RedisUtil.set(username, cacheToken, JwtUtils.getExpireTime());
 		// 查找登录用户对象
 		SysUserLoginDTO user = sysUserService.token(token);
 
