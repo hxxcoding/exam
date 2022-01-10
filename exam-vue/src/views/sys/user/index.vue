@@ -11,15 +11,15 @@
 
       <template slot="filter-content">
 
-        <el-input v-model="listQuery.params.userName" style="width: 200px" placeholder="搜索学号" class="filter-item" clearable />
-        <el-input v-model="listQuery.params.realName" style="width: 200px" placeholder="搜索姓名" class="filter-item" clearable />
+        <el-input v-model="listQuery.params.userName" style="width: 130px" placeholder="搜索学号" class="filter-item" clearable />
+        <el-input v-model="listQuery.params.realName" style="width: 130px" placeholder="搜索姓名" class="filter-item" clearable />
+        <meet-role v-model="listQuery.params.roleIds" style="width: 200px" class="filter-item" />
         <depart-tree-select
           v-model="listQuery.params.departId"
           class="el-select filter-item el-select--medium"
           :options="treeData"
           :props="defaultProps"
           placeholder="请选择班级/学院"
-          width="200px"
         />
 
         <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="handleAdd">

@@ -1,6 +1,7 @@
 package com.yf.exam.modules.sys.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -38,6 +39,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -83,6 +85,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             if(!StringUtils.isBlank(params.getDepartId())){
                 List<String> ids = sysDepartService.listAllSubIds(params.getDepartId());
                 wrapper.lambda().in(SysUser::getDepartId, ids);
+            }
+
+            if (!StringUtils.isBlank(params.getRoleIds())) {
+                List<String> roles = JSONObject.parseArray(params.getRoleIds(), String.class);
+                roles.forEach(id -> wrapper.lambda().like(SysUser::getRoleIds, id));
             }
         }
 

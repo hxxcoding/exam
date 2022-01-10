@@ -35,16 +35,13 @@ public class SysRoleController extends BaseController {
     @Autowired
     private SysRoleService baseService;
 
-
-
-
     /**
      * 分页查找
      * @param reqDTO
      * @return
      */
     @ApiOperation(value = "分页查找")
-    @RequestMapping(value = "/paging", method = { RequestMethod.POST})
+    @RequestMapping(value = "/paging", method = { RequestMethod.POST })
     public ApiRest<IPage<SysRoleDTO>> paging(@RequestBody PagingReqDTO<SysRoleDTO> reqDTO) {
 
         //分页查询并转换
@@ -57,7 +54,7 @@ public class SysRoleController extends BaseController {
      * @return
      */
     @ApiOperation(value = "查找列表")
-    @RequestMapping(value = "/list", method = { RequestMethod.POST})
+    @RequestMapping(value = "/list", method = { RequestMethod.POST })
     public ApiRest<List<SysRoleDTO>> list() {
 
         //分页查询并转换

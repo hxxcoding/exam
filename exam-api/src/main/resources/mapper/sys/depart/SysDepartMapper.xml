@@ -26,7 +26,7 @@
 
 
     <select id="findChildren" resultMap="TreeResultMap">
-j        SELECT * FROM sys_depart WHERE parent_id=#{id} ORDER BY sys_depart.sort
+        SELECT * FROM sys_depart WHERE parent_id=#{id} ORDER BY sys_depart.sort
     </select>
 
     <select id="paging" resultMap="TreeResultMap">
