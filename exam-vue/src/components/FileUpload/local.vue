@@ -9,17 +9,17 @@
       :on-success="handleSuccess"
       :on-exceed="handleExceed"
 
-      :drag="listType!=='picture'"
+      :drag="listType!=='text'"
       :limit="limit"
       :headers="header"
       :file-list="fileList"
       :list-type="listType"
     >
 
-      <el-button v-if="listType==='picture'" size="small" type="primary">点击上传</el-button>
+      <el-button v-if="listType==='text'" size="small" type="primary">点击上传</el-button>
 
-      <i v-if="listType!=='picture'" class="el-icon-upload" />
-      <div v-if="listType!=='picture'" class="el-upload__text">
+      <i v-if="listType!=='text'" class="el-icon-upload" />
+      <div v-if="listType!=='text'" class="el-upload__text">
         将文件拖到此处，或
         <em>点击上传</em>
       </div>

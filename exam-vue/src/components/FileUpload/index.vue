@@ -20,7 +20,7 @@ export default {
     tips: String,
     listType: {
       type: String,
-      default: 'picture'
+      default: 'text'
     }
   },
   data() {
