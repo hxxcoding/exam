@@ -26,7 +26,7 @@
 
 
     <select id="findChildren" resultMap="TreeResultMap">
-        SELECT * FROM sys_depart WHERE parent_id=#{id}
+j        SELECT * FROM sys_depart WHERE parent_id=#{id} ORDER BY sys_depart.sort
     </select>
 
     <select id="paging" resultMap="TreeResultMap">
@@ -36,6 +36,7 @@
                 AND dept_name LIKE '%${query.deptName}%'
             </if>
         </if>
+        ORDER BY sys_depart.sort
     </select>
 
 </mapper>

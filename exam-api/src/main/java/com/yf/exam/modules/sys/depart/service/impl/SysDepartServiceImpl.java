@@ -71,7 +71,6 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     @Override
-    @Cacheable(sync = true)
     public IPage<SysDepartTreeDTO> paging(PagingReqDTO<SysDepartDTO> reqDTO) {
 
         // 创建分页对象
@@ -145,7 +144,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     }
 
     @Override
-    @Cacheable(sync = true)
+    @CacheEvict(allEntries = true)
     public void sort(String id, Integer sort) {
 
         SysDepart depart = this.getById(id);
