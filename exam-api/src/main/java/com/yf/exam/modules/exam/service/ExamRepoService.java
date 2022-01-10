@@ -2,7 +2,6 @@ package com.yf.exam.modules.exam.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yf.exam.modules.exam.dto.ExamRepoDTO;
-import com.yf.exam.modules.exam.dto.ext.ExamRepoExtDTO;
 import com.yf.exam.modules.exam.entity.ExamRepo;
 
 import java.util.List;
@@ -23,14 +22,14 @@ public interface ExamRepoService extends IService<ExamRepo> {
      * @param examId
      * @param list
      */
-    void saveAll(String examId, List<ExamRepoExtDTO> list);
+    void saveAll(String examId, List<ExamRepoDTO> list);
 
     /**
      * 查找考试题库列表
      * @param examId
      * @return
      */
-    List<ExamRepoExtDTO> listByExam(String examId);
+    List<ExamRepoDTO> listByExam(String examId);
 
     /**
      * 清理脏数据

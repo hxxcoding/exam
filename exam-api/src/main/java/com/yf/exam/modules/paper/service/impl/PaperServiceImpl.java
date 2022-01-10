@@ -14,7 +14,7 @@ import com.yf.exam.core.utils.poi.WordUtils;
 import com.yf.exam.modules.enums.JoinType;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.ExamRepoDTO;
-import com.yf.exam.modules.exam.dto.ext.ExamRepoExtDTO;
+import com.yf.exam.modules.exam.enums.ExamState;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
 import com.yf.exam.modules.paper.dto.PaperQuDTO;
@@ -28,7 +28,6 @@ import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 import com.yf.exam.modules.paper.entity.PaperQu;
 import com.yf.exam.modules.paper.entity.PaperQuAnswer;
-import com.yf.exam.modules.exam.enums.ExamState;
 import com.yf.exam.modules.paper.enums.PaperState;
 import com.yf.exam.modules.paper.mapper.PaperMapper;
 import com.yf.exam.modules.paper.service.PaperQuAnswerService;
@@ -43,25 +42,15 @@ import com.yf.exam.modules.qu.service.QuAnswerService;
 import com.yf.exam.modules.qu.service.QuService;
 import com.yf.exam.modules.sys.user.entity.SysUser;
 import com.yf.exam.modules.sys.user.service.SysUserService;
-import com.yf.exam.modules.user.book.service.UserBookService;
 import com.yf.exam.modules.user.exam.entity.UserExam;
 import com.yf.exam.modules.user.exam.service.UserExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
 * <p>
@@ -283,7 +272,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     private List<PaperQu> generateByRepo(String examId, Integer level){
 
         // 查找规则指定的题库
-        List<ExamRepoExtDTO> list = examRepoService.listByExam(examId);
+        List<ExamRepoDTO> list = examRepoService.listByExam(examId);
 
         //最终的题目列表
         List<PaperQu> quList = new ArrayList<>();
@@ -293,7 +282,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         excludes.add("none");
 
         if (!CollectionUtils.isEmpty(list)) {
-            for (ExamRepoExtDTO item : list) {
+            for (ExamRepoDTO item : list) {
 
                 // 单选题
                 if(item.getRadioCount() > 0){

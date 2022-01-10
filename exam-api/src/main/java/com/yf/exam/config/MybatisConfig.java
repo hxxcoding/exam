@@ -1,7 +1,6 @@
 package com.yf.exam.config;
 
 import com.yf.exam.aspect.mybatis.QueryInterceptor;
-import com.yf.exam.aspect.mybatis.UpdateInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,14 +21,6 @@ public class MybatisConfig {
     public QueryInterceptor queryInterceptor() {
         // setLimit(500L) 设置最大单页限制数量，默认 500 条，-1 不受限制
         return new QueryInterceptor();
-    }
-
-    /**
-     * 插入数据过滤器
-     */
-    @Bean
-    public UpdateInterceptor updateInterceptor() {
-        return new UpdateInterceptor();
     }
 
 

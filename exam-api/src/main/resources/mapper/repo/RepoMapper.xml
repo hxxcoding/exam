@@ -46,17 +46,17 @@
 
 
     <update id="refreshStat">
-         UPDATE el_repo a
-         SET
-         radio_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=1),
-         multi_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=2),
-         judge_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=3),
-         saq_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=4),
-         blank_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=5),
-         word_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=10),
-         excel_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=11),
-         ppt_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=12)
-         WHERE a.id=#{repoId}
+        UPDATE el_repo a
+        SET
+        radio_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=1),
+        multi_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=2),
+        judge_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=3),
+        saq_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=4),
+        blank_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=5),
+        word_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=10),
+        excel_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=11),
+        ppt_count=(SELECT COUNT(0) FROM el_qu_repo WHERE repo_id=a.id AND qu_type=12)
+        WHERE a.id=#{repoId}
     </update>
 
 

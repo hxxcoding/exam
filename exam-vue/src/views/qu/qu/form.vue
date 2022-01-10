@@ -175,14 +175,14 @@
                     <el-option
                       v-for="item in wordData.methods"
                       :key="item"
-                      :label="item"
+                      :label="item | wordMethodFilter"
                       :value="item"
                     />
                   </el-select>
                 </template>
               </el-table-column>
 
-              <el-table-column label="提取格式" align="center" width="120">
+              <el-table-column label="提取格式" align="center" width="100">
                 <template slot-scope="scope">
                   <el-button size="small" @click="readWordFormat(scope.row)">
                     提取格式
@@ -198,11 +198,11 @@
 
               <el-table-column label="设置得分" align="center">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.score" :min="0" />
+                  <el-input-number v-model="scope.row.score" :min="0" style="width: 150px" />
                 </template>
               </el-table-column>
 
-              <el-table-column label="删除" align="center" width="80px">
+              <el-table-column label="删除" align="center" width="60">
                 <template slot-scope="scope">
                   <el-button type="danger" icon="el-icon-delete" circle @click="removeOfficeAnswerItem(scope.$index)" />
                 </template>
@@ -348,7 +348,8 @@ export default {
     fetchData(id) {
       fetchDetail(id).then(response => {
         this.postForm = response.data
-        if (this.postForm.quType >= 10 && this.postForm.id !== null && this.postForm.id !== '') {
+        if (this.postForm.quType >= 10 && this.postForm.id !== null && this.postForm.id !== '' &&
+            this.postForm.remark !== null && this.postForm.remark !== '') {
           this.officeAnalyze()
         }
       })

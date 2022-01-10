@@ -63,3 +63,27 @@ export function examStateFilter(value) {
   }
   return map[value]
 }
+
+export function wordMethodFilter(value) {
+  const map = {
+    'isBold': '是否有下划线',
+    'isItalic': '是否斜体',
+    'getPgSzW': '页面宽度',
+    'getPgSzH': '页面高度',
+    'getPgMarLeft': '左页边距',
+    'getPgMarRight': '右页边距',
+    'getPgMarTop': '上页边距',
+    'getPgMarBottom': '下页边距',
+    'getColsNum': '分栏数量',
+    'isColsLine': '是否分栏',
+    'getIndentationFirstLine': '首行缩进',
+    'getIndentationHanging': '悬挂缩进',
+    'getSpacingBetween': '行间距',
+    'getNumFmt': '项目符号',
+    'getFontSize': '字号',
+    'getFontFamily': '字体',
+    'getUnderlineType': '下划线类型',
+    'getPicTextAround': '图片环绕方式'
+  }
+  return map[value]
+}

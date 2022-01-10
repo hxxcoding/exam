@@ -250,6 +250,7 @@
 
 <script>
 import { fetchDetail, saveData } from '@/api/exam/exam'
+import { fetchRepoDetail } from '@/api/qu/repo'
 import { fetchTree } from '@/api/sys/depart/depart'
 import RepoSelect from '@/components/RepoSelect'
 
@@ -551,6 +552,20 @@ export default {
 
         if (this.postForm.joinType === 1) {
           that.repoList = that.postForm.repoList
+          that.repoList.forEach(repo => {
+            fetchRepoDetail({
+              id: repo.repoId
+            }).then(response => {
+              repo.totalRadio = response.data.radioCount
+              repo.totalMulti = response.data.multiCount
+              repo.totalJudge = response.data.judgeCount
+              repo.totalBlank = response.data.blankCount
+              repo.totalWord = response.data.wordCount
+              repo.totalExcel = response.data.excelCount
+              repo.totalPPT = response.data.pptCount
+            })
+          })
+          console.log(that.repoList)
         }
       })
     },

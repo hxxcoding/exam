@@ -32,32 +32,4 @@
         `word_count`,`word_score`,`excel_count`,`excel_score`,`ppt_count`,`ppt_score`
     </sql>
 
-    <resultMap id="ExamRepoExtResultMap" type="com.yf.exam.modules.exam.dto.ext.ExamRepoExtDTO" extends="BaseResultMap">
-        <result column="totalRadio" property="totalRadio" />
-        <result column="totalMulti" property="totalMulti" />
-        <result column="totalJudge" property="totalJudge" />
-        <result column="totalSaq" property="totalSaq" />
-        <result column="totalBlank" property="totalBlank" />
-        <result column="totalWord" property="totalWord" />
-        <result column="totalExcel" property="totalExcel" />
-        <result column="totalPPT" property="totalPPT" />
-    </resultMap>
-
-    <select id="listByExam" resultMap="ExamRepoExtResultMap">
-        SELECT ep.*,
-               repo.radio_count AS totalRadio,
-               repo.multi_count AS totalMulti,
-               repo.judge_count AS totalJudge,
-               repo.saq_count AS totalSaq,
-               repo.blank_count AS totalBlank,
-               repo.word_count AS totalWord,
-               repo.excel_count AS totalExcel,
-               repo.ppt_count AS totalPPT
-
-        FROM el_exam_repo ep
-                 LEFT JOIN el_repo repo ON ep.repo_id=repo.id
-        WHERE ep.exam_id=#{examId}
-    </select>
-
-
 </mapper>

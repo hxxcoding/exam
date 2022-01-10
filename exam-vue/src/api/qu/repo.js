@@ -4,7 +4,7 @@ import { post } from '@/utils/request'
  * 题库详情
  * @param data
  */
-export function fetchDetail(data) {
+export function fetchRepoDetail(data) {
   return post('/exam/api/repo/detail', data)
 }
 
