@@ -18,14 +18,27 @@ export function saveData(data) {
 
 /**
  * office文件分析
- * @param data
+ * @param url
  */
-export function officeAnalyze(data) {
-  return post('/exam/api/qu/qu/office/analyse', data)
+export function officeAnalyze(url) {
+  return post('/exam/api/qu/qu/office/analyse', {
+    url: url
+  })
 }
 
-export function readWordFormat(data) {
-  return post('/exam/api/qu/qu/office/word/read-format', data)
+/**
+ * 读取Word格式
+ * @param url
+ * @param pos
+ * @param method
+ * @returns {Promise}
+ */
+export function readWordFormat(url, pos, method) {
+  return post('/exam/api/qu/qu/office/word/read-format', {
+    url: url,
+    pos: pos,
+    method: method
+  })
 }
 
 /**

@@ -429,37 +429,33 @@ export default {
     },
 
     officeAnalyze() {
-      officeAnalyze({
-        url: this.postForm.remark
-      }).then(response => {
-        this.wordData = response.data
-        this.wordData.paragraphs[this.wordData.paragraphs.length] = {
-          paragraph: '全文格式',
-          pos: undefined
-        }
-        this.$notify({
-          title: '成功',
-          message: '解析文件成功！',
-          type: 'success',
-          duration: 2000
+      officeAnalyze(this.postForm.remark)
+        .then(response => {
+          this.wordData = response.data
+          this.wordData.paragraphs[this.wordData.paragraphs.length] = {
+            paragraph: '全文格式',
+            pos: undefined
+          }
+          this.$notify({
+            title: '成功',
+            message: '解析文件成功！',
+            type: 'success',
+            duration: 2000
+          })
         })
-      })
     },
 
     readWordFormat(row) {
-      readWordFormat({
-        pos: row.pos,
-        method: row.method,
-        url: this.postForm.remark
-      }).then(response => {
-        row.answer = response.data
-        this.$notify({
-          title: '成功',
-          message: '读取格式为:' + response.data,
-          type: 'success',
-          duration: 2000
+      readWordFormat(this.postForm.remark, row.pos, row.method)
+        .then(response => {
+          row.answer = response.data
+          this.$notify({
+            title: '成功',
+            message: '读取格式为:' + response.data,
+            type: 'success',
+            duration: 2000
+          })
         })
-      })
     },
 
     handleOfficeAnswerAdd() {
