@@ -19,8 +19,6 @@ import java.lang.reflect.Field;
 @Component
 public class InjectUtils {
 
-
-
     /**
      * 给对象字段赋值
      *
@@ -35,7 +33,7 @@ public class InjectUtils {
         for (String fieldName : fields) {
 
             //获取当前
-            Field field = this.getFiled(object.getClass(), fieldName);
+            Field field = this.getField(object.getClass(), fieldName);
             if(field == null){
                 continue;
             }
@@ -52,7 +50,7 @@ public class InjectUtils {
      * @param clazz     目标类
      * @param fieldName 字段名
      */
-    private Field getFiled(Class clazz, String fieldName) {
+    private Field getField(Class clazz, String fieldName) {
 
         System.out.println("注入的类："+clazz.toString());
 
@@ -66,13 +64,12 @@ public class InjectUtils {
 
             //如果为空且存在父类，则往上找
             if(clazz.getSuperclass()!=null){
-                return this.getFiled(clazz.getSuperclass(), fieldName);
+                return this.getField(clazz.getSuperclass(), fieldName);
             }
 
             return null;
         }
     }
-
 
     /**
      * 打印结果返回
@@ -90,9 +87,7 @@ public class InjectUtils {
             response.getWriter().write(JSON.toJSONString(apiRest));
             response.getWriter().close();
 
-        }catch (IOException e){
-
-        }
+        }catch (IOException ignore) {}
 
     }
 

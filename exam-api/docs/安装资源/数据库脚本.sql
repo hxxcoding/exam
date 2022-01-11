@@ -1253,4 +1253,16 @@ INSERT INTO `sys_user_role` VALUES ('1318103579445284865', '10001', 'sa');
 INSERT INTO `sys_user_role` VALUES ('1318128865264132097', '1252125239901696002', 'student');
 COMMIT;
 
+CREATE TABLE `sys_log` (
+    `id` varchar(32) NOT NULL COMMENT 'ID',
+    `title` varchar(255) NOT NULL COMMENT '日志名称',
+    `user_id` varchar(32) NOT NULL DEFAULT '' COMMENT '用户ID',
+    `user_name` varchar(32) NOT NULL DEFAULT '' COMMENT '用户名称',
+    `ip` varchar(255) NOT NULL DEFAULT '' COMMENT 'IP地址',
+    `ip_region` varchar(255) NOT NULL DEFAULT '' COMMENT 'IP归属地',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `data` text NOT NULL COMMENT '日志明细',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统日志';
+
 SET FOREIGN_KEY_CHECKS = 1;

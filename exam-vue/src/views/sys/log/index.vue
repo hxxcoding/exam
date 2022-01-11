@@ -9,14 +9,7 @@
     >
 
       <template slot="filter-content">
-        <el-select v-model="listQuery.params.title" clearable class="filter-item">
-          <el-option
-            v-for="item in types"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+        <el-input v-model="listQuery.params.title" clearable placeholder="搜索日志" style="width: 200px;" class="filter-item" />
         <el-input v-model="listQuery.params.userName" clearable placeholder="操作人" style="width: 200px;" class="filter-item" />
       </template>
 
