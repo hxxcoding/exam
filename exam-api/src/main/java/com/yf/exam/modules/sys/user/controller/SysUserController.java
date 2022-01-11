@@ -14,9 +14,15 @@ import com.yf.exam.modules.sys.user.dto.SysUserDTO;
 import com.yf.exam.modules.sys.user.dto.export.SysUserExportDTO;
 import com.yf.exam.modules.sys.user.dto.request.SysUserLoginReqDTO;
 import com.yf.exam.modules.sys.user.dto.request.SysUserSaveReqDTO;
+import com.yf.exam.modules.sys.user.dto.response.RouterTreeDTO;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
+import com.yf.exam.modules.sys.user.entity.SysMenu;
 import com.yf.exam.modules.sys.user.entity.SysUser;
+import com.yf.exam.modules.sys.user.service.SysMenuService;
+import com.yf.exam.modules.sys.user.service.SysRoleService;
+import com.yf.exam.modules.sys.user.service.SysUserRoleService;
 import com.yf.exam.modules.sys.user.service.SysUserService;
+import com.yf.exam.modules.user.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -45,6 +51,10 @@ public class SysUserController extends BaseController {
 
     @Autowired
     private SysUserService baseService;
+    @Autowired
+    private SysMenuService sysMenuService;
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
 
     /**
      * 用户登录
@@ -182,12 +192,19 @@ public class SysUserController extends BaseController {
 //        SysUserLoginDTO respDTO = baseService.quickReg(reqDTO);
 //        return success(respDTO);
 //    }
+    @RequestMapping(value = "/router", method = { RequestMethod.POST })
+    public ApiRest<Object> getRouter() {
+        String userId = UserUtils.getUserId();
+        List<String> roles = sysUserRoleService.listRoles(userId);
+        List<SysMenu> menus = sysMenuService.listTreeByRoleIds(roles);
+        List<RouterTreeDTO> routers = sysMenuService.buildMenus(menus);
+        return super.success(routers);
+    }
 
 
     /**
      * 下载导入试题数据模板
      */
-    @ResponseBody
     @RequestMapping(value = "import/template")
     public ApiRest importFileTemplate(HttpServletResponse response) {
         try {
@@ -205,7 +222,6 @@ public class SysUserController extends BaseController {
      * @param file
      * @return
      */
-    @ResponseBody
     @RequestMapping(value = "import")
     public ApiRest importFile(@RequestParam("file") MultipartFile file) {
         try {
