@@ -53,7 +53,6 @@ import java.util.List;
 @Api(tags={"问题题目"})
 @RestController
 @RequestMapping("/exam/api/qu/qu")
-@RequiresRoles(logical = Logical.OR, value = {"sa", "teacher"})
 public class QuController extends BaseController {
 
     @Autowired

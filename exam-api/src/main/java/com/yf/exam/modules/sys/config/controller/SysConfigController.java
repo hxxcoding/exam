@@ -39,7 +39,6 @@ public class SysConfigController extends BaseController {
     */
     @ApiOperation(value = "添加或修改")
     @RequestMapping(value = "/save", method = { RequestMethod.POST})
-    @RequiresRoles("sa")
     public ApiRest<BaseIdRespDTO> save(@RequestBody SysConfigDTO reqDTO) {
         //复制参数
         SysConfig entity = new SysConfig();

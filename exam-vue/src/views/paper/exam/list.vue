@@ -149,7 +149,7 @@ export default {
 
     // 开始考试
     handlePre(examId) {
-      this.$router.push({ name: 'PreExam', params: { examId: examId }})
+      this.$router.push({ name: 'ExamPrepare', query: { examId: examId }})
     }
   }
 }

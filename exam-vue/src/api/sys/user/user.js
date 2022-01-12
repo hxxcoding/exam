@@ -1,5 +1,9 @@
 import { download, post, upload } from '@/utils/request'
 
+export function fetchRouters() {
+  return post('/exam/api/sys/user/router', {})
+}
+
 export function updateData(data) {
   return post('/exam/api/sys/user/update', data)
 }

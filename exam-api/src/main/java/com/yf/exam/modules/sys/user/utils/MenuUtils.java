@@ -16,12 +16,13 @@ public class MenuUtils {
      * @return 路由名称
      */
     public static String getRouteName(SysMenu menu) {
-        String routerName = StringUtils.capitalize(menu.getPath());
-        // 非外链并且是一级目录（类型为目录）
-        if (isMenuFrame(menu)) {
-            routerName = StringUtils.EMPTY;
+        String[] split = menu.getPath().split("/");
+        StringBuilder sb = new StringBuilder();
+        for (String s : split) {
+            sb.append(StringUtils.capitalize(s));
         }
-        return routerName;
+        // 非外链并且是一级目录（类型为目录）
+        return isMenuFrame(menu) ? "" : sb.toString();
     }
 
     /**

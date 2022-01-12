@@ -213,7 +213,7 @@ export default {
   // 回退时无法弹窗
   created() {
     screenfull.toggle()
-    const id = this.$route.params.id
+    const id = this.$route.query.id
     if (typeof id !== 'undefined') {
       this.paperId = id
       this.fetchData(id)

@@ -54,7 +54,7 @@ import { fetchDetail } from '@/api/exam/exam'
 import { createPaper } from '@/api/paper/exam'
 
 export default {
-  name: 'PreExam',
+  name: 'ExamPrepare',
   data() {
     return {
       detailData: {},
@@ -71,7 +71,7 @@ export default {
   },
 
   created() {
-    this.postForm.examId = this.$route.params.examId
+    this.postForm.examId = this.$route.query.examId
     this.fetchData()
   },
 
@@ -104,7 +104,7 @@ export default {
           setTimeout(function() {
             loading.close()
             that.dialogVisible = false
-            that.$router.push({ name: 'StartExam', params: { id: response.data.id }})
+            that.$router.push({ name: 'StartExam', query: { id: response.data.id }})
           }, 1000)
         }
       }).catch(() => {

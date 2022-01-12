@@ -57,7 +57,7 @@
               trigger="hover"
             >
               <span v-html="scope.row.content" />
-              <router-link slot="reference" :to="{ name: 'UpdateQu', params:{ id: scope.row.id}}">
+              <router-link slot="reference" :to="{ name: 'UpdateQu', query:{ id: scope.row.id}}">
                 {{ scope.row.content }}
               </router-link>
             </el-popover>

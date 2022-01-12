@@ -38,7 +38,7 @@
         >
 
           <template slot-scope="scope">
-            <router-link :to="{ name: 'ShowExam', params: {id : scope.row.id}}">
+            <router-link :to="{ name: 'ExamResult', query: {id : scope.row.id}}">
               {{ scope.row.title }}
             </router-link>
 
@@ -202,7 +202,7 @@ export default {
   },
 
   created() {
-    const examId = this.$route.params.examId
+    const examId = this.$route.query.examId
 
     if (typeof examId !== 'undefined') {
       this.listQuery.params.examId = examId

@@ -124,7 +124,6 @@ public class SysUserController extends BaseController {
      */
     @ApiOperation(value = "批量删除")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
-    @RequiresRoles("sa")
     public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
         baseService.removeByIds(reqDTO.getIds());
@@ -138,7 +137,6 @@ public class SysUserController extends BaseController {
      */
     @ApiOperation(value = "分页查找")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
-    @RequiresRoles("sa")
     public ApiRest<IPage<SysUserDTO>> paging(@RequestBody PagingReqDTO<SysUserDTO> reqDTO) {
 
         //分页查询并转换
@@ -153,7 +151,6 @@ public class SysUserController extends BaseController {
      */
     @ApiOperation(value = "修改状态")
     @RequestMapping(value = "/state", method = { RequestMethod.POST})
-    @RequiresRoles("sa")
     public ApiRest state(@RequestBody BaseStateReqDTO reqDTO) {
 
         // 条件

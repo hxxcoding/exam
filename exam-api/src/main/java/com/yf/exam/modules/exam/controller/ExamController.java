@@ -37,7 +37,6 @@ import java.util.Date;
 @Api(tags={"考试"})
 @RestController
 @RequestMapping("/exam/api/exam/exam")
-@RequiresRoles(logical = Logical.OR, value = {"sa", "teacher"})
 public class ExamController extends BaseController {
 
     @Autowired
@@ -76,7 +75,6 @@ public class ExamController extends BaseController {
     */
     @ApiOperation(value = "查找详情")
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
-    @RequiresRoles(logical = Logical.OR, value = {"sa", "student", "teacher"})
     public ApiRest<ExamSaveReqDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         ExamSaveReqDTO dto = baseService.findDetail(reqDTO.getId());
         return super.success(dto);
@@ -109,7 +107,6 @@ public class ExamController extends BaseController {
      */
     @ApiOperation(value = "考试视角")
     @RequestMapping(value = "/online-paging", method = { RequestMethod.POST})
-    @RequiresRoles(logical = Logical.OR, value = {"sa", "student", "teacher"})
     public ApiRest<IPage<ExamOnlineRespDTO>> myPaging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
 
         //分页查询并转换

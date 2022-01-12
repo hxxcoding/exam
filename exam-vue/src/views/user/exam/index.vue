@@ -109,7 +109,7 @@ export default {
   },
 
   created() {
-    this.listQuery.params.examId = this.$route.params.examId
+    this.listQuery.params.examId = this.$route.query.examId
   },
   methods: {
 

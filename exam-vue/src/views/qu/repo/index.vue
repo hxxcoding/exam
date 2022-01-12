@@ -25,7 +25,7 @@
 
         <template slot-scope="data">
 
-          <router-link :to="{ name: 'UpdateRepo', params:{id: data.row.id}}">
+          <router-link :to="{ name: 'UpdateRepo', query:{id: data.row.id}}">
             {{ data.row.title }}
           </router-link>
 

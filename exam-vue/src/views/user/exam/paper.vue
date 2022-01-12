@@ -95,7 +95,7 @@ export default {
     },
 
     handlePaperDetail(id) {
-      this.$router.push({ name: 'ShowExam', params: { id: id }})
+      this.$router.push({ name: 'ExamResult', query: { id: id }})
     }
   }
 }

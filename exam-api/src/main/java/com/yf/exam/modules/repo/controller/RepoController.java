@@ -38,7 +38,6 @@ import java.util.List;
 @Api(tags={"题库"})
 @RestController
 @RequestMapping("/exam/api/repo")
-@RequiresRoles(logical = Logical.OR, value = {"sa", "teacher"})
 public class RepoController extends BaseController {
 
     @Autowired

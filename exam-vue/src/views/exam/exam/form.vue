@@ -381,7 +381,7 @@ export default {
 
   },
   created() {
-    const id = this.$route.params.id
+    const id = this.$route.query.id
     if (typeof id !== 'undefined') {
       this.fetchData(id)
     }

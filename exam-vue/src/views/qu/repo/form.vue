@@ -27,7 +27,7 @@
 
 <script>
 
-import { fetchDetail, saveData } from '@/api/qu/repo'
+import { fetchRepoDetail, saveData } from '@/api/qu/repo'
 
 export default {
   name: 'QuRepoDetail',
@@ -46,7 +46,7 @@ export default {
     }
   },
   created() {
-    const id = this.$route.params.id
+    const id = this.$route.query.id
     if (typeof id !== 'undefined') {
       this.fetchData(id)
     }
@@ -60,7 +60,7 @@ export default {
 
     fetchData(id) {
       const params = { id: id }
-      fetchDetail(params).then(response => {
+      fetchRepoDetail(params).then(response => {
         this.postForm = response.data
       })
     },

@@ -180,11 +180,11 @@ export default {
   methods: {
 
     handleExamDetail(examId) {
-      this.$router.push({ name: 'ListExamUser', params: { examId: examId }})
+      this.$router.push({ name: 'ListExamUser', query: { examId: examId }})
     },
 
     handleUpdateExam(examId) {
-      this.$router.push({ name: 'UpdateExam', params: { id: examId }})
+      this.$router.push({ name: 'UpdateExam', query: { id: examId }})
     }
   }
 }
