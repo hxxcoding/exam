@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yf.exam.modules.sys.user.dto.ext.MetaDTO;
 import com.yf.exam.modules.sys.user.dto.response.RouterTreeDTO;
+import com.yf.exam.modules.sys.user.dto.response.TreeSelectDTO;
 import com.yf.exam.modules.sys.user.entity.SysMenu;
 import com.yf.exam.modules.sys.user.entity.SysRoleMenu;
 import com.yf.exam.modules.sys.user.enums.MenuType;
@@ -16,6 +17,7 @@ import com.yf.exam.modules.user.UserUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -51,7 +53,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public List<SysMenu> listTreeByRoleIds(List<String> roleIds) {
-        List<SysMenu> menus = null;
+        List<SysMenu> menus = null; // TODO 修改为join语句
         if (UserUtils.isAdmin(true)) {
             menus = this.list(new QueryWrapper<SysMenu>().lambda()
                     .in(SysMenu::getType, MenuType.DIR, MenuType.MENU)
@@ -62,10 +64,13 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     .select(SysRoleMenu::getMenuId)
                     .in(SysRoleMenu::getRoleId, roleIds))
                 .stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(menuIds)) {
+                return new ArrayList<>();
+            }
             menus = this.list(new QueryWrapper<SysMenu>().lambda()
                     .in(SysMenu::getType, MenuType.DIR, MenuType.MENU)
-                    .eq(SysMenu::getIsAvailable, true)
                     .in(SysMenu::getId, menuIds)
+                    .eq(SysMenu::getIsAvailable, true)
                     .orderByAsc(SysMenu::getParentId, SysMenu::getSort));
         }
         return MenuUtils.getChildPerms(menus, "0");
@@ -113,6 +118,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             routers.add(router);
         }
         return routers;
+    }
+
+    @Override
+    public List<TreeSelectDTO> buildMenuTreeSelect(List<SysMenu> menus) {
+        List<SysMenu> menuTree = MenuUtils.buildMenuTree(menus);
+        return menuTree.stream().map(TreeSelectDTO::new).collect(Collectors.toList());
     }
 
 }

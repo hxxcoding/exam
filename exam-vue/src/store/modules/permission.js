@@ -53,6 +53,7 @@ const actions = {
     return new Promise(resolve => {
       fetchRouters().then(res => {
         const accessedRoutes = filterAsyncRouter(res.data)
+        accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       })

@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Accessors(chain = true)
 @TableName("sys_role_menu")
 public class SysRoleMenu extends Model<SysRoleMenu> {
 

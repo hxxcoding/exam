@@ -143,4 +143,28 @@ public class MenuUtils {
         return getChildList(list, t).size() > 0;
     }
 
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param menus 菜单列表
+     * @return 树结构列表
+     */
+    public static List<SysMenu> buildMenuTree(List<SysMenu> menus) {
+        List<SysMenu> returnList = new ArrayList<>();
+        List<String> tempList = new ArrayList<>();
+        for (SysMenu menu : menus) {
+            tempList.add(menu.getId());
+        }
+        for (SysMenu menu : menus) {
+            // 如果是顶级节点, 遍历该父节点的所有子节点
+            if (!tempList.contains(menu.getParentId())) {
+                recursionFn(menus, menu);
+                returnList.add(menu);
+            }
+        }
+        if (returnList.isEmpty()) {
+            returnList = menus;
+        }
+        return returnList;
+    }
 }
