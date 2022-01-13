@@ -1,4 +1,4 @@
-import { constantRoutes } from '@/router'
+import router, { asyncRoutes, constantRoutes } from '@/router'
 import { fetchRouters } from '@/api/sys/user/user'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
@@ -53,8 +53,9 @@ const actions = {
     return new Promise(resolve => {
       fetchRouters().then(res => {
         const accessedRoutes = filterAsyncRouter(res.data)
-        accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
         commit('SET_ROUTES', accessedRoutes)
+        router.addRoutes(asyncRoutes)
+        accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
         resolve(accessedRoutes)
       })
     })

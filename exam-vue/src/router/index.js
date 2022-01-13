@@ -105,7 +105,77 @@ export const constantRoutes = [
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
-export const asyncRoutes = []
+export const asyncRoutes = [
+
+  {
+    path: '/start/exam',
+    component: () => import('@/views/paper/exam/exam'),
+    name: 'StartExam',
+    meta: { title: '开始考试' },
+    hidden: true
+  },
+
+  {
+    path: '/my',
+    component: Layout,
+    name: 'Online',
+    hidden: true,
+    children: [
+
+      {
+        path: 'exam/prepare',
+        component: () => import('@/views/paper/exam/preview'),
+        name: 'ExamPrepare',
+        meta: { title: '准备考试', noCache: true, activeMenu: '/my/exam/online' }
+      },
+
+      {
+        path: 'exam/result',
+        component: () => import('@/views/paper/exam/result'),
+        name: 'ExamResult',
+        meta: { title: '考试结果', noCache: true }
+      }
+
+    ]
+  },
+
+  {
+    path: '/exam',
+    component: Layout,
+    name: 'Manage',
+    hidden: true,
+    children: [
+
+      {
+        path: 'save/repo',
+        component: () => import('@/views/qu/repo/form'),
+        name: 'SaveRepo',
+        meta: { title: '保存题库', noCache: true, activeMenu: '/exam/list/repo' }
+      },
+
+      {
+        path: 'save/qu',
+        component: () => import('@/views/qu/qu/form'),
+        name: 'SaveQu',
+        meta: { title: '保存试题', noCache: true, activeMenu: '/exam/list/qu' }
+      },
+
+      {
+        path: 'save/exam',
+        component: () => import('@/views/exam/exam/form'),
+        name: 'SaveExam',
+        meta: { title: '保存考试', noCache: true, activeMenu: '/exam/list/exam' }
+      },
+
+      {
+        path: 'list/exam/user',
+        component: () => import('@/views/user/exam'),
+        name: 'ListExamUser',
+        meta: { title: '考试人员', noCache: true, activeMenu: '/exam/list/exam' }
+      }
+    ]
+  }
+]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
