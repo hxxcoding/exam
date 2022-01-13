@@ -25,7 +25,7 @@
 
         <template slot-scope="data">
 
-          <router-link :to="{ name: 'UpdateRepo', query:{id: data.row.id}}">
+          <router-link :to="{ name: 'SaveRepo', query:{id: data.row.id}}">
             {{ data.row.title }}
           </router-link>
 
@@ -123,7 +123,7 @@ export default {
         // 启用禁用
         stateUrl: '/qu/repo/state',
         // 添加数据路由
-        addRoute: 'AddRepo'
+        addRoute: 'SaveRepo'
       }
     }
   },

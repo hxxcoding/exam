@@ -173,7 +173,7 @@ export default {
         deleteUrl: '/exam/api/exam/exam/delete',
         // 状态请求URL
         stateUrl: '/exam/api/exam/exam/state',
-        addRoute: 'AddExam'
+        addRoute: 'SaveExam'
       }
     }
   },
@@ -184,7 +184,7 @@ export default {
     },
 
     handleUpdateExam(examId) {
-      this.$router.push({ name: 'UpdateExam', query: { id: examId }})
+      this.$router.push({ name: 'SaveExam', query: { id: examId }})
     }
   }
 }

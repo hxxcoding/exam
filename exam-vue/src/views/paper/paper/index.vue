@@ -17,6 +17,7 @@
           :options="treeData"
           :props="defaultProps"
           width="200px"
+          placeholder="请选择班级/学院"
         />
         <el-select v-model="listQuery.params.state" placeholder="考试状态" class="filter-item" clearable>
           <el-option
@@ -128,26 +129,9 @@
 
         </el-table-column>
 
-        <el-table-column
-          label="视频截图"
-          align="center"
-        >
-
-          <template slot-scope="scope">
-            <el-button type="primary" size="small" @click="handleCapture(scope.row.id)">考试截图</el-button>
-          </template>
-
-        </el-table-column>
-
       </template>
 
     </data-table>
-
-    <el-dialog title="考试截图" :visible.sync="dialogVisible" width="500px">
-
-      <img v-for="item in captureList" :key="item.id" :src="item.capture" style="width: 230px">
-
-    </el-dialog>
 
   </div>
 
@@ -157,7 +141,6 @@
 import DataTable from '@/components/DataTable'
 import DepartTreeSelect from '@/components/DepartTreeSelect'
 import { fetchTree } from '@/api/sys/depart/depart'
-import { listCaptures } from '@/api/paper/paper'
 import ExamSelect from '@/components/ExamSelect'
 
 export default {
@@ -213,13 +196,6 @@ export default {
     })
   },
   methods: {
-
-    handleCapture(paperId) {
-      this.dialogVisible = true
-      listCaptures(paperId).then(res => {
-        this.captureList = res.data
-      })
-    }
   }
 }
 </script>

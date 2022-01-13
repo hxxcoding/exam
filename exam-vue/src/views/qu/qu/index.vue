@@ -57,7 +57,7 @@
               trigger="hover"
             >
               <span v-html="scope.row.content" />
-              <router-link slot="reference" :to="{ name: 'UpdateQu', query:{ id: scope.row.id}}">
+              <router-link slot="reference" :to="{ name: 'SaveQu', query:{ id: scope.row.id}}">
                 {{ scope.row.content }}
               </router-link>
             </el-popover>
@@ -202,7 +202,7 @@ export default {
         // 删除请求URL
         deleteUrl: '/exam/api/qu/qu/delete',
         // 添加数据路由
-        addRoute: 'AddQu'
+        addRoute: 'SaveQu'
       }
     }
   },

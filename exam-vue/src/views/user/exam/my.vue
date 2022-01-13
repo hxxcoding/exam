@@ -56,7 +56,6 @@
         >
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-view" @click="handleExamDetail(scope.row.examId)">详情</el-button>
-            <el-button type="warning" size="mini" icon="el-icon-close" @click="handlerExamBook(scope.row.examId)">错题</el-button>
           </template>
 
         </el-table-column>
@@ -118,10 +117,6 @@ export default {
     handleExamDetail(examId) {
       this.examId = examId
       this.dialogVisible = true
-    },
-
-    handlerExamBook(examId) {
-      this.$router.push({ name: 'BookList', params: { examId: examId }})
     }
   }
 }

@@ -634,17 +634,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         //更新试卷
         paperService.updateById(paper);
-
-        //把打错的问题加入错题本
-//        List<PaperQuDTO> list = paperQuService.listByPaper(paperId);
-//        for(PaperQuDTO qu: list){
-//            // 主观题和对的都不加入错题库
-//            if(qu.getIsRight()){
-//                continue;
-//            }
-//            //加入错题本
-//            userBookService.addBook(paper.getExamId(), qu.getQuId());
-//        }
     }
 
     @Transactional(rollbackFor = Exception.class)

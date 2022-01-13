@@ -17,6 +17,7 @@ import com.yf.exam.modules.exam.service.ExamService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,7 @@ public class ExamController extends BaseController {
     * @return
     */
     @ApiOperation(value = "添加或修改")
+    @RequiresPermissions("exam:save")
     @RequestMapping(value = "/save", method = { RequestMethod.POST })
     public ApiRest save(@RequestBody ExamSaveReqDTO reqDTO) {
         //复制参数
@@ -61,6 +63,7 @@ public class ExamController extends BaseController {
     * @return
     */
     @ApiOperation(value = "批量删除")
+    @RequiresPermissions("exam:delete")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST })
     public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
@@ -74,6 +77,7 @@ public class ExamController extends BaseController {
     * @return
     */
     @ApiOperation(value = "查找详情")
+    @RequiresPermissions("exam:detail")
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
     public ApiRest<ExamSaveReqDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         ExamSaveReqDTO dto = baseService.findDetail(reqDTO.getId());
@@ -86,6 +90,7 @@ public class ExamController extends BaseController {
      * @return
      */
     @ApiOperation(value = "修改考试状态")
+    @RequiresPermissions("exam:state")
     @RequestMapping(value = "/state", method = { RequestMethod.POST})
     public ApiRest state(@RequestBody BaseStateReqDTO reqDTO) {
 
@@ -106,6 +111,7 @@ public class ExamController extends BaseController {
      * @return
      */
     @ApiOperation(value = "考试视角")
+    @RequiresPermissions("exam:online-paging")
     @RequestMapping(value = "/online-paging", method = { RequestMethod.POST})
     public ApiRest<IPage<ExamOnlineRespDTO>> myPaging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
 
@@ -120,6 +126,7 @@ public class ExamController extends BaseController {
     * @return
     */
     @ApiOperation(value = "分页查找")
+    @RequiresPermissions("exam:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
     public ApiRest<IPage<ExamDTO>> paging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
 
@@ -130,20 +137,20 @@ public class ExamController extends BaseController {
     }
 
 
-    /**
-     * 分页查找
-     * @param reqDTO
-     * @return
-     */
-    @ApiOperation(value = "待阅试卷")
-    @RequestMapping(value = "/review-paging", method = { RequestMethod.POST})
-    public ApiRest<IPage<ExamReviewRespDTO>> reviewPaging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
-
-        //分页查询并转换
-        IPage<ExamReviewRespDTO> page = baseService.reviewPaging(reqDTO);
-
-        return super.success(page);
-    }
+//    /**
+//     * 分页查找
+//     * @param reqDTO
+//     * @return
+//     */
+//    @ApiOperation(value = "待阅试卷")
+//    @RequestMapping(value = "/review-paging", method = { RequestMethod.POST})
+//    public ApiRest<IPage<ExamReviewRespDTO>> reviewPaging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
+//
+//        //分页查询并转换
+//        IPage<ExamReviewRespDTO> page = baseService.reviewPaging(reqDTO);
+//
+//        return super.success(page);
+//    }
 
 
 }

@@ -9,6 +9,7 @@ import com.yf.exam.modules.user.exam.dto.response.UserExamRespDTO;
 import com.yf.exam.modules.user.exam.service.UserExamService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,7 @@ public class UserExamController extends BaseController {
      * @return
      */
     @ApiOperation(value = "分页查找")
+    @RequiresPermissions("user:exam:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
     public ApiRest<IPage<UserExamRespDTO>> paging(@RequestBody PagingReqDTO<UserExamReqDTO> reqDTO) {
 
@@ -54,6 +56,7 @@ public class UserExamController extends BaseController {
     * @return
     */
     @ApiOperation(value = "分页查找")
+    @RequiresPermissions("user:exam:my-paging")
     @RequestMapping(value = "/my-paging", method = { RequestMethod.POST})
     public ApiRest<IPage<UserExamRespDTO>> MyPaging(@RequestBody PagingReqDTO<UserExamReqDTO> reqDTO) {
 

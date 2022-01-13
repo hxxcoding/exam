@@ -16,8 +16,7 @@ import com.yf.exam.modules.qu.service.QuRepoService;
 import com.yf.exam.modules.repo.service.RepoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +51,7 @@ public class RepoController extends BaseController {
     * @return
     */
     @ApiOperation(value = "添加或修改")
+    @RequiresPermissions("repo:save")
     @RequestMapping(value = "/save", method = { RequestMethod.POST})
     public ApiRest save(@RequestBody RepoDTO reqDTO) {
         baseService.save(reqDTO);
@@ -64,6 +64,7 @@ public class RepoController extends BaseController {
     * @return
     */
     @ApiOperation(value = "批量删除")
+    @RequiresPermissions("repo:delete")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
     public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
@@ -77,6 +78,7 @@ public class RepoController extends BaseController {
     * @return
     */
     @ApiOperation(value = "查找详情")
+    @RequiresPermissions("repo:detail")
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
     public ApiRest<RepoDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         Repo entity = baseService.getById(reqDTO.getId());
@@ -91,6 +93,7 @@ public class RepoController extends BaseController {
     * @return
     */
     @ApiOperation(value = "分页查找")
+    @RequiresPermissions("repo:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
     public ApiRest<IPage<RepoRespDTO>> paging(@RequestBody PagingReqDTO<RepoDTO> reqDTO) {
 
@@ -106,6 +109,7 @@ public class RepoController extends BaseController {
      * @return
      */
     @ApiOperation(value = "批量操作", notes = "批量加入或从题库移除")
+    @RequiresPermissions("repo:batch-action")
     @RequestMapping(value = "/batch-action", method = { RequestMethod.POST})
     public ApiRest paging(@RequestBody QuRepoBatchReqDTO reqDTO) {
 
@@ -120,6 +124,7 @@ public class RepoController extends BaseController {
      * @return
      */
     @ApiOperation(value = "查找列表")
+    @RequiresPermissions("repo:list")
     @RequestMapping(value = "/list", method = { RequestMethod.POST})
     public ApiRest<List<RepoDTO>> list(@RequestBody RepoDTO reqDTO) {
 

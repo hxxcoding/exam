@@ -23,6 +23,7 @@ import com.yf.exam.modules.user.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,55 +49,12 @@ public class PaperController extends BaseController {
     private PaperService baseService;
 
     /**
-    * 添加或修改
-    * @param reqDTO
-    * @return
-    */
-    @ApiOperation(value = "添加或修改")
-    @RequestMapping(value = "/save", method = { RequestMethod.POST})
-    public ApiRest<BaseIdRespDTO> save(@RequestBody PaperDTO reqDTO) {
-        //复制参数
-        Paper entity = new Paper();
-        BeanMapper.copy(reqDTO, entity);
-        baseService.saveOrUpdate(entity);
-        return super.success(new BaseIdRespDTO(entity.getId()));
-    }
-
-    /**
-    * 批量删除
-    * @param reqDTO
-    * @return
-    */
-    @ApiOperation(value = "批量删除")
-    @RequestMapping(value = "/delete", method = { RequestMethod.POST})
-    public ApiRest deleteBatch(@RequestBody BaseIdsReqDTO reqDTO) {
-        //根据ID删除
-        baseService.removeByIds(reqDTO.getIds());
-        return super.success();
-    }
-
-    /**
-    * 查找详情
-    * @param reqDTO
-    * @return
-    */
-    @ApiOperation(value = "查找详情")
-    @RequestMapping(value = "/detail", method = { RequestMethod.POST})
-    public ApiRest<PaperDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
-        Paper entity = baseService.getById(reqDTO.getId());
-        PaperDTO dto = new PaperDTO();
-        BeanUtils.copyProperties(entity, dto);
-        return super.success(dto);
-    }
-
-
-
-    /**
      * 分页查找
      * @param reqDTO
      * @return
      */
     @ApiOperation(value = "分页查找")
+    @RequiresPermissions("paper:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
     public ApiRest<IPage<PaperListRespDTO>> paging(@RequestBody PagingReqDTO<PaperListReqDTO> reqDTO) {
 
@@ -106,14 +64,13 @@ public class PaperController extends BaseController {
         return super.success(page);
     }
 
-
-
     /**
      * 创建试卷
      * @param reqDTO
      * @return
      */
     @ApiOperation(value = "创建试卷")
+    @RequiresPermissions("paper:create-paper")
     @RequestMapping(value = "/create-paper", method = { RequestMethod.POST})
     public ApiRest<BaseIdRespDTO> save(@RequestBody PaperCreateReqDTO reqDTO) {
         //复制参数
@@ -127,6 +84,7 @@ public class PaperController extends BaseController {
      * @return
      */
     @ApiOperation(value = "试卷详情")
+    @RequiresPermissions("paper:paper-detail")
     @RequestMapping(value = "/paper-detail", method = { RequestMethod.POST})
     public ApiRest<ExamDetailRespDTO> paperDetail(@RequestBody BaseIdReqDTO reqDTO) {
         //根据ID查找试卷的试题
@@ -140,6 +98,7 @@ public class PaperController extends BaseController {
      * @return
      */
     @ApiOperation(value = "试题详情")
+    @RequiresPermissions("paper:qu-detail")
     @RequestMapping(value = "/qu-detail", method = { RequestMethod.POST})
     public ApiRest<PaperQuDetailDTO> quDetail(@RequestBody PaperQuQueryDTO reqDTO) {
         //根据ID查找
@@ -153,6 +112,7 @@ public class PaperController extends BaseController {
      * @return
      */
     @ApiOperation(value = "填充答案")
+    @RequiresPermissions("paper:fill-answer")
     @RequestMapping(value = "/fill-answer", method = { RequestMethod.POST})
     public ApiRest<PaperQuDetailDTO> fillAnswer(@RequestBody PaperAnswerDTO reqDTO) {
         //根据ID填充
@@ -167,6 +127,7 @@ public class PaperController extends BaseController {
      * @return
      */
     @ApiOperation(value = "交卷操作")
+    @RequiresPermissions("paper:hand-exam")
     @RequestMapping(value = "/hand-exam", method = { RequestMethod.POST})
     public ApiRest<PaperQuDetailDTO> handleExam(@RequestBody BaseIdReqDTO reqDTO) {
         //根据ID删除
@@ -176,11 +137,12 @@ public class PaperController extends BaseController {
 
 
     /**
-     * 批量删除
+     * 试卷结果
      * @param reqDTO
      * @return
      */
     @ApiOperation(value = "试卷详情")
+    @RequiresPermissions("paper:paper-result")
     @RequestMapping(value = "/paper-result", method = { RequestMethod.POST})
     public ApiRest<ExamResultRespDTO> paperResult(@RequestBody BaseIdReqDTO reqDTO) {
         //根据ID删除
@@ -188,17 +150,17 @@ public class PaperController extends BaseController {
         return super.success(respDTO);
     }
 
-
-    /**
-     * 提交阅卷
-     * @param reqDTO
-     * @return
-     */
-    @ApiOperation(value = "提交阅卷")
-    @RequestMapping(value = "/review-paper", method = { RequestMethod.POST})
-    public ApiRest<PaperQuDetailDTO> reviewPaper(@RequestBody ExamResultRespDTO reqDTO) {
-        //根据ID删除
-        baseService.reviewPaper(reqDTO);
-        return super.success();
-    }
+//
+//    /**
+//     * 提交阅卷
+//     * @param reqDTO
+//     * @return
+//     */
+//    @ApiOperation(value = "提交阅卷")
+//    @RequestMapping(value = "/review-paper", method = { RequestMethod.POST})
+//    public ApiRest<PaperQuDetailDTO> reviewPaper(@RequestBody ExamResultRespDTO reqDTO) {
+//        //根据ID删除
+//        baseService.reviewPaper(reqDTO);
+//        return super.success();
+//    }
 }

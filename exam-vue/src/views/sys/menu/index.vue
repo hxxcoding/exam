@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
 
+    <el-alert
+      title="菜单属于系统配置,请在前后端协调下进行修改/删除,修改/删除操作并可能导致系统功能异常！"
+      type="error"
+      style="margin-bottom: 10px;"
+    />
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -417,7 +423,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       // 删除
-      this.$confirm('是否确认删除名称为"' + row.name + '"的数据项？', '提示', {
+      this.$confirm('是否确认删除名称为"' + row.name + '"的数据项？', '严重警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

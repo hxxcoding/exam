@@ -54,7 +54,6 @@ public class SysConfigController extends BaseController {
     * @return
     */
     @ApiOperation(value = "查找详情")
-    @RequiresAuthentication
     @RequestMapping(value = "/detail", method = { RequestMethod.POST})
     public ApiRest<SysConfigDTO> find() {
         SysConfigDTO dto = baseService.find();
