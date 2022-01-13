@@ -13,11 +13,13 @@ public class ExamTest {
 
     @Test
     public void testOnline() throws Exception {
-        XWPFDocument docx = new XWPFDocument(new FileInputStream("/Users/hxx/Desktop/test.docx"));
+        XWPFDocument docx = new XWPFDocument(new FileInputStream("/Users/hxx/Desktop/old.docx"));
         CTDocument1 document = docx.getDocument();
         CTBody body = document.getBody();
         CTSectPr sectPr = body.getSectPr();
         CTPageMar pgMar = sectPr.getPgMar();
+        List<CTP> pList = body.getPList();
+        System.out.println(pList.size());
         // 页边距为3.5cm(1985)
         System.out.println(pgMar.getLeft().intValue() == 1985 && pgMar.getRight().intValue() == 1985);
         List<XWPFPictureData> allPictures = docx.getAllPictures();

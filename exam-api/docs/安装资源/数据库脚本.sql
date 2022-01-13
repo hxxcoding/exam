@@ -1245,6 +1245,143 @@ CREATE TABLE `sys_user_role` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色';
 
+
+DROP TABLE IF EXISTS `sys_menu`;
+CREATE TABLE `sys_menu` (
+                            `id` varchar(32) NOT NULL COMMENT 'ID',
+                            `name` varchar(255) DEFAULT NULL COMMENT '菜单名称',
+                            `parent_id` varchar(32) NOT NULL DEFAULT '0' COMMENT '父菜单ID',
+                            `type` varchar(255) DEFAULT NULL COMMENT '菜单类型',
+                            `path` varchar(255) DEFAULT '' COMMENT '路由地址',
+                            `component` varchar(255) DEFAULT NULL COMMENT '组件路径',
+                            `query` varchar(255) DEFAULT NULL COMMENT '路由参数',
+                            `perms` varchar(255) DEFAULT NULL COMMENT '权限标识',
+                            `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
+                            `is_frame` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否外部链接',
+                            `no_cache` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否禁用缓存',
+                            `is_visible` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否可见(1可见,0隐藏)',
+                            `is_available` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否可用(1可用,2不可用)',
+                            `icon` varchar(255) DEFAULT NULL COMMENT '菜单图标',
+                            `remark` varchar(500) DEFAULT '' COMMENT '备注',
+                            `create_time` datetime DEFAULT NULL COMMENT '添加时间',
+                            `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                            PRIMARY KEY (`id`) USING BTREE,
+                            KEY `idx_sys_menu_parent_id` (`parent_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of sys_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_menu` VALUES ('1', '在线考试', '0', 'dir', 'my', NULL, '', '', 2, 0, 1, 1, 1, 'list', '', '2022-01-11 22:33:15', '2022-01-13 12:09:32');
+INSERT INTO `sys_menu` VALUES ('10', '在线考试', '1', 'menu', 'exam/online', 'paper/exam/list', NULL, '', 1, 0, 1, 1, 1, 'guide', '', NULL, '2022-01-13 17:46:43');
+INSERT INTO `sys_menu` VALUES ('13', '我的成绩', '1', 'menu', 'exam/records', 'user/exam/my', NULL, '', 3, 0, 1, 1, 1, 'results', '', NULL, '2022-01-13 17:08:36');
+INSERT INTO `sys_menu` VALUES ('1481481897841324033', '学校官网', '0', 'dir', 'http://www.xaut.edu.cn', NULL, NULL, NULL, 6, 1, 0, 1, 1, 'map', '', '2022-01-13 12:23:04', '2022-01-13 20:37:45');
+INSERT INTO `sys_menu` VALUES ('1481499644885295105', '查询全部菜单', '55', 'button', '', NULL, NULL, 'sys:menu:list', 1, 0, 0, 1, 1, NULL, '查询全部菜单', '2022-01-13 13:33:35', '2022-01-13 13:36:03');
+INSERT INTO `sys_menu` VALUES ('1481507789556748289', '查询菜单详情', '55', 'button', '', NULL, NULL, 'sys:menu:detail', 2, 0, 0, 1, 1, NULL, '参数id: menuId', '2022-01-13 14:05:57', '2022-01-13 14:05:57');
+INSERT INTO `sys_menu` VALUES ('1481508045849694210', '保存菜单', '55', 'button', '', NULL, NULL, 'sys:menu:save', 3, 0, 0, 1, 1, NULL, '新增或修改', '2022-01-13 14:06:58', '2022-01-13 14:06:58');
+INSERT INTO `sys_menu` VALUES ('1481508175411744770', '删除菜单', '55', 'button', '', NULL, NULL, 'sys:menu:delete', 4, 0, 0, 1, 1, NULL, '参数id: menuId', '2022-01-13 14:07:29', '2022-01-13 14:11:34');
+INSERT INTO `sys_menu` VALUES ('1481508593730654210', '查询已有权限树', '55', 'button', '', NULL, NULL, 'sys:menu:list-tree-by-role', 6, 0, 0, 1, 1, NULL, '查询选中的菜单列表', '2022-01-13 14:09:09', '2022-01-13 15:01:51');
+INSERT INTO `sys_menu` VALUES ('1481510618170200065', '菜单排序', '55', 'button', '', NULL, NULL, 'sys:menu:sort', 5, 0, 0, 1, 1, NULL, '', '2022-01-13 14:17:11', '2022-01-13 15:01:51');
+INSERT INTO `sys_menu` VALUES ('1481522249199411202', '角色查找', '52', 'button', '', NULL, NULL, 'sys:role:paging', 1, 0, 0, 1, 1, NULL, '分页角色查找', '2022-01-13 15:03:24', '2022-01-13 15:28:58');
+INSERT INTO `sys_menu` VALUES ('1481522639903023106', '查询角色列表', '52', 'button', '', NULL, NULL, 'sys:role:list', 2, 0, 0, 1, 1, NULL, '查询角色列表主要用于选择器', '2022-01-13 15:04:57', '2022-01-13 15:29:05');
+INSERT INTO `sys_menu` VALUES ('1481522833340129282', '修改角色授权', '52', 'button', '', NULL, NULL, 'sys:role:menu:update', 3, 0, 0, 1, 1, NULL, '修改身份对应授权的菜单', '2022-01-13 15:05:43', '2022-01-13 15:29:11');
+INSERT INTO `sys_menu` VALUES ('1481524929967841281', '保存用户', '53', 'button', '', NULL, NULL, 'sys:user:save', 1, 0, 0, 1, 1, NULL, '保存或修改用户资料', '2022-01-13 15:14:03', '2022-01-13 15:14:03');
+INSERT INTO `sys_menu` VALUES ('1481525247472459778', '批量删除用户', '53', 'button', '', NULL, NULL, 'sys:user:delete', 2, 0, 0, 1, 1, NULL, '批量删除用户', '2022-01-13 15:15:19', '2022-01-13 15:15:19');
+INSERT INTO `sys_menu` VALUES ('1481525359057723393', '分页查找用户', '53', 'button', '', NULL, NULL, 'sys:user:paging', 3, 0, 0, 1, 1, NULL, '分页查找用户', '2022-01-13 15:15:46', '2022-01-13 15:15:46');
+INSERT INTO `sys_menu` VALUES ('1481525641909002242', '批量修改用户状态', '53', 'button', '', NULL, NULL, 'sys:user:state', 3, 0, 0, 1, 1, NULL, '批量修改用户状态', '2022-01-13 15:16:53', '2022-01-13 15:16:53');
+INSERT INTO `sys_menu` VALUES ('1481526474834862082', '批量导入用户', '53', 'button', '', NULL, NULL, 'sys:user:import', 6, 0, 0, 1, 1, NULL, 'excel批量导入用户', '2022-01-13 15:20:12', '2022-01-13 15:23:39');
+INSERT INTO `sys_menu` VALUES ('1481527318443614210', '下载导入模版', '53', 'button', '', NULL, NULL, 'sys:user:import:template', 5, 0, 0, 1, 1, NULL, '下载用户导入模版', '2022-01-13 15:23:33', '2022-01-13 15:23:39');
+INSERT INTO `sys_menu` VALUES ('1481531532882538497', '保存部门', '51', 'button', '', NULL, NULL, 'sys:depart:save', 1, 0, 0, 1, 1, NULL, '添加或修改部门', '2022-01-13 15:40:18', '2022-01-13 15:40:18');
+INSERT INTO `sys_menu` VALUES ('1481531652839632898', '批量删除部门', '51', 'button', '', NULL, NULL, 'sys:depart:delete', 2, 0, 0, 1, 1, NULL, '批量删除部门', '2022-01-13 15:40:46', '2022-01-13 15:40:46');
+INSERT INTO `sys_menu` VALUES ('1481531892967731202', '分页查找部门', '51', 'button', '', NULL, NULL, 'sys:depart:paging', 3, 0, 0, 1, 1, NULL, '分页查找部门', '2022-01-13 15:41:43', '2022-01-13 15:41:43');
+INSERT INTO `sys_menu` VALUES ('1481532029039341570', '查找部门列表', '51', 'button', '', NULL, NULL, 'sys:depart:list', 4, 0, 0, 1, 1, NULL, '查找部门列表', '2022-01-13 15:42:16', '2022-01-13 15:42:16');
+INSERT INTO `sys_menu` VALUES ('1481532313039859714', '查找部门树', '51', 'button', '', NULL, NULL, 'sys:depart:tree', 5, 0, 0, 1, 1, NULL, '查找部门树, 用于选择部门等功能', '2022-01-13 15:43:24', '2022-01-13 15:43:24');
+INSERT INTO `sys_menu` VALUES ('1481532417666772994', '排序部门', '51', 'button', '', NULL, NULL, 'sys:depart:sort', 6, 0, 0, 1, 1, NULL, '排序部门', '2022-01-13 15:43:49', '2022-01-13 15:43:49');
+INSERT INTO `sys_menu` VALUES ('1481534798307606530', '保存系统设置', '50', 'button', '', NULL, NULL, 'sys:config:save', 1, 0, 0, 1, 1, NULL, '保存系统设置', '2022-01-13 15:53:16', '2022-01-13 15:53:16');
+INSERT INTO `sys_menu` VALUES ('1481535038314070017', '分页查询日志', '54', 'button', '', NULL, NULL, 'sys:log:paging', 1, 0, 0, 1, 1, NULL, '分页查询日志', '2022-01-13 15:54:13', '2022-01-13 15:54:13');
+INSERT INTO `sys_menu` VALUES ('1481541884714237953', '批量删除题库', '30', 'button', '', NULL, NULL, 'repo:delete', 1, 0, 0, 1, 1, NULL, '批量删除题库', '2022-01-13 16:21:26', '2022-01-13 16:21:26');
+INSERT INTO `sys_menu` VALUES ('1481542108383887361', '查找题库详情', '30', 'button', '', NULL, NULL, 'repo:detail', 2, 0, 0, 1, 1, NULL, '查找题库详情', '2022-01-13 16:22:19', '2022-01-13 16:22:19');
+INSERT INTO `sys_menu` VALUES ('1481542357638791170', '分页查找题库', '30', 'button', '', NULL, NULL, 'repo:paging', 3, 0, 0, 1, 1, NULL, '分页查找题库', '2022-01-13 16:23:18', '2022-01-13 16:23:27');
+INSERT INTO `sys_menu` VALUES ('1481542688862978049', '批量操作题库题目', '30', 'button', '', NULL, NULL, 'repo:batch-action', 4, 0, 0, 1, 1, NULL, '批量加入或从题库移除 quRepo', '2022-01-13 16:24:37', '2022-01-13 16:24:37');
+INSERT INTO `sys_menu` VALUES ('1481542840977801217', '查找题库列表', '30', 'button', '', NULL, NULL, 'repo:list', 5, 0, 0, 1, 1, NULL, '查找题库列表', '2022-01-13 16:25:14', '2022-01-13 16:25:14');
+INSERT INTO `sys_menu` VALUES ('1481544868395302914', '保存题库', '30', 'button', '', NULL, NULL, 'repo:save', 6, 0, 0, 1, 1, NULL, '添加或修改题库', '2022-01-13 16:33:17', '2022-01-13 16:33:17');
+INSERT INTO `sys_menu` VALUES ('1481545190966640642', '保存试题', '33', 'button', '', NULL, NULL, 'qu:save', 1, 0, 0, 1, 1, NULL, '添加或修改试题', '2022-01-13 16:34:34', '2022-01-13 16:34:34');
+INSERT INTO `sys_menu` VALUES ('1481545344415252482', '批量删除试题', '33', 'button', '', NULL, NULL, 'qu:delete', 2, 0, 0, 1, 1, NULL, '批量删除试题', '2022-01-13 16:35:11', '2022-01-13 16:35:11');
+INSERT INTO `sys_menu` VALUES ('1481545410458763265', '查找试题详情', '33', 'button', '', NULL, NULL, 'qu:detail', 3, 0, 0, 1, 1, NULL, '查找试题详情', '2022-01-13 16:35:26', '2022-01-13 16:35:26');
+INSERT INTO `sys_menu` VALUES ('1481545536787005441', '分页查找试题', '33', 'button', '', NULL, NULL, 'qu:paging', 4, 0, 0, 1, 1, NULL, '分页查找试题', '2022-01-13 16:35:56', '2022-01-13 16:35:56');
+INSERT INTO `sys_menu` VALUES ('1481545614935277569', '查找试题列表', '33', 'button', '', NULL, NULL, 'qu:list', 5, 0, 0, 1, 1, NULL, '查找试题列表', '2022-01-13 16:36:15', '2022-01-13 16:36:15');
+INSERT INTO `sys_menu` VALUES ('1481545915683651586', 'office分析', '33', 'button', '', NULL, NULL, 'qu:office:analyse', 6, 0, 0, 1, 1, NULL, 'office题目文件分析', '2022-01-13 16:37:27', '2022-01-13 16:37:27');
+INSERT INTO `sys_menu` VALUES ('1481546054313787393', '读取word格式', '33', 'button', '', NULL, NULL, 'qu:office:word:read-format', 7, 0, 0, 1, 1, NULL, '读取word文件格式', '2022-01-13 16:38:00', '2022-01-13 16:38:00');
+INSERT INTO `sys_menu` VALUES ('1481546199621255170', '导出题目', '33', 'button', '', NULL, NULL, 'qu:export', 8, 0, 0, 1, 1, NULL, '导出题目excel文件', '2022-01-13 16:38:34', '2022-01-13 16:38:34');
+INSERT INTO `sys_menu` VALUES ('1481546314897506306', '导入题目', '33', 'button', '', NULL, NULL, 'qu:import', 9, 0, 0, 1, 1, NULL, 'excel导入题目', '2022-01-13 16:39:02', '2022-01-13 16:39:02');
+INSERT INTO `sys_menu` VALUES ('1481546420417806338', '下载导入模板', '33', 'button', '', NULL, NULL, 'qu:import:template', 10, 0, 0, 1, 1, NULL, '下载导入试题数据模板', '2022-01-13 16:39:27', '2022-01-13 16:39:27');
+INSERT INTO `sys_menu` VALUES ('1481549220942000129', '保存考试', '36', 'button', '', NULL, NULL, 'exam:save', 1, 0, 0, 1, 1, NULL, '保存考试', '2022-01-13 16:50:35', '2022-01-13 16:50:35');
+INSERT INTO `sys_menu` VALUES ('1481549342337740802', '批量删除考试', '36', 'button', '', NULL, NULL, 'exam:delete', 2, 0, 0, 1, 1, NULL, '批量删除考试', '2022-01-13 16:51:04', '2022-01-13 16:51:04');
+INSERT INTO `sys_menu` VALUES ('1481549474911301633', '查找考试详情', '36', 'button', '', NULL, NULL, 'exam:detail', 3, 0, 0, 1, 1, NULL, '查找考试详情', '2022-01-13 16:51:35', '2022-01-13 16:51:35');
+INSERT INTO `sys_menu` VALUES ('1481549654167465986', '修改考试状态', '36', 'button', '', NULL, NULL, 'exam:state', 4, 0, 0, 1, 1, NULL, '禁用或启用考试', '2022-01-13 16:52:18', '2022-01-13 16:52:18');
+INSERT INTO `sys_menu` VALUES ('1481549889136570370', '学生考试视角', '36', 'button', '', NULL, NULL, 'exam:online-paging', 5, 0, 0, 1, 1, NULL, '学生考试视角，查询学生本人可参与的考试', '2022-01-13 16:53:14', '2022-01-13 16:53:14');
+INSERT INTO `sys_menu` VALUES ('1481550043050749954', '分页查询考试', '36', 'button', '', NULL, NULL, 'exam:paging', 6, 0, 0, 1, 1, NULL, '分页查询考试', '2022-01-13 16:53:51', '2022-01-13 16:53:51');
+INSERT INTO `sys_menu` VALUES ('1481552967294332929', '分页查询试卷', '40', 'button', '', NULL, NULL, 'paper:paging', 1, 0, 0, 1, 1, NULL, '分页查询试卷', '2022-01-13 17:05:28', '2022-01-13 17:05:28');
+INSERT INTO `sys_menu` VALUES ('1481553537233137666', '获取部门树', '40', 'button', '', NULL, NULL, 'sys:depart:tree', 2, 0, 0, 1, 1, NULL, '用于查询某个部门的试卷', '2022-01-13 17:07:44', '2022-01-13 17:07:44');
+INSERT INTO `sys_menu` VALUES ('1481559248663031810', '我的考试', '13', 'button', '', NULL, NULL, 'user:exam:my-paging', 2, 0, 0, 1, 1, NULL, '分页查找我参与的考试', '2022-01-13 17:30:26', '2022-01-13 17:30:26');
+INSERT INTO `sys_menu` VALUES ('1481561198422994945', '分页查询试卷', '13', 'button', '', NULL, NULL, 'paper:paging', 3, 0, 0, 1, 1, NULL, '分页查询试卷，用于查看本人的考试试卷', '2022-01-13 17:38:10', '2022-01-13 17:38:10');
+INSERT INTO `sys_menu` VALUES ('1481563085411004418', '考试人员查询', '36', 'button', '', NULL, NULL, 'user:exam:paging', 7, 0, 0, 1, 1, NULL, '考试人员查询', '2022-01-13 17:45:40', '2022-01-13 17:45:40');
+INSERT INTO `sys_menu` VALUES ('1481566231327748098', '学生查看考试', '10', 'button', '', NULL, NULL, 'exam:online-paging,exam:detail', 2, 0, 0, 1, 1, NULL, '学生考试视角 查看可以参与的考试', '2022-01-13 17:58:10', '2022-01-13 18:03:31');
+INSERT INTO `sys_menu` VALUES ('1481566585054375938', '学生开始考试', '10', 'button', '', NULL, NULL, 'paper:create-paper,paper:paper-detail,paper:qu-detail,paper:fill-answer,paper:hand-exam', 3, 0, 0, 1, 1, NULL, '参与考试的所有权限', '2022-01-13 17:59:35', '2022-01-13 18:07:43');
+INSERT INTO `sys_menu` VALUES ('1481594856315858946', '考试结果', '36', 'button', '', NULL, NULL, 'paper:paper-result', 8, 0, 0, 1, 1, NULL, '考试结果', '2022-01-13 19:51:55', '2022-01-13 19:51:55');
+INSERT INTO `sys_menu` VALUES ('1481594958245834753', '考试结果', '40', 'button', '', NULL, NULL, 'paper:paper-detail', 3, 0, 0, 1, 1, NULL, '考试结果', '2022-01-13 19:52:19', '2022-01-13 19:52:19');
+INSERT INTO `sys_menu` VALUES ('3', '考试管理', '0', 'dir', 'exam', NULL, NULL, NULL, 3, 0, 1, 1, 1, 'example', '', NULL, '2022-01-13 15:01:37');
+INSERT INTO `sys_menu` VALUES ('30', '题库管理', '3', 'menu', 'list/repo', 'qu/repo', NULL, NULL, 1, 0, 1, 1, 1, 'repo', '', NULL, NULL);
+INSERT INTO `sys_menu` VALUES ('33', '试题管理', '3', 'menu', 'list/qu', 'qu/qu', NULL, NULL, 4, 0, 1, 1, 1, 'support', '', NULL, '2022-01-13 16:15:11');
+INSERT INTO `sys_menu` VALUES ('36', '考试管理', '3', 'menu', 'list/exam', 'exam/exam', NULL, NULL, 7, 0, 1, 1, 1, 'log', '', NULL, NULL);
+INSERT INTO `sys_menu` VALUES ('40', '试卷记录', '3', 'menu', 'list/paper', 'paper/paper', NULL, NULL, 10, 0, 1, 1, 1, 'list', '全部考试记录', NULL, '2022-01-13 17:25:55');
+INSERT INTO `sys_menu` VALUES ('5', '系统设置', '0', 'dir', 'sys', NULL, NULL, NULL, 4, 0, 1, 1, 1, 'configure', '', NULL, '2022-01-13 15:01:37');
+INSERT INTO `sys_menu` VALUES ('50', '系统设置', '5', 'menu', 'sys/config', 'sys/config', NULL, NULL, 1, 0, 1, 1, 1, 'theme', '', NULL, NULL);
+INSERT INTO `sys_menu` VALUES ('51', '部门管理', '5', 'menu', 'sys/depart', 'sys/depart', NULL, NULL, 2, 0, 1, 1, 1, 'tree', '', NULL, '2022-01-13 15:29:35');
+INSERT INTO `sys_menu` VALUES ('52', '角色管理', '5', 'menu', 'sys/role', 'sys/role', NULL, NULL, 4, 0, 1, 1, 1, 'role', '', NULL, '2022-01-13 12:32:58');
+INSERT INTO `sys_menu` VALUES ('53', '用户管理', '5', 'menu', 'sys/user', 'sys/user', NULL, NULL, 3, 0, 1, 1, 1, 'admin', '', NULL, '2022-01-13 15:29:35');
+INSERT INTO `sys_menu` VALUES ('54', '系统日志', '5', 'menu', 'sys/log', 'sys/log', NULL, NULL, 6, 0, 1, 1, 1, 'log', '', NULL, '2022-01-13 12:32:44');
+INSERT INTO `sys_menu` VALUES ('55', '菜单管理', '5', 'menu', 'sys/menu', 'sys/menu', NULL, NULL, 5, 0, 1, 1, 1, 'tree-table', '', NULL, '2022-01-13 12:32:57');
+COMMIT;
+
+
+DROP TABLE IF EXISTS `sys_role_menu`;
+CREATE TABLE `sys_role_menu` (
+                                 `id` varchar(32) NOT NULL COMMENT 'ID',
+                                 `role_id` varchar(32) NOT NULL COMMENT 'sys_role.id',
+                                 `menu_id` varchar(32) NOT NULL COMMENT 'sys_menu.id',
+                                 `create_time` datetime DEFAULT NULL COMMENT '添加时间',
+                                 `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                                 PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of sys_role_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_role_menu` VALUES ('1481574678379147266', 'teacher', '2', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678383341570', 'teacher', '1', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678383341571', 'teacher', '10', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678383341572', 'teacher', '1481566231327748098', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678383341573', 'teacher', '1481566585054375938', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678387535874', 'teacher', '11', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678387535875', 'teacher', '13', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678387535876', 'teacher', '1481558268462575617', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678387535877', 'teacher', '1481559248663031810', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678387535878', 'teacher', '1481561198422994945', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481574678387535879', 'teacher', '1481574507998130177', '2022-01-13 18:31:44', '2022-01-13 18:31:44');
+INSERT INTO `sys_role_menu` VALUES ('1481589747502592002', 'student', '1', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+INSERT INTO `sys_role_menu` VALUES ('1481589747506786306', 'student', '2', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+INSERT INTO `sys_role_menu` VALUES ('1481589747506786307', 'student', '10', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+INSERT INTO `sys_role_menu` VALUES ('1481589747506786308', 'student', '1481566231327748098', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+INSERT INTO `sys_role_menu` VALUES ('1481589747506786309', 'student', '1481566585054375938', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+INSERT INTO `sys_role_menu` VALUES ('1481589747510980609', 'student', '11', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+INSERT INTO `sys_role_menu` VALUES ('1481589747510980610', 'student', '13', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+INSERT INTO `sys_role_menu` VALUES ('1481589747515174913', 'student', '1481559248663031810', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+INSERT INTO `sys_role_menu` VALUES ('1481589747515174914', 'student', '1481561198422994945', '2022-01-13 19:31:37', '2022-01-13 19:31:37');
+COMMIT;
+
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------

@@ -11,13 +11,20 @@ import com.yf.exam.modules.qu.entity.QuAnswerOffice;
 import com.yf.exam.modules.qu.enums.QuType;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuService;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,7 +65,7 @@ public class PaperTest {
         System.out.println("字号：" + docx.getFontSize(2) + "，字体：" + docx.getFontFamily(2) + "\n" + " 下划线类型" +
                 docx.getUnderlineType(2) + " 是否斜体：" + docx.isItalic(2) + " 是否加粗：" + docx.isBold(2) + "\n" +
                 "行间距：" + docx.getSpacingBetween(2) + " 项目符号：" + docx.getNumFmt(8));
-        System.out.println("分栏：" + docx.getColsNum(39) + " 分栏分割线" + docx.isColsLine(39));
+        System.out.println("分栏：" + docx.getColsNum(38) + " 分栏分割线" + docx.isColsLine(38));
         System.out.println("插入图片环绕类型：" + docx.getPicTextAround(4));
     }
 
@@ -88,5 +95,19 @@ public class PaperTest {
             }
         }
         System.out.println(totalScore);
+    }
+
+    @Test
+    public void testQueryMethodList() {
+        Arrays.stream(WordUtils.class.getDeclaredMethods())
+                .map(Method::getName)
+                .filter(name -> name.startsWith("get") || name.startsWith("is"))
+                .collect(Collectors.toList()).forEach(System.out::println);
+    }
+
+    @Test
+    public void testExcel() throws IOException {
+        XSSFWorkbook xlsx = new XSSFWorkbook(new FileInputStream("/Users/hxx/Desktop/office/excel_answer.xlsx"));
+        System.out.println(xlsx.getCalculationChain().getCTCalcChain());
     }
 }

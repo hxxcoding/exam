@@ -1,8 +1,10 @@
 package com.yf.exam.core.utils.poi;
 
 import com.yf.exam.core.exception.ServiceException;
+import com.yf.exam.core.utils.Reflections;
 import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.modules.qu.dto.WordParagraphDTO;
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
@@ -33,15 +35,12 @@ public class WordUtils {
      */
     public Object executeMethod(String methodName, Object... args) {
         try {
-            Class<?>[] classes = null;
             if (args[0] == null) {
                 args = null;
-            } else {
-                classes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
             }
-            return WordUtils.class.getMethod(methodName, classes).invoke(this, args);
-        } catch (Exception e) {
-            return null;
+            return Reflections.invokeMethodByName(this, methodName, args);
+        } catch (NullPointerException | IllegalArgumentException e) {
+            throw new ServiceException("无法获取到格式,请检查`段落`和`方法`是否对应");
         }
     }
 
@@ -84,7 +83,7 @@ public class WordUtils {
     }
 
     /**
-     * 获取右页边距
+     * 获取上页边距
      * @return
      */
     public Integer getPgMarTop() {
@@ -92,7 +91,7 @@ public class WordUtils {
     }
 
     /**
-     * 获取右页边距
+     * 获取下页边距
      * @return
      */
     public Integer getPgMarBottom() {
@@ -124,10 +123,10 @@ public class WordUtils {
      */
     public Integer getColsNum(Integer pos) {
         try {
-            return xwpfDocument.getDocument().getBody().getPList().get(pos)
+            return xwpfDocument.getDocument().getBody().getPList().get(pos + 1)
                     .getPPr().getSectPr().getCols().getNum().intValue();
         } catch (NullPointerException e) {
-            return 0;
+            throw new ServiceException("不存在`分栏数`数据");
         }
     }
 
@@ -140,42 +139,50 @@ public class WordUtils {
      */
     public Boolean isColsLine(Integer pos) {
         try {
-            return xwpfDocument.getDocument().getBody().getPList().get(pos)
+            return xwpfDocument.getDocument().getBody().getPList().get(pos + 1)
                     .getPPr().getSectPr().getCols().getSep().toString().equals("1");
         } catch (NullPointerException e){
-            return false;
+            throw new ServiceException("不存在`分栏分隔符`数据");
         }
     }
 
     /**
-     * 获取某个段落的首行缩进
+     * 获取某个段落的首行缩进 未缩进返回-1
      * @param pos
      * @return
      */
     public Integer getIndentationFirstLine(Integer pos) {
         try {
             return xwpfDocument.getParagraphs().get(pos).getIndentationFirstLine();
-        } catch (NullPointerException e) {
-            return 0;
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
         }
     }
 
     /**
-     * 获取某个段落的悬挂缩进
+     * 获取某个段落的悬挂缩进 未缩进返回-1
      * @param pos
      * @return
      */
     public Integer getIndentationHanging(Integer pos) {
-        return xwpfDocument.getParagraphs().get(pos).getIndentationHanging();
+        try {
+            return xwpfDocument.getParagraphs().get(pos).getIndentationHanging();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
     }
 
     /**
-     * 获取某个段落的行间距
+     * 获取某个段落的行间距 默认-1.0
      * @param pos
      * @return
      */
-    public double getSpacingBetween(Integer pos) {
-        return xwpfDocument.getParagraphs().get(pos).getSpacingBetween();
+    public Double getSpacingBetween(Integer pos) {
+        try {
+            return xwpfDocument.getParagraphs().get(pos).getSpacingBetween();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
     }
 
     /**
@@ -185,19 +192,28 @@ public class WordUtils {
      */
     public String getNumFmt(Integer pos) {
         try {
-            return xwpfDocument.getParagraphs().get(pos).getNumFmt();
-        } catch (NullPointerException e) {
-            return null;
+            String numFmt = xwpfDocument.getParagraphs().get(pos).getNumFmt();
+            if (numFmt != null) {
+                return numFmt;
+            } else {
+                throw new ServiceException("不存在`项目符号`数据");
+            }
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
         }
     }
 
     /**
-     * 获取某个段落的字体大小
+     * 获取某个段落的字体大小 默认-1
      * @param pos 段落
      * @return 字体大小
      */
     public Integer getFontSize(Integer pos) {
-        return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getFontSize();
+        try {
+            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getFontSize();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
     }
 
     /**
@@ -206,7 +222,16 @@ public class WordUtils {
      * @return 字体
      */
     public String getFontFamily(Integer pos) {
-        return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getFontFamily();
+        try {
+            String fontFamily = xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getFontFamily();
+            if (fontFamily != null) {
+                return fontFamily;
+            } else {
+                throw new ServiceException("不存在`字体`数据");
+            }
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
     }
 
     /**
@@ -214,17 +239,30 @@ public class WordUtils {
      * @param pos 段落
      * @return
      */
-    public Integer getUnderlineType(Integer pos) {
-        return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getUnderline().getValue();
+    public String getUnderlineType(Integer pos) {
+        try {
+            UnderlinePatterns underline = xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getUnderline();
+            if (underline != UnderlinePatterns.NONE) {
+                return underline.toString();
+            } else {
+                throw new ServiceException("不存在`下划线`数据");
+            }
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
     }
 
     /**
-     * 获取某个段落是否有下划线
+     * 获取某个段落是否加粗
      * @param pos 段落
      * @return
      */
     public Boolean isBold(Integer pos) {
-        return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).isBold();
+        try {
+            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).isBold();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
     }
 
     /**
@@ -233,7 +271,11 @@ public class WordUtils {
      * @return
      */
     public Boolean isItalic(Integer pos) {
-        return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).isItalic();
+        try {
+            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).isItalic();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
     }
 
     /**
@@ -245,8 +287,8 @@ public class WordUtils {
         try {
             return xwpfDocument.getParagraphArray(pos).getRuns().get(0).getCTR()
                     .getDrawingArray(0).getAnchorArray(0).getWrapSquare().getWrapText().toString();
-        } catch (Exception e) {
-            return null;
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("无法获取到该`段落`的图片文字环绕方式");
         }
     }
 

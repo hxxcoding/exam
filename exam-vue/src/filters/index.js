@@ -66,7 +66,7 @@ export function examStateFilter(value) {
 
 export function wordMethodFilter(value) {
   const map = {
-    'isBold': '是否有下划线',
+    'isBold': '是否加粗',
     'isItalic': '是否斜体',
     'getPgSzW': '页面宽度',
     'getPgSzH': '页面高度',
