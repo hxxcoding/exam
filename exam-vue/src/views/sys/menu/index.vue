@@ -45,7 +45,7 @@
       <el-table-column align="center" prop="perms" label="权限标识" :show-overflow-tooltip="true" />
       <el-table-column align="center" prop="component" label="组件路径" :show-overflow-tooltip="true" />
       <el-table-column align="center" prop="isAvailable" label="状态" width="70">
-        <template slot-scope="scope">
+        <template v-if="scope.row.type !== 'button'" slot-scope="scope">
           <div v-if="scope.row.isAvailable">
             <el-tag v-if="scope.row.isVisible" type="success">显示</el-tag>
             <el-tag v-else type="info">隐藏</el-tag>

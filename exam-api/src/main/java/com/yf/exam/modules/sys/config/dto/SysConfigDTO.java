@@ -33,7 +33,7 @@ public class SysConfigDTO implements Serializable {
     @ApiModelProperty(value = "后台LOGO")
     private String backLogo;
 
-    @ApiModelProperty(value = "后台LOGO")
+    @ApiModelProperty(value = "系统通知")
     private String siteNotice;
     
 }

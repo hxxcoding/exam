@@ -19,14 +19,14 @@ import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
 import com.yf.exam.modules.sys.user.entity.SysMenu;
 import com.yf.exam.modules.sys.user.entity.SysUser;
 import com.yf.exam.modules.sys.user.service.SysMenuService;
-import com.yf.exam.modules.sys.user.service.SysRoleService;
 import com.yf.exam.modules.sys.user.service.SysUserRoleService;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,7 +76,7 @@ public class SysUserController extends BaseController {
     @CrossOrigin
     @ApiOperation(value = "用户退出登录")
     @RequestMapping(value = "/logout", method = {RequestMethod.POST})
-    public ApiRest logout(HttpServletRequest request) {
+    public ApiRest<?> logout(HttpServletRequest request) {
         String token = request.getHeader("token");
         baseService.logout(token);
         return super.success();
@@ -88,7 +88,7 @@ public class SysUserController extends BaseController {
      */
     @ApiOperation(value = "获取会话")
     @RequestMapping(value = "/info", method = {RequestMethod.POST})
-    public ApiRest info(@RequestParam("token") String token) {
+    public ApiRest<?> info(@RequestParam("token") String token) {
         SysUserLoginDTO respDTO = baseService.token(token);
         return success(respDTO);
     }
@@ -97,9 +97,10 @@ public class SysUserController extends BaseController {
      * 修改用户资料
      * @return
      */
-    @ApiOperation(value = "修改用户资料")
+    @ApiOperation(value = "用户本人修改资料")
+    @RequiresAuthentication
     @RequestMapping(value = "/update", method = {RequestMethod.POST})
-    public ApiRest update(@RequestBody SysUserDTO reqDTO) {
+    public ApiRest<?> update(@RequestBody SysUserDTO reqDTO) {
         baseService.update(reqDTO);
         return success();
     }
@@ -110,8 +111,9 @@ public class SysUserController extends BaseController {
      * @return
      */
     @ApiOperation(value = "保存或修改")
+    @RequiresPermissions("sys:user:save")
     @RequestMapping(value = "/save", method = {RequestMethod.POST})
-    public ApiRest save(@RequestBody SysUserSaveReqDTO reqDTO) {
+    public ApiRest<?> save(@RequestBody SysUserSaveReqDTO reqDTO) {
         baseService.save(reqDTO);
         return success();
     }
@@ -123,8 +125,9 @@ public class SysUserController extends BaseController {
      * @return
      */
     @ApiOperation(value = "批量删除")
+    @RequiresPermissions("sys:user:delete")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
-    public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
+    public ApiRest<?> edit(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
         baseService.removeByIds(reqDTO.getIds());
         return super.success();
@@ -136,6 +139,7 @@ public class SysUserController extends BaseController {
      * @return
      */
     @ApiOperation(value = "分页查找")
+    @RequiresPermissions("sys:user:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
     public ApiRest<IPage<SysUserDTO>> paging(@RequestBody PagingReqDTO<SysUserDTO> reqDTO) {
 
@@ -150,8 +154,9 @@ public class SysUserController extends BaseController {
      * @return
      */
     @ApiOperation(value = "修改状态")
+    @RequiresPermissions("sys:user:state")
     @RequestMapping(value = "/state", method = { RequestMethod.POST})
-    public ApiRest state(@RequestBody BaseStateReqDTO reqDTO) {
+    public ApiRest<?> state(@RequestBody BaseStateReqDTO reqDTO) {
 
         // 条件
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
@@ -189,6 +194,9 @@ public class SysUserController extends BaseController {
 //        SysUserLoginDTO respDTO = baseService.quickReg(reqDTO);
 //        return success(respDTO);
 //    }
+
+    @ApiOperation(value = "获取当前登录用户的router")
+    @RequiresAuthentication
     @RequestMapping(value = "/router", method = { RequestMethod.POST })
     public ApiRest<Object> getRouter() {
         String userId = UserUtils.getUserId();
@@ -200,9 +208,10 @@ public class SysUserController extends BaseController {
 
 
     /**
-     * 下载导入试题数据模板
+     * 用户导入数据模板
      */
     @RequestMapping(value = "import/template")
+    @RequiresPermissions("sys:user:import:template")
     public ApiRest importFileTemplate(HttpServletResponse response) {
         try {
             String fileName = "用户导入模板.xlsx";
@@ -220,6 +229,7 @@ public class SysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "import")
+    @RequiresPermissions("sys:user:import")
     public ApiRest importFile(@RequestParam("file") MultipartFile file) {
         try {
             ImportExcel ei = new ImportExcel(file, 1, 0);

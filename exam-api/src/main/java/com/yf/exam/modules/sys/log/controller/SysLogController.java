@@ -8,6 +8,7 @@ import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,7 @@ public class SysLogController extends BaseController {
     * @return
     */
     @ApiOperation(value = "分页查找")
+    @RequiresPermissions("sys:log:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
     public ApiRest<IPage<SysLogDTO>> paging(@RequestBody PagingReqDTO<SysLogDTO> reqDTO) {
 

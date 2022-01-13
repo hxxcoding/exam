@@ -14,6 +14,7 @@ import com.yf.exam.modules.sys.user.service.SysRoleMenuService;
 import com.yf.exam.modules.sys.user.service.SysRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,7 @@ public class SysRoleController extends BaseController {
      * @return
      */
     @ApiOperation(value = "分页查找")
+    @RequiresPermissions("sys:role:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST })
     public ApiRest<IPage<SysRoleDTO>> paging(@RequestBody PagingReqDTO<SysRoleDTO> reqDTO) {
 
@@ -60,6 +62,7 @@ public class SysRoleController extends BaseController {
      * @return
      */
     @ApiOperation(value = "查找列表")
+    @RequiresPermissions("sys:role:list")
     @RequestMapping(value = "/list", method = { RequestMethod.POST })
     public ApiRest<List<SysRoleDTO>> list() {
 
@@ -76,6 +79,7 @@ public class SysRoleController extends BaseController {
     }
 
     @ApiOperation(value = "修改身份菜单授权")
+    @RequiresPermissions("sys:role:menu:update")
     @RequestMapping(value = "/menu/update", method = { RequestMethod.POST })
     public ApiRest<?> updateRoleMenu(@RequestBody SysRoleMenuSaveReqDTO reqDTO) {
         sysRoleMenuService.remove(new QueryWrapper<SysRoleMenu>()
