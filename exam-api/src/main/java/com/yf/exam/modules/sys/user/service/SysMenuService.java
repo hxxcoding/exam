@@ -10,12 +10,6 @@ import java.util.List;
 public interface SysMenuService extends IService<SysMenu> {
 
     /**
-     * 获取菜单的url和permission
-     * @return
-     */
-    List<SysMenu> listUrlAndPermission();
-
-    /**
      * 根据身份获取菜单
      * @param roleIds
      * @return
@@ -32,6 +26,12 @@ public interface SysMenuService extends IService<SysMenu> {
      * @param menus 菜单列表
      * @return 下拉树结构列表
      */
-    public List<TreeSelectDTO> buildMenuTreeSelect(List<SysMenu> menus);
+    List<TreeSelectDTO> buildMenuTreeSelect(List<SysMenu> menus);
 
+    /**
+     * 排序
+     * @param id
+     * @param sort
+     */
+    void sort(String id, Integer sort);
 }

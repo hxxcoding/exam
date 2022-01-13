@@ -1,4 +1,4 @@
-package com.yf.exam.modules.sys.depart.dto.request;
+package com.yf.exam.core.api.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,17 +7,16 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
-* <p>
-* 部门排序请求类
-* </p>
-*
-* @author 聪明笨狗
-* @since 2020-03-14 10:37
-*/
+ * <p>
+ * 排序请求类
+ * </p>
+ *
+ * @author Xiaoxiao Hu
+ * @since 2021-01-13
+ */
 @Data
-@ApiModel(value="部门排序请求类", description="部门排序请求类")
-public class DepartSortReqDTO implements Serializable {
-
+@ApiModel(value="排序请求类", description="排序请求类")
+public class BaseSortReqDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "分类ID")

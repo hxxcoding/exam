@@ -36,16 +36,24 @@
           <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="sort" label="排序" width="60" />
-      <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true" />
-      <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" />
-      <el-table-column prop="isAvailable" label="状态" width="80">
+      <el-table-column align="center" label="排序" width="90">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.isAvailable" type="success">正常</el-tag>
+          <el-button title="向下排序" size="mini" icon="el-icon-sort-down" circle @click="handleSort(scope.row.id, 1)" />
+          <el-button title="向上排序" size="mini" icon="el-icon-sort-up" circle @click="handleSort(scope.row.id, 0)" />
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="perms" label="权限标识" :show-overflow-tooltip="true" />
+      <el-table-column align="center" prop="component" label="组件路径" :show-overflow-tooltip="true" />
+      <el-table-column align="center" prop="isAvailable" label="状态" width="70">
+        <template slot-scope="scope">
+          <div v-if="scope.row.isAvailable">
+            <el-tag v-if="scope.row.isVisible" type="success">显示</el-tag>
+            <el-tag v-else type="info">隐藏</el-tag>
+          </div>
           <el-tag v-else type="danger">失效</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="220">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -192,8 +200,8 @@
                 是否缓存
               </span>
               <el-radio-group v-model="form.noCache">
-                <el-radio label="false">缓存</el-radio>
-                <el-radio label="true">不缓存</el-radio>
+                <el-radio :label="false">缓存</el-radio>
+                <el-radio :label="true">不缓存</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -225,6 +233,14 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item prop="component">
+              <span slot="label">
+                备注
+              </span>
+              <el-input v-model="form.remark" placeholder="请输入菜单备注" />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -236,10 +252,11 @@
 </template>
 
 <script>
-import { listMenu, menuDetail, deleteMenu, saveMenu } from '@/api/sys/menu/menu'
+import { listMenu, deleteMenu, saveMenu } from '@/api/sys/menu/menu'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import IconSelect from '@/components/IconSelect'
+import { sortData } from '@/api/sys/menu/menu'
 
 export default {
   name: 'Menu',
@@ -312,12 +329,10 @@ export default {
     },
     /** 查询菜单下拉树结构 */
     getTreeselect() {
-      listMenu().then(response => {
-        this.menuOptions = []
-        const menu = { id: 0, name: '主类目', children: [] }
-        menu.children = this.handleTree(response.data, 'id', 'parentId', 'children')
-        this.menuOptions.push(menu)
-      })
+      this.menuOptions = []
+      const menu = { id: 0, name: '主类目', children: [] }
+      menu.children = this.menuList
+      this.menuOptions.push(menu)
     },
     // 取消按钮
     cancel() {
@@ -331,7 +346,7 @@ export default {
         parentId: 0,
         name: undefined,
         icon: undefined,
-        type: 'M',
+        type: 'dir',
         sort: undefined,
         isFrame: '0',
         noCache: '0',
@@ -343,8 +358,8 @@ export default {
     handleAdd(row) {
       this.reset()
       this.getTreeselect()
-      if (row != null && row.menuId) {
-        this.form.parentId = row.menuId
+      if (row != null && row.id) {
+        this.form.parentId = row.id
       } else {
         this.form.parentId = 0
       }
@@ -359,15 +374,28 @@ export default {
         this.refreshTable = true
       })
     },
+
+    /** 修改排序操作 */
+    handleSort(id, sort) {
+      sortData(id, sort).then(() => {
+        this.$notify({
+          title: '成功',
+          message: '排序成功！',
+          type: 'success',
+          duration: 2000
+        })
+
+        this.getList()
+      })
+    },
+
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
       this.getTreeselect()
-      menuDetail(row.id).then(response => {
-        this.form = response.data
-        this.open = true
-        this.title = '修改菜单'
-      })
+      this.form = row
+      this.open = true
+      this.title = '修改菜单'
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -394,7 +422,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteMenu(row.menuId).then(response => {
+        deleteMenu(row.id).then(response => {
           this.getList()
           this.$notify({
             title: '成功',

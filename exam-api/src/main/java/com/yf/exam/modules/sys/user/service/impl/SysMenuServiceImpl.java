@@ -31,14 +31,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private SysRoleMenuService sysRoleMenuService;
 
     @Override
-    public List<SysMenu> listUrlAndPermission() {
-        return this.list(new QueryWrapper<SysMenu>().lambda()
-                .select(SysMenu::getUrl, SysMenu::getPerms)
-                .isNotNull(SysMenu::getUrl)
-                .orderByAsc(SysMenu::getSort));
-    }
-
-    @Override
     public List<SysMenu> listByRoleIds(List<String> roleIds) {
         if (roleIds.contains(RoleType.SUPER_ADMIN)) {
             return this.list();
@@ -124,6 +116,48 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public List<TreeSelectDTO> buildMenuTreeSelect(List<SysMenu> menus) {
         List<SysMenu> menuTree = MenuUtils.buildMenuTree(menus);
         return menuTree.stream().map(TreeSelectDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public void sort(String id, Integer sort) {
+
+        SysMenu menu = this.getById(id);
+        SysMenu exchange = null;
+
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        // 同级排序
+        wrapper.lambda()
+                .eq(SysMenu::getParentId, menu.getParentId());
+        wrapper.last("LIMIT 1");
+
+        // 上升
+        if(sort == 0){
+            // 同级排序
+            wrapper.lambda()
+                    .lt(SysMenu::getSort, menu.getSort())
+                    .orderByDesc(SysMenu::getSort);
+            exchange = this.getOne(wrapper, false);
+        }
+
+        // 下降
+        if(sort == 1){
+            // 同级排序
+            wrapper.lambda()
+                    .gt(SysMenu::getSort, menu.getSort())
+                    .orderByAsc(SysMenu::getSort);
+            exchange = this.getOne(wrapper, false);
+        }
+
+        if (exchange != null) {
+            SysMenu a = new SysMenu();
+            a.setId(id);
+            a.setSort(exchange.getSort());
+            SysMenu b = new SysMenu();
+            b.setId(exchange.getId());
+            b.setSort(menu.getSort());
+            this.updateById(a);
+            this.updateById(b);
+        }
     }
 
 }

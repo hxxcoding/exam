@@ -5,6 +5,8 @@ import com.yf.exam.core.utils.RedisUtil;
 import com.yf.exam.modules.shiro.jwt.JwtToken;
 import com.yf.exam.modules.shiro.jwt.JwtUtils;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
+import com.yf.exam.modules.sys.user.entity.SysMenu;
+import com.yf.exam.modules.sys.user.service.SysMenuService;
 import com.yf.exam.modules.sys.user.service.SysUserRoleService;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +21,13 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户登录鉴权和获取用户授权
@@ -39,6 +45,9 @@ public class ShiroRealm extends AuthorizingRealm {
 	@Lazy
 	private SysUserRoleService sysUserRoleService;
 
+	@Autowired
+	@Lazy
+	private SysMenuService sysMenuService;
 
 	@Override
 	public boolean supports(AuthenticationToken token) {
@@ -55,8 +64,9 @@ public class ShiroRealm extends AuthorizingRealm {
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
 		String userId = null;
+		SysUserLoginDTO user = null;
 		if (principals != null) {
-			SysUserLoginDTO user = (SysUserLoginDTO) principals.getPrimaryPrincipal();
+			user = (SysUserLoginDTO) principals.getPrimaryPrincipal();
 			userId = user.getId();
 		}
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
@@ -64,6 +74,19 @@ public class ShiroRealm extends AuthorizingRealm {
 		// 查找用户角色
 		List<String> roles = sysUserRoleService.listRoles(userId);
 		info.setRoles(new HashSet<>(roles));
+
+		List<SysMenu> menuList = null;
+		menuList = sysMenuService.listByRoleIds(roles);
+		if (!CollectionUtils.isEmpty(menuList)) {
+			Set<String> permissionSet = new HashSet<>();
+			for (SysMenu menu : menuList) {
+				String permission = null;
+				if (!StringUtils.isEmpty(permission = menu.getPerms())) {
+					permissionSet.addAll(Arrays.asList(permission.trim().split(",")));
+				}
+			}
+			info.setStringPermissions(permissionSet);
+		}
 
 		log.info("++++++++++校验详细权限完成");
 		return info;

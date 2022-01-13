@@ -26,3 +26,8 @@ export function listMenuTreeByRole(roleId) {
     id: roleId
   })
 }
+
+export function sortData(id, sort) {
+  const data = { id: id, sort: sort }
+  return post('/exam/api/sys/menu/sort', data)
+}

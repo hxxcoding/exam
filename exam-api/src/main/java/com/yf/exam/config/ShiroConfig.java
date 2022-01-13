@@ -52,9 +52,6 @@ public class ShiroConfig {
 		// 获取网站基本信息
 		map.put("/exam/api/sys/config/detail", "anon");
 
-		// 文件读取
-		map.put("/upload/file/**", "anon");
-
 		map.put("/", "anon");
 		map.put("/v2/**", "anon");
 		map.put("/doc.html", "anon");
@@ -75,6 +72,9 @@ public class ShiroConfig {
 		map.put("/swagger-ui.html", "anon");
 		map.put("/swagger**/**", "anon");
 		map.put("/webjars/**", "anon");
+
+		// 文件读取
+		map.put("/upload/file/**", "authc");
 
 		// 添加自己的过滤器并且取名为jwt
 		Map<String, Filter> filterMap = new HashMap<String, Filter>(1);

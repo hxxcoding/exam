@@ -67,9 +67,6 @@ public class SysMenuDTO implements Serializable {
     @ApiModelProperty(value = "备注", required = true)
     private String remark;
 
-    @ApiModelProperty(value = "后端请求url", required = true)
-    private String url;
-
     @ApiModelProperty(value = "创建时间", required = true)
     private Date createTime;
 

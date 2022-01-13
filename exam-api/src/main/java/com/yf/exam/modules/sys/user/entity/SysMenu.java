@@ -94,11 +94,6 @@ public class SysMenu extends Model<SysMenu> {
     private String icon;
 
     /**
-     * 后端请求url
-     */
-    private String url;
-
-    /**
      * 备注
      */
     private String remark;

@@ -6,17 +6,15 @@ import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdsReqDTO;
+import com.yf.exam.core.api.dto.BaseSortReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.modules.sys.depart.dto.SysDepartDTO;
-import com.yf.exam.modules.sys.depart.dto.request.DepartSortReqDTO;
 import com.yf.exam.modules.sys.depart.dto.response.SysDepartTreeDTO;
 import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -137,7 +135,7 @@ public class SysDepartController extends BaseController {
      */
     @ApiOperation(value = "分类排序")
     @RequestMapping(value = "/sort", method = { RequestMethod.POST})
-    public ApiRest sort(@RequestBody DepartSortReqDTO reqDTO) {
+    public ApiRest sort(@RequestBody BaseSortReqDTO reqDTO) {
         baseService.sort(reqDTO.getId(), reqDTO.getSort());
         return super.success();
     }

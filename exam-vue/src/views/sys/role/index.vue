@@ -53,6 +53,12 @@
           />
         </el-form-item>
       </el-form>
+
+      <el-alert
+        title="`角色管理`,`菜单管理`为系统高危权限,请谨慎操作！"
+        type="error"
+      />
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
