@@ -8,7 +8,6 @@ import com.yf.exam.modules.sys.user.dto.response.TreeSelectDTO;
 import com.yf.exam.modules.sys.user.entity.SysMenu;
 import com.yf.exam.modules.sys.user.entity.SysRoleMenu;
 import com.yf.exam.modules.sys.user.enums.MenuType;
-import com.yf.exam.modules.sys.user.enums.RoleType;
 import com.yf.exam.modules.sys.user.mapper.SysMenuMapper;
 import com.yf.exam.modules.sys.user.service.SysMenuService;
 import com.yf.exam.modules.sys.user.service.SysRoleMenuService;
@@ -29,19 +28,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
-
-    @Override
-    public List<SysMenu> listByRoleIds(List<String> roleIds) {
-        if (roleIds.contains(RoleType.SUPER_ADMIN)) {
-            return this.list();
-        }
-        List<SysRoleMenu> roleMenuList = sysRoleMenuService.list(new QueryWrapper<SysRoleMenu>().lambda()
-                .select(SysRoleMenu::getMenuId)
-                .in(SysRoleMenu::getRoleId, roleIds));
-        List<String> menuIds = roleMenuList.stream()
-                .map(SysRoleMenu::getMenuId).collect(Collectors.toList());
-        return this.listByIds(menuIds);
-    }
 
     @Override
     public List<SysMenu> listTreeByRoleIds(List<String> roleIds) {

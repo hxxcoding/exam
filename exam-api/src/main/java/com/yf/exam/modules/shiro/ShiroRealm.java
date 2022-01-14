@@ -5,8 +5,7 @@ import com.yf.exam.core.utils.RedisUtil;
 import com.yf.exam.modules.shiro.jwt.JwtToken;
 import com.yf.exam.modules.shiro.jwt.JwtUtils;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
-import com.yf.exam.modules.sys.user.entity.SysMenu;
-import com.yf.exam.modules.sys.user.service.SysMenuService;
+import com.yf.exam.modules.sys.user.service.SysRoleMenuService;
 import com.yf.exam.modules.sys.user.service.SysUserRoleService;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用户登录鉴权和获取用户授权
@@ -47,7 +43,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
 	@Autowired
 	@Lazy
-	private SysMenuService sysMenuService;
+	private SysRoleMenuService sysRoleMenuService;
 
 	@Override
 	public boolean supports(AuthenticationToken token) {
@@ -75,17 +71,10 @@ public class ShiroRealm extends AuthorizingRealm {
 		List<String> roles = sysUserRoleService.listRoles(userId);
 		info.setRoles(new HashSet<>(roles));
 
-		List<SysMenu> menuList = null;
-		menuList = sysMenuService.listByRoleIds(roles);
-		if (!CollectionUtils.isEmpty(menuList)) {
-			Set<String> permissionSet = new HashSet<>();
-			for (SysMenu menu : menuList) {
-				String permission = null;
-				if (!StringUtils.isEmpty(permission = menu.getPerms())) {
-					permissionSet.addAll(Arrays.asList(permission.trim().split(",")));
-				}
-			}
-			info.setStringPermissions(permissionSet);
+		Set<String> permSet = new HashSet<>();
+		roles.forEach(role -> permSet.addAll(sysRoleMenuService.listPermsByRoleId(role)));
+		if (!CollectionUtils.isEmpty(permSet)) {
+			info.setStringPermissions(permSet);
 		}
 
 		log.info("++++++++++校验详细权限完成");

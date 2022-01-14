@@ -141,7 +141,7 @@ export default {
         if (valid) {
           if (this.form.id !== undefined) {
             this.form.menuIds = this.getMenuAllCheckedKeys()
-            updateRoleMenu(this.form).then(response => {
+            updateRoleMenu(this.form.id, this.form.menuIds).then(response => {
               this.$notify({
                 title: '成功',
                 message: '修改成功！',

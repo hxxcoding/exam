@@ -82,16 +82,7 @@ public class SysRoleController extends BaseController {
     @RequiresPermissions("sys:role:menu:update")
     @RequestMapping(value = "/menu/update", method = { RequestMethod.POST })
     public ApiRest<?> updateRoleMenu(@RequestBody SysRoleMenuSaveReqDTO reqDTO) {
-        sysRoleMenuService.remove(new QueryWrapper<SysRoleMenu>()
-                .lambda().eq(SysRoleMenu::getRoleId, reqDTO.getId()));
-        List<SysRoleMenu> list = new ArrayList<>();
-        for (String menuId : reqDTO.getMenuIds()) {
-            list.add(new SysRoleMenu()
-                    .setMenuId(menuId)
-                    .setRoleId(reqDTO.getId()));
-        }
-        sysRoleMenuService.saveBatch(list);
+        sysRoleMenuService.saveAll(reqDTO.getId(), reqDTO.getMenuIds());
         return super.success();
-        // TODO 重构到Service层
     }
 }

@@ -1255,7 +1255,7 @@ CREATE TABLE `sys_menu` (
                             `path` varchar(255) DEFAULT '' COMMENT '路由地址',
                             `component` varchar(255) DEFAULT NULL COMMENT '组件路径',
                             `query` varchar(255) DEFAULT NULL COMMENT '路由参数',
-                            `perms` varchar(255) DEFAULT NULL COMMENT '权限标识',
+                            `perms` varchar(255) NOT NULL DEFAULT '' COMMENT '权限标识',
                             `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
                             `is_frame` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否外部链接',
                             `no_cache` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否禁用缓存',
@@ -1288,7 +1288,7 @@ INSERT INTO `sys_menu` VALUES ('1481522639903023106', '查询角色列表', '52'
 INSERT INTO `sys_menu` VALUES ('1481522833340129282', '修改角色授权', '52', 'button', '', NULL, NULL, 'sys:role:menu:update', 3, 0, 0, 1, 1, NULL, '修改身份对应授权的菜单', '2022-01-13 15:05:43', '2022-01-13 15:29:11');
 INSERT INTO `sys_menu` VALUES ('1481524929967841281', '保存用户', '53', 'button', '', NULL, NULL, 'sys:user:save', 1, 0, 0, 1, 1, NULL, '保存或修改用户资料', '2022-01-13 15:14:03', '2022-01-13 15:14:03');
 INSERT INTO `sys_menu` VALUES ('1481525247472459778', '批量删除用户', '53', 'button', '', NULL, NULL, 'sys:user:delete', 2, 0, 0, 1, 1, NULL, '批量删除用户', '2022-01-13 15:15:19', '2022-01-13 15:15:19');
-INSERT INTO `sys_menu` VALUES ('1481525359057723393', '分页查找用户', '53', 'button', '', NULL, NULL, 'sys:user:paging', 3, 0, 0, 1, 1, NULL, '分页查找用户', '2022-01-13 15:15:46', '2022-01-13 15:15:46');
+INSERT INTO `sys_menu` VALUES ('1481525359057723393', '分页查找用户', '53', 'button', '', NULL, NULL, 'sys:user:paging,sys:role:list', 3, 0, 0, 1, 1, NULL, '分页查找用户', '2022-01-13 15:15:46', '2022-01-13 15:15:46');
 INSERT INTO `sys_menu` VALUES ('1481525641909002242', '批量修改用户状态', '53', 'button', '', NULL, NULL, 'sys:user:state', 3, 0, 0, 1, 1, NULL, '批量修改用户状态', '2022-01-13 15:16:53', '2022-01-13 15:16:53');
 INSERT INTO `sys_menu` VALUES ('1481526474834862082', '批量导入用户', '53', 'button', '', NULL, NULL, 'sys:user:import', 6, 0, 0, 1, 1, NULL, 'excel批量导入用户', '2022-01-13 15:20:12', '2022-01-13 15:23:39');
 INSERT INTO `sys_menu` VALUES ('1481527318443614210', '下载导入模版', '53', 'button', '', NULL, NULL, 'sys:user:import:template', 5, 0, 0, 1, 1, NULL, '下载用户导入模版', '2022-01-13 15:23:33', '2022-01-13 15:23:39');

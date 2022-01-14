@@ -9,13 +9,6 @@ import java.util.List;
 
 public interface SysMenuService extends IService<SysMenu> {
 
-    /**
-     * 根据身份获取菜单
-     * @param roleIds
-     * @return
-     */
-    List<SysMenu> listByRoleIds(List<String> roleIds);
-
     List<SysMenu> listTreeByRoleIds(List<String> roleIds);
 
     List<RouterTreeDTO> buildMenus(List<SysMenu> menus);
