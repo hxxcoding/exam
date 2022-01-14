@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
 * <p>
@@ -15,6 +16,7 @@ import lombok.Data;
 * @author 聪明笨狗
 * @since 2020-05-25 13:23
 */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("el_qu_answer")
 public class QuAnswer extends Model<QuAnswer> {
@@ -24,7 +26,7 @@ public class QuAnswer extends Model<QuAnswer> {
     /**
      * 答案ID
      */
-    @TableId(value = "id", type = IdType.ID_WORKER_STR)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
     /**

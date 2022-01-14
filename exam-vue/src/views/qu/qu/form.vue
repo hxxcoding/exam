@@ -53,7 +53,7 @@
 
       <div v-if="postForm.quType < 10" class="filter-container" style="margin-top: 25px">
 
-        <el-button class="filter-item" type="primary" icon="el-icon-plus" size="small" plain @click="handleAdd">
+        <el-button v-if="postForm.quType !== 3 && postForm.quType !== 5" class="filter-item" type="primary" icon="el-icon-plus" size="small" @click="handleAdd">
           添加
         </el-button>
 
@@ -129,12 +129,12 @@
           />
           <el-card>
             <el-form-item label="答案附件" prop="image">
-              <file-upload v-model="postForm.remark" list-type="file" accept=".docx, .xlsx, .pptx" />
+              <file-upload v-model="postForm.answer" list-type="file" accept=".docx, .xlsx, .pptx" />
             </el-form-item>
             <el-form-item
-              v-if="(postForm.quType === 10 && postForm.remark != null && postForm.remark.endsWith('.docx'))
-                || (postForm.quType === 11 && postForm.remark != null && postForm.remark.endsWith('.xlsx'))
-                || (postForm.quType === 12 && postForm.remark != null && postForm.remark.endsWith('.pptx'))"
+              v-if="(postForm.quType === 10 && postForm.answer != null && postForm.answer.endsWith('.docx'))
+                || (postForm.quType === 11 && postForm.answer != null && postForm.answer.endsWith('.xlsx'))
+                || (postForm.quType === 12 && postForm.answer != null && postForm.answer.endsWith('.pptx'))"
               label="操作"
               prop="image"
             >
@@ -349,7 +349,7 @@ export default {
       fetchDetail(id).then(response => {
         this.postForm = response.data
         if (this.postForm.quType >= 10 && this.postForm.id !== null && this.postForm.id !== '' &&
-            this.postForm.remark !== null && this.postForm.remark !== '') {
+            this.postForm.answer !== null && this.postForm.answer !== '') {
           this.officeAnalyze()
         }
       })
@@ -430,7 +430,7 @@ export default {
     },
 
     officeAnalyze() {
-      officeAnalyze(this.postForm.remark)
+      officeAnalyze(this.postForm.answer)
         .then(response => {
           this.wordData = response.data
           this.wordData.paragraphs[this.wordData.paragraphs.length] = {
@@ -447,7 +447,7 @@ export default {
     },
 
     readWordFormat(row) {
-      readWordFormat(this.postForm.remark, row.pos, row.method)
+      readWordFormat(this.postForm.answer, row.pos, row.method)
         .then(response => {
           row.answer = response.data
           this.$notify({

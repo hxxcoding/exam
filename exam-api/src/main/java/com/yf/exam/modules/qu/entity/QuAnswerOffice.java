@@ -7,12 +7,23 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+/**
+ * <p>
+ * 问题题目实体类
+ * </p>
+ *
+ * @author Xiaoxiao Hu
+ */
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("el_qu_answer_office")
 @Accessors(chain = true)
 public class QuAnswerOffice extends Model<QuAnswerOffice> {
+
     private static final long serialVersionUID = 1L;
 
     /**

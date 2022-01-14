@@ -3,6 +3,7 @@ package com.yf.exam.modules.qu.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 * @author 聪明笨狗
 * @since 2020-05-25 13:23
 */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("el_qu")
 public class Qu extends Model<Qu> {
@@ -23,7 +25,7 @@ public class Qu extends Model<Qu> {
     /**
      * 题目ID
      */
-    @TableId(value = "id", type = IdType.ID_WORKER_STR)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
     /**
@@ -48,6 +50,16 @@ public class Qu extends Model<Qu> {
     private String content;
 
     /**
+     * 题目答案(填空题 / office题)
+     */
+    private String answer;
+
+    /**
+     * 整题解析
+     */
+    private String analysis;
+
+    /**
      * 创建时间
      */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
@@ -58,15 +70,5 @@ public class Qu extends Model<Qu> {
      */
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
-    /**
-     * 题目备注
-     */
-    private String remark;
-
-    /**
-     * 整题解析
-     */
-    private String analysis;
     
 }

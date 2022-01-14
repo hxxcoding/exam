@@ -37,17 +37,16 @@ public class QuDTO implements Serializable {
     @ApiModelProperty(value = "题目内容", required=true)
     private String content;
 
+    @ApiModelProperty(value = "题目答案(填空题/office题)", required=true)
+    private String answer;
+
+    @ApiModelProperty(value = "整题解析", required=true)
+    private String analysis;
 
     @ApiModelProperty(value = "创建时间", required=true)
     private Date createTime;
 
     @ApiModelProperty(value = "更新时间", required=true)
     private Date updateTime;
-
-    @ApiModelProperty(value = "题目备注", required=true)
-    private String remark;
-
-    @ApiModelProperty(value = "整题解析", required=true)
-    private String analysis;
     
 }

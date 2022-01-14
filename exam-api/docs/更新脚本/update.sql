@@ -20,3 +20,7 @@ ADD COLUMN `excel_count` int(11) NOT NULL DEFAULT 0 COMMENT 'excel操作题数�
 ADD COLUMN `ppt_count` int(11) NOT NULL DEFAULT 0 COMMENT 'ppt操作题数量' AFTER `excel_count`,
 DROP PRIMARY KEY,
 ADD PRIMARY KEY (`id`) USING BTREE;
+
+ALTER TABLE `yf_exam_lite`.`el_qu`
+    CHANGE COLUMN `remark` `answer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '填空题/office题答案' AFTER `content`,
+    MODIFY COLUMN `analysis` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '整题解析' AFTER `answer`;

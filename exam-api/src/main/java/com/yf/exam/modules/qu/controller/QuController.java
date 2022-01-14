@@ -194,7 +194,6 @@ public class QuController extends BaseController {
                     item.setQAnalysis("");
                     item.setRepoList(null);
                     item.setQImage("");
-                    item.setQVideo("");
                 }
                 item.setNo(String.valueOf(no));
             }
@@ -239,8 +238,7 @@ public class QuController extends BaseController {
             l1.setQContent("问题内容");
             l1.setQAnalysis("整个问题的解析");
             l1.setQuType("只能填写1、2、3、4、5；1表示单选题，2表示多选题，3表示判断题，4表示操作题，5表示填空题");
-            l1.setQImage("题目图片，完整URL，多个用逗号隔开，限制10个"); // TODO
-            l1.setQVideo("题目视频，完整URL，只限一个");
+            l1.setQImage("题目附件，完整URL"); // TODO
             l1.setAImage("答案图片，完整URL，只限一个");
             l1.setRepoList(Arrays.asList(new String[]{"已存在题库的ID，多个用逗号隔开，题库ID错误无法导入"}));
             l1.setAContent("候选答案1");

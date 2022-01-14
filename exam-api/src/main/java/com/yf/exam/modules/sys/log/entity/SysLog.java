@@ -23,7 +23,7 @@ public class SysLog extends Model<SysLog> {
     /**
     * ID
     */
-    @TableId(value = "id", type = IdType.ID_WORKER_STR)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
     
     /**

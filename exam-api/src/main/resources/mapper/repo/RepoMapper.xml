@@ -23,7 +23,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         `id`,`code`,`title`,`radio_count`,`multi_count`,`judge_count`, `saq_count`,
-        `blank_count`,`word_count`,`excel_count`,`ppt_count`,```remark`,`create_time`,
+        `blank_count`,`word_count`,`excel_count`,`ppt_count`,`remark`,`create_time`,
         `update_time`
     </sql>
 
