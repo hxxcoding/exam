@@ -1,7 +1,7 @@
 package com.yf.exam.modules.paper.dto.response;
 
 import com.yf.exam.modules.paper.dto.PaperDTO;
-import com.yf.exam.modules.paper.dto.PaperQuDTO;
+import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,28 +15,28 @@ public class ExamDetailRespDTO extends PaperDTO {
 
 
     @ApiModelProperty(value = "单选题列表", required=true)
-    private List<PaperQuDTO> radioList;
+    private List<OnlinePaperQuDTO> radioList;
 
     @ApiModelProperty(value = "多选题列表", required=true)
-    private List<PaperQuDTO> multiList;
+    private List<OnlinePaperQuDTO> multiList;
 
     @ApiModelProperty(value = "判断题列表", required=true)
-    private List<PaperQuDTO> judgeList;
+    private List<OnlinePaperQuDTO> judgeList;
 
     @ApiModelProperty(value = "简答题列表", required=true)
-    private List<PaperQuDTO> saqList;
+    private List<OnlinePaperQuDTO> saqList;
 
     @ApiModelProperty(value = "填空题列表", required=true)
-    private List<PaperQuDTO> blankList;
+    private List<OnlinePaperQuDTO> blankList;
 
     @ApiModelProperty(value = "word操作题列表", required=true)
-    private List<PaperQuDTO> wordList;
+    private List<OnlinePaperQuDTO> wordList;
 
     @ApiModelProperty(value = "excel操作题列表", required=true)
-    private List<PaperQuDTO> excelList;
+    private List<OnlinePaperQuDTO> excelList;
 
     @ApiModelProperty(value = "ppt操作题列表", required=true)
-    private List<PaperQuDTO> pptList;
+    private List<OnlinePaperQuDTO> pptList;
 
 
     @ApiModelProperty(value = "剩余结束秒数", required=true)

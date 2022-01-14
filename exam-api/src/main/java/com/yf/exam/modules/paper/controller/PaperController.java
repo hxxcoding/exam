@@ -129,7 +129,7 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "交卷操作")
     @RequiresPermissions("paper:hand-exam")
     @RequestMapping(value = "/hand-exam", method = { RequestMethod.POST})
-    public ApiRest<PaperQuDetailDTO> handleExam(@RequestBody BaseIdReqDTO reqDTO) {
+    public ApiRest<?> handleExam(@RequestBody BaseIdReqDTO reqDTO) {
         //根据ID删除
         baseService.handExam(reqDTO.getId());
         return super.success();
@@ -150,17 +150,4 @@ public class PaperController extends BaseController {
         return super.success(respDTO);
     }
 
-//
-//    /**
-//     * 提交阅卷
-//     * @param reqDTO
-//     * @return
-//     */
-//    @ApiOperation(value = "提交阅卷")
-//    @RequestMapping(value = "/review-paper", method = { RequestMethod.POST})
-//    public ApiRest<PaperQuDetailDTO> reviewPaper(@RequestBody ExamResultRespDTO reqDTO) {
-//        //根据ID删除
-//        baseService.reviewPaper(reqDTO);
-//        return super.success();
-//    }
 }

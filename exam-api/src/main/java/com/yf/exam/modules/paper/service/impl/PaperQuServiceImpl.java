@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.modules.paper.dto.PaperQuDTO;
+import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.entity.PaperQu;
 import com.yf.exam.modules.paper.mapper.PaperQuMapper;
@@ -45,7 +46,7 @@ public class PaperQuServiceImpl extends ServiceImpl<PaperQuMapper, PaperQu> impl
      }
 
     @Override
-    public List<PaperQuDTO> listByPaper(String paperId) {
+    public List<OnlinePaperQuDTO> listByPaper(String paperId) {
 
         //查询条件
         QueryWrapper<PaperQu> wrapper = new QueryWrapper<>();
@@ -53,7 +54,7 @@ public class PaperQuServiceImpl extends ServiceImpl<PaperQuMapper, PaperQu> impl
                 .orderByAsc(PaperQu::getSort);
 
         List<PaperQu> list = this.list(wrapper);
-        return BeanMapper.mapList(list, PaperQuDTO.class);
+        return BeanMapper.mapList(list, OnlinePaperQuDTO.class);
     }
 
     @Override

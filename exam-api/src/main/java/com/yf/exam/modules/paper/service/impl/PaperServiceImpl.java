@@ -17,7 +17,7 @@ import com.yf.exam.modules.exam.dto.ExamRepoDTO;
 import com.yf.exam.modules.exam.enums.ExamState;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
-import com.yf.exam.modules.paper.dto.PaperQuDTO;
+import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuAnswerExtDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
@@ -184,17 +184,17 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         BeanMapper.copy(paper, respDTO);
 
         // 查找题目列表
-        List<PaperQuDTO> list = paperQuService.listByPaper(paperId);
+        List<OnlinePaperQuDTO> list = paperQuService.listByPaper(paperId);
 
-        List<PaperQuDTO> radioList = new ArrayList<>();
-        List<PaperQuDTO> multiList = new ArrayList<>();
-        List<PaperQuDTO> judgeList = new ArrayList<>();
-        List<PaperQuDTO> saqList = new ArrayList<>();
-        List<PaperQuDTO> blankList = new ArrayList<>();
-        List<PaperQuDTO> wordList = new ArrayList<>();
-        List<PaperQuDTO> excelList = new ArrayList<>();
-        List<PaperQuDTO> pptList = new ArrayList<>();
-        for (PaperQuDTO item: list) {
+        List<OnlinePaperQuDTO> radioList = new ArrayList<>();
+        List<OnlinePaperQuDTO> multiList = new ArrayList<>();
+        List<OnlinePaperQuDTO> judgeList = new ArrayList<>();
+        List<OnlinePaperQuDTO> saqList = new ArrayList<>();
+        List<OnlinePaperQuDTO> blankList = new ArrayList<>();
+        List<OnlinePaperQuDTO> wordList = new ArrayList<>();
+        List<OnlinePaperQuDTO> excelList = new ArrayList<>();
+        List<OnlinePaperQuDTO> pptList = new ArrayList<>();
+        for (OnlinePaperQuDTO item: list) {
             if (QuType.RADIO.equals(item.getQuType())) {
                 radioList.add(item);
             } else if (QuType.MULTI.equals(item.getQuType())) {

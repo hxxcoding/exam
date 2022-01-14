@@ -1,6 +1,5 @@
 package com.yf.exam.modules.paper.dto.ext;
 
-import com.yf.exam.modules.paper.dto.PaperQuDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,7 +16,7 @@ import java.util.List;
 */
 @Data
 @ApiModel(value="试卷题目详情类", description="试卷题目详情类")
-public class PaperQuDetailDTO extends PaperQuDTO {
+public class PaperQuDetailDTO extends OnlinePaperQuDTO {
 
     private static final long serialVersionUID = 1L;
 

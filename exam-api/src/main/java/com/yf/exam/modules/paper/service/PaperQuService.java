@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.modules.paper.dto.PaperQuDTO;
+import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.entity.PaperQu;
 
@@ -27,11 +28,11 @@ public interface PaperQuService extends IService<PaperQu> {
     IPage<PaperQuDTO> paging(PagingReqDTO<PaperQuDTO> reqDTO);
 
     /**
-     * 根据试卷找出题目列表
+     * 在线考试时根据试卷找出题目列表
      * @param paperId
      * @return
      */
-    List<PaperQuDTO> listByPaper(String paperId);
+    List<OnlinePaperQuDTO> listByPaper(String paperId);
 
     /**
      * 查找详情
