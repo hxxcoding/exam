@@ -148,7 +148,6 @@ import FileUpload from '@/components/FileUpload'
 import ExamTimer from '@/components/ExamTimer'
 import { setWaterMark, removeWatermark } from '@/utils/watermark'
 import { mapGetters } from 'vuex'
-import screenfull from 'screenfull'
 
 export default {
   name: 'ExamProcess',
@@ -212,7 +211,6 @@ export default {
   },
   // 回退时无法弹窗
   created() {
-    screenfull.toggle()
     const id = this.$route.query.id
     if (typeof id !== 'undefined') {
       this.paperId = id
@@ -325,8 +323,6 @@ export default {
           message: '试卷提交成功！',
           type: 'success'
         })
-        this.isFullscreen = !this.isFullscreen
-        screenfull.toggle()
         this.$router.push({ name: 'ExamOnline' })
       })
     },

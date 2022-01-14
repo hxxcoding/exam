@@ -532,9 +532,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         //更新正确答案
         if (reqDTO.getQuType().equals(QuType.BLANK)) { // 填空题判题
             if (!StringUtils.isBlank(reqDTO.getAnswer())) {
-                QuAnswer quAnswer = quAnswerService.getOne(new QueryWrapper<QuAnswer>()
-                        .lambda().eq(QuAnswer::getQuId, reqDTO.getQuId()));
-                String[] answers = quAnswer.getContent().split(";");
+                Qu blankQu = quService.getOne(new QueryWrapper<Qu>()
+                        .lambda().eq(Qu::getId, reqDTO.getQuId()));
+                String[] answers = blankQu.getAnswer().split(",");
                 for (String answer : answers) {
                     if (reqDTO.getAnswer().equals(answer)) {
                         right = true;

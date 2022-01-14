@@ -53,14 +53,9 @@
           show-overflow-tooltip
         >
           <template slot-scope="scope">
-            <el-popover
-              trigger="hover"
-            >
-              <span v-html="scope.row.content" />
-              <router-link slot="reference" :to="{ name: 'SaveQu', query:{ id: scope.row.id}}">
-                {{ scope.row.content }}
-              </router-link>
-            </el-popover>
+            <router-link slot="reference" :to="{ name: 'SaveQu', query:{ id: scope.row.id}}">
+              {{ scope.row.content }}
+            </router-link>
           </template>
         </el-table-column>
 
@@ -279,3 +274,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.el-tooltip__popper{max-width:50%}
+</style>

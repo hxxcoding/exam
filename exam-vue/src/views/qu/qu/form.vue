@@ -18,27 +18,18 @@
 
         </el-form-item>
 
-        <!--        <el-form-item label="难度等级 " prop="level">-->
-
-        <!--          <el-select v-model="postForm.level" class="filter-item">-->
-        <!--            <el-option-->
-        <!--              v-for="item in levels"-->
-        <!--              :key="item.value"-->
-        <!--              :label="item.label"-->
-        <!--              :value="item.value"-->
-        <!--            />-->
-        <!--          </el-select>-->
-
-        <!--        </el-form-item>-->
-
         <el-form-item label="归属题库" prop="repoIds">
 
           <repo-select v-model="postForm.repoIds" :multi="true" />
 
         </el-form-item>
-
         <el-form-item label="题目内容" prop="content">
           <tinymce-editor v-model="postForm.content" />
+          <el-alert
+            title="请勿直接粘贴`带格式文本`,否则数据量过大可能导致`无法插入`,建议粘贴`无格式文本`后,在`富文本编辑器`中设置格式！"
+            type="error"
+            style="margin-top: 10px"
+          />
         </el-form-item>
 
         <el-form-item label="试题附件">
@@ -51,9 +42,9 @@
 
       </el-card>
 
-      <div v-if="postForm.quType < 10" class="filter-container" style="margin-top: 25px">
+      <div v-if="postForm.quType <= 3" class="filter-container" style="margin-top: 25px">
 
-        <el-button v-if="postForm.quType !== 3 && postForm.quType !== 5" class="filter-item" type="primary" icon="el-icon-plus" size="small" @click="handleAdd">
+        <el-button v-if="postForm.quType !== 3" class="filter-item" type="primary" icon="el-icon-plus" size="small" @click="handleAdd">
           添加
         </el-button>
 
@@ -120,7 +111,35 @@
 
       </div>
 
-      <div v-if="postForm.quType >= 10" class="app-container" style="margin-top: 25px">
+      <div v-if="postForm.quType === 5" class="filter-container" style="margin-top: 25px">
+        <el-form ref="postForm" :model="postForm" :rules="rules" label-position="left" label-width="150px">
+          <el-card>
+            <el-form-item label="填空题答案" prop="answer">
+              <el-tag
+                v-for="tag in blankAnswerTags"
+                :key="tag"
+                closable
+                :disable-transitions="false"
+                @close="handleTagClose(tag)"
+              >
+                {{ tag }}
+              </el-tag>
+              <el-input
+                v-if="inputTagVisible"
+                ref="saveTagInput"
+                v-model="inputTagValue"
+                class="input-new-tag"
+                size="small"
+                @keyup.enter.native="handleInputTagConfirm"
+                @blur="handleInputTagConfirm"
+              />
+              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 更多答案</el-button>
+            </el-form-item>
+          </el-card>
+        </el-form>
+      </div>
+
+      <div v-if="postForm.quType >= 10" class="filter-container" style="margin-top: 25px">
         <el-form ref="postForm" :model="postForm" :rules="rules" label-position="left" label-width="150px">
           <el-alert
             title="如无解析按钮,请检查附件格式是否正确！"
@@ -289,6 +308,12 @@ export default {
         officeAnswerList: []
       },
 
+      blankAnswerTags: [],
+
+      inputTagVisible: false,
+
+      inputTagValue: '',
+
       rules: {
         content: [
           { required: true, message: '题目内容不能为空！' }
@@ -352,6 +377,9 @@ export default {
             this.postForm.answer !== null && this.postForm.answer !== '') {
           this.officeAnalyze()
         }
+        if (this.postForm.quType === 5 && this.postForm.answer !== null) {
+          this.blankAnswerTags = this.postForm.answer.split(',')
+        }
       })
     },
     submitForm() {
@@ -397,13 +425,19 @@ export default {
       }
 
       if (this.postForm.quType === 5) {
-        if (rightCount !== 1) {
+        if (this.blankAnswerTags.length === 0) {
           this.$message({
-            message: '填空题请勿增加选项框！', // TODO 填空题只能有一个选项
+            message: '填空题不能没有正确项！',
             type: 'warning'
           })
 
           return
+        } else {
+          this.postForm.answer = ''
+          this.blankAnswerTags.forEach(tag => {
+            this.postForm.answer += tag + ','
+          })
+          this.postForm.answer = this.postForm.answer.substring(0, this.postForm.answer.length - 1)
         }
       }
 
@@ -470,6 +504,25 @@ export default {
 
     removeOfficeAnswerItem(index) {
       this.postForm.officeAnswerList.splice(index, 1)
+    },
+
+    handleTagClose(tag) {
+      this.blankAnswerTags.splice(this.blankAnswerTags.indexOf(tag), 1)
+    },
+
+    showInput() {
+      this.inputTagVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+
+    handleInputTagConfirm() {
+      if (this.inputTagValue) {
+        this.blankAnswerTags.push(this.inputTagValue)
+      }
+      this.inputTagVisible = false
+      this.inputTagValue = ''
     }
 
   }
@@ -477,6 +530,20 @@ export default {
 </script>
 
 <style scoped>
-
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
 </style>
 
