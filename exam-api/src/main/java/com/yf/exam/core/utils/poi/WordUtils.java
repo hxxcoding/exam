@@ -23,7 +23,7 @@ public class WordUtils {
         try (FileInputStream fis = new FileInputStream(filePath)) { // 自动关闭
             xwpfDocument = new XWPFDocument(fis);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ServiceException("文件读取失败,请检查文件是否上传成功或文件格式是否正确");
         }
     }
 
@@ -39,8 +39,8 @@ public class WordUtils {
                 args = null;
             }
             return Reflections.invokeMethodByName(this, methodName, args);
-        } catch (NullPointerException | IllegalArgumentException e) {
-            throw new ServiceException("无法获取到格式,请检查`段落`和`方法`是否对应");
+        } catch (Exception e) { // 捕获所有异常,发生异常表示获取不到对应答案,判错
+            return null;
         }
     }
 

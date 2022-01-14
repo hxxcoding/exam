@@ -11,6 +11,7 @@ import com.yf.exam.core.api.controller.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,6 +40,7 @@ public class UploadController extends BaseController {
      * @return
      */
     @PostMapping("/common/api/file/upload")
+    @RequiresAuthentication
     @ApiOperation(value = "文件上传", notes = "此接口较为特殊，参数都通过表单方式提交，而非JSON")
     public ApiRest<UploadRespDTO> upload(@ModelAttribute UploadReqDTO reqDTO) {
         // 上传并返回URL
@@ -63,6 +65,7 @@ public class UploadController extends BaseController {
      * @return
      */
     @PostMapping("/common/api/file/delete")
+    @RequiresAuthentication
     @ApiOperation(value = "文件删除", notes = "删除已上传的文件")
     public ApiRest delete(@RequestBody FileUrlReqDTO reqDTO) {
         uploadService.delete(reqDTO.getUrl());

@@ -74,7 +74,7 @@ public class ShiroConfig {
 		map.put("/webjars/**", "anon");
 
 		// 文件读取
-		map.put("/upload/file/**", "authc");
+		map.put("/upload/file/**", "anon");
 
 		// 添加自己的过滤器并且取名为jwt
 		Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
