@@ -186,6 +186,11 @@ public class FileUtils {
 		}
 	}
 
+	/**
+	 * 删除文件
+	 * @param filePath
+	 * @throws IOException
+	 */
 	public static void deleteFile(String filePath) throws IOException {
 		File file = new File(filePath);
 		if (!file.exists() || !file.isFile()) {

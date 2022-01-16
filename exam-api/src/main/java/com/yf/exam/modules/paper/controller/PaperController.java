@@ -18,6 +18,7 @@ import com.yf.exam.modules.paper.dto.request.PaperQuQueryDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
+import com.yf.exam.modules.paper.dto.response.PaperQuOfficePointsRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.user.UserUtils;
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
 * <p>
@@ -149,6 +152,17 @@ public class PaperController extends BaseController {
         //根据ID删除
         ExamResultRespDTO respDTO = baseService.paperResult(reqDTO.getId());
         return super.success(respDTO);
+    }
+
+    /**
+     * 获取office题用户答案的详细得分点
+     */
+    @ApiOperation(value = "office题学生得分详情")
+    @RequiresPermissions("paper:paper-result")
+    @RequestMapping(value = "/paper-result/office/points", method = { RequestMethod.POST})
+    public ApiRest<List<PaperQuOfficePointsRespDTO>> quOfficePoints(@RequestBody PaperQuQueryDTO reqDTO) {
+        List<PaperQuOfficePointsRespDTO> res = baseService.quOfficePoints(reqDTO.getPaperId(), reqDTO.getQuId());
+        return super.success(res);
     }
 
 }

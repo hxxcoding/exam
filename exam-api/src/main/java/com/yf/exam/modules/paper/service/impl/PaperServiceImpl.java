@@ -1,5 +1,6 @@
 package com.yf.exam.modules.paper.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -26,6 +27,7 @@ import com.yf.exam.modules.paper.dto.request.PaperListReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
+import com.yf.exam.modules.paper.dto.response.PaperQuOfficePointsRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 import com.yf.exam.modules.paper.entity.PaperQu;
 import com.yf.exam.modules.paper.entity.PaperQuAnswer;
@@ -518,6 +520,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paperQuAnswerService.saveBatch(batchAnswerList);
     }
 
+    /**
+     * 填充答案并判分
+     * @param reqDTO
+     */
     @Override
     public void fillAnswer(PaperAnswerDTO reqDTO) {
 
@@ -543,25 +549,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     }
                 }
             }
-        } else if (reqDTO.getQuType().equals(QuType.WORD)) {
-            // word操作题判分
-            String answerFileUrl = reqDTO.getAnswer();
-            if (!StringUtils.isBlank(answerFileUrl) && answerFileUrl.endsWith(".docx")) {
-                right = true; // 设置为true 实际的分看actualScore 与is_right无关
-                String realPath = uploadService.getRealPath(answerFileUrl.substring(answerFileUrl.indexOf(Constant.FILE_PREFIX)));
-                WordUtils docx = new WordUtils(realPath);
-                List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
-                        .lambda().eq(QuAnswerOffice::getQuId, reqDTO.getQuId()));
-                int totalScore = 0;
-                for (QuAnswerOffice officeAnswer : officeAnswers) {
-                    Object userAnswer = docx.executeMethod(officeAnswer.getMethod(), officeAnswer.getPos());
-                    if (userAnswer != null && officeAnswer.getAnswer().equals(userAnswer.toString())) {
-                        totalScore += officeAnswer.getScore();
-                    }
-                }
-                paperQu.setActualScore(totalScore);
-            }
-        } else {
+        }
+
+        if (reqDTO.getQuType().equals(QuType.RADIO)
+                || reqDTO.getQuType().equals(QuType.MULTI)
+                || reqDTO.getQuType().equals(QuType.JUDGE)){
             right = true;
             for (PaperQuAnswer item : list) {
 
@@ -572,6 +564,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     right = false;
                 } // TODO 少选得一半 错选不得分
                 paperQuAnswerService.updateById(item);
+            }
+        }
+
+        if (reqDTO.getQuType() >= QuType.WORD) {
+            // office操作题判分
+            String answerFileUrl = reqDTO.getAnswer();
+            if (!StringUtils.isBlank(answerFileUrl)) {
+                right = true; // 设置为true 实际的分看actualScore 与is_right无关
+                String realPath = uploadService.getRealPath(answerFileUrl.substring(answerFileUrl.indexOf(Constant.FILE_PREFIX)));
+                paperQu.setActualScore(this.calcQuOfficeActualScore(reqDTO.getQuType(), reqDTO.getQuId(), realPath));
             }
         }
 
@@ -591,6 +593,60 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         paperQuService.updateById(paperQu);
 
+    }
+
+    /**
+     * 获取学生作答的office题的得分
+     */
+    @Override
+    public Integer calcQuOfficeActualScore(Integer quType, String quId, String filePath) {
+        int totalScore = 0;
+        if (quType.equals(QuType.WORD) && filePath.endsWith(".docx")) {
+            WordUtils docx = new WordUtils(filePath);
+            List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
+                    .lambda().eq(QuAnswerOffice::getQuId, quId));
+            for (QuAnswerOffice officeAnswer : officeAnswers) {
+                Object userAnswer = docx.executeMethod(officeAnswer.getMethod(), officeAnswer.getPos());
+                if (userAnswer != null && officeAnswer.getAnswer().equals(userAnswer.toString())) {
+                    totalScore += officeAnswer.getScore();
+                }
+            }
+            return totalScore;
+        }
+        return totalScore;
+    }
+
+    @Override
+    public List<PaperQuOfficePointsRespDTO> quOfficePoints(String paperId, String quId) {
+        PaperQu paperQu = paperQuService.findByKey(paperId, quId);
+
+        List<PaperQuOfficePointsRespDTO> res = null;
+
+        String answerFile = paperQu.getAnswer();
+        String realPath = uploadService.getRealPath(answerFile.substring(answerFile.indexOf(Constant.FILE_PREFIX)));
+        if (paperQu.getQuType().equals(QuType.WORD) && answerFile.endsWith(".docx")) {
+            WordUtils docx = new WordUtils(realPath);
+            res = new ArrayList<>();
+            List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new LambdaQueryWrapper<QuAnswerOffice>()
+                    .eq(QuAnswerOffice::getQuId, quId));
+            for (QuAnswerOffice an : officeAnswers) {
+                Object userAnswer = docx.executeMethod(an.getMethod(), an.getPos());
+                PaperQuOfficePointsRespDTO point = new PaperQuOfficePointsRespDTO()
+                        .setMethod(an.getMethod())
+                        .setPos(an.getPos())
+                        .setPointAnswer(an.getAnswer())
+                        .setPointScore(an.getScore());
+                if (userAnswer == null) point.setUserAnswer("获取失败").setUserScore(0);
+                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
+                    point.setUserAnswer(userAnswer.toString()).setUserScore(an.getScore());
+                }
+                if (userAnswer != null && !an.getAnswer().equals(userAnswer.toString())) {
+                    point.setUserAnswer(userAnswer.toString()).setUserScore(0);
+                }
+                res.add(point);
+            }
+        }
+        return res;
     }
 
     @Transactional(rollbackFor = Exception.class)
