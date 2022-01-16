@@ -18,6 +18,7 @@ import com.yf.exam.modules.exam.enums.ExamState;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDTO;
+import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuAnswerExtDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
@@ -244,9 +245,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
-    public PaperQuDetailDTO findQuDetail(String paperId, String quId) {
+    public OnlinePaperQuDetailDTO findQuDetail(String paperId, String quId) {
 
-        PaperQuDetailDTO respDTO = new PaperQuDetailDTO();
+        OnlinePaperQuDetailDTO respDTO = new OnlinePaperQuDetailDTO();
         // 问题
         Qu qu = quService.getById(quId); // cached
 

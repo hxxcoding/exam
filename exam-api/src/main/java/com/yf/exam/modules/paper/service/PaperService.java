@@ -3,7 +3,7 @@ package com.yf.exam.modules.paper.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
-import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
+import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
 import com.yf.exam.modules.paper.dto.request.PaperListReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
@@ -52,7 +52,7 @@ public interface PaperService extends IService<Paper> {
      * @param quId
      * @return
      */
-    PaperQuDetailDTO findQuDetail(String paperId, String quId);
+    OnlinePaperQuDetailDTO findQuDetail(String paperId, String quId);
 
     /**
      * 填充答案

@@ -1,8 +1,10 @@
 package com.yf.exam.modules.paper.dto.ext;
 
+import com.yf.exam.modules.paper.dto.PaperQuDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -14,9 +16,10 @@ import java.util.List;
 * @author 聪明笨狗
 * @since 2020-05-25 17:31
 */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ApiModel(value="试卷题目详情类", description="试卷题目详情类")
-public class PaperQuDetailDTO extends OnlinePaperQuDTO {
+public class PaperQuDetailDTO extends PaperQuDTO {
 
     private static final long serialVersionUID = 1L;
 

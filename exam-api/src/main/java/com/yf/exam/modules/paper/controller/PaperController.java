@@ -9,6 +9,7 @@ import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.modules.paper.dto.PaperDTO;
+import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
 import com.yf.exam.modules.paper.dto.request.PaperCreateReqDTO;
@@ -102,7 +103,7 @@ public class PaperController extends BaseController {
     @RequestMapping(value = "/qu-detail", method = { RequestMethod.POST})
     public ApiRest<PaperQuDetailDTO> quDetail(@RequestBody PaperQuQueryDTO reqDTO) {
         //根据ID查找
-        PaperQuDetailDTO respDTO = baseService.findQuDetail(reqDTO.getPaperId(), reqDTO.getQuId());
+        OnlinePaperQuDetailDTO respDTO = baseService.findQuDetail(reqDTO.getPaperId(), reqDTO.getQuId());
         return super.success(respDTO);
     }
 
