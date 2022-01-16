@@ -6,6 +6,7 @@
       ref="pagingTable"
       :options="options"
       :list-query="listQuery"
+      @multi-actions="handleMultiAction"
     >
       <template slot="filter-content" style="display: flex; align-items: flex-start">
 
@@ -177,7 +178,13 @@ export default {
       options: {
 
         // 可批量操作
-        multi: false,
+        multi: true,
+        multiActions: [
+          {
+            value: 'saveToPdf',
+            label: '保存为PDF'
+          }
+        ],
         // 列表请求URL
         listUrl: '/exam/api/paper/paper/paging'
       }
@@ -196,6 +203,20 @@ export default {
     })
   },
   methods: {
+    handleMultiAction(params) {
+      if (params.opt === 'saveToPdf') {
+        params.ids.forEach(id => {
+          const routeData = this.$router.resolve({
+            name: 'ExamResult',
+            query: {
+              id: id,
+              isPrint: true
+            }
+          })
+          window.open(routeData.href, '_blank')
+        })
+      }
+    }
   }
 }
 </script>

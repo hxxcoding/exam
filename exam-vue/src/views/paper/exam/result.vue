@@ -1,6 +1,7 @@
 <template>
-  <div class="app-container">
+  <div id="pdfDom" class="app-container">
 
+    <el-button @click="saveToPdf">保存为PDF</el-button>
     <h2 class="text-center">{{ paperData.title }}</h2>
     <p class="text-center" style="color: #666">{{ paperData.createTime }} ~ {{ paperData.updateTime }}</p>
 
@@ -29,27 +30,19 @@
       <div v-for="item in paperData.quList" :key="item.id" class="qu-content">
 
         <p>{{ item.sort + 1 }}.<span v-html="item.content" />（分值：{{ item.score }}）</p>
-        <div v-if="item.image!=null && item.image!=''">
-          <el-image :src="item.image" style="max-width:100%;">
-            <div slot="error" class="image-slot">
-              <el-link :href="item.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
-                下载附件
-              </el-link>
-            </div>
-          </el-image>
+        <div v-if="item.image!=null && item.image!==''">
+          <el-link :href="item.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+            下载附件
+          </el-link>
         </div>
         <div v-if="item.quType === 1 || item.quType===3">
           <el-radio-group v-model="radioValues[item.id]">
             <el-radio v-for="an in item.answerList" :key="an.id" :label="an.id">
               {{ an.abc }}.{{ an.content }}
               <div v-if="an.image!=null && an.image!==''" style="clear: both">
-                <el-image :src="an.image" style="max-width:100%;">
-                  <div slot="error" class="image-slot">
-                    <el-link :href="an.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
-                      下载附件
-                    </el-link>
-                  </div>
-                </el-image>
+                <el-link :href="an.image" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                  下载附件
+                </el-link>
               </div>
             </el-radio>
           </el-radio-group>
@@ -81,15 +74,62 @@
             <el-col :span="12">
               回答：<span>(得分: {{ item.actualScore }}分)</span>
               <div v-if="item.answer!=null && item.answer!==''">
-                <el-image :src="item.answer" style="max-width:100%;">
-                  <div slot="error" class="image-slot">
-                    <el-link :href="item.answer" type="primary" target="_blank" icon="el-icon-files" :underline="true">
-                      {{ item.answer }}
-                    </el-link>
-                  </div>
-                </el-image>
+                <el-link :href="item.answer" type="primary" target="_blank" icon="el-icon-files" :underline="true">
+                  {{ item.answer }}
+                </el-link>
+              </div>
+              <div v-else>
+                <span style="color: #ff0000">未作答</span>
               </div>
             </el-col>
+            <el-table
+              v-if="quOfficePoints[item.quId] !== undefined"
+              :data="quOfficePoints[item.quId]"
+              size="mini"
+              border
+              style="width: 80%"
+            >
+              <el-table-column
+                align="center"
+                label="方法"
+              >
+                <template slot-scope="scope">
+                  <div>{{ scope.row.method | wordMethodFilter }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="段落"
+              >
+                <template slot-scope="scope">
+                  <div>{{ scope.row.pos !== undefined ? scope.row.pos : '全文格式' }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="pointAnswer"
+                label="设定答案"
+                width="200px"
+                show-overflow-tooltip
+              />
+              <el-table-column
+                align="center"
+                prop="userAnswer"
+                label="用户答案"
+                width="200px"
+                show-overflow-tooltip
+              />
+              <el-table-column
+                align="center"
+                prop="pointScore"
+                label="设定分数"
+              />
+              <el-table-column
+                align="center"
+                prop="userScore"
+                label="实际得分"
+              />
+            </el-table>
           </el-row>
         </div>
 
@@ -152,9 +192,10 @@
 
 <script>
 
-import { paperResult } from '@/api/paper/exam'
+import { paperResult, fetchQuOfficePoints } from '@/api/paper/exam'
 import { setWaterMark, removeWatermark } from '@/utils/watermark'
 import { mapGetters } from 'vuex'
+import htmlToPdf from '@/utils/htmlToPdf'
 
 export default {
   name: 'AuctionGoodsDetail',
@@ -171,7 +212,11 @@ export default {
       radioRights: {},
       multiRights: {},
       myRadio: {},
-      myMulti: {}
+      myMulti: {},
+
+      quOfficePoints: {},
+
+      isPrint: false
     }
   },
   computed: {
@@ -183,11 +228,19 @@ export default {
       'realName'
     ])
   },
+  watch: {
+    isPrint: function() {
+      this.$nextTick(function() {
+        this.saveToPdf()
+      })
+    }
+  },
   created() {
     const id = this.$route.query.id
+    const isPrint = this.$route.query.isPrint
     if (typeof id !== 'undefined') {
       this.paperId = id
-      this.fetchData(id)
+      this.fetchData(id, isPrint)
     }
   },
   mounted() {
@@ -198,12 +251,16 @@ export default {
   },
   methods: {
 
-    fetchData(id) {
+    async fetchData(id, isPrint) {
       const params = { id: id }
-      paperResult(params).then(response => {
+      await paperResult(params).then(response => {
         // 试卷内容
         this.paperData = response.data
-        console.log(this.paperData)
+        this.paperData.quList.forEach(qu => {
+          if (qu.quType >= 10 && qu.answer !== null && qu.answer !== '') {
+            this.fetchQuOfficePoints(id, qu.quId)
+          }
+        })
 
         // 填充该题目的答案
         this.paperData.quList.forEach((item) => {
@@ -252,10 +309,22 @@ export default {
 
           this.blankValues[item.id] = blankValue
         })
-
-        console.log(this.multiValues)
-        console.log(this.radioValues)
       })
+      if (isPrint) {
+        setTimeout(() => {
+          this.isPrint = isPrint
+        }, 1000)
+      }
+    },
+
+    fetchQuOfficePoints(paperId, quId) {
+      fetchQuOfficePoints(paperId, quId).then(response => {
+        this.$set(this.quOfficePoints, quId, response.data)
+      })
+    },
+
+    saveToPdf() {
+      htmlToPdf.downloadPDF(document.querySelector('#pdfDom'), this.paperData.userId_dictText + '_' + this.paperId)
     }
   }
 }

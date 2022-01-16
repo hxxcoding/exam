@@ -79,7 +79,7 @@ export default {
       // 输入框显示值
       labelModel: '',
       // 实际请求传值
-      valueModel: '0'
+      valueModel: ''
     }
   },
   computed: {

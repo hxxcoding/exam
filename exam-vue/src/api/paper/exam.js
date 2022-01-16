@@ -16,6 +16,13 @@ export function paperDetail(data) {
   return post('/exam/api/paper/paper/paper-detail', data)
 }
 
+export function fetchQuOfficePoints(paperId, quId) {
+  return post('/exam/api/paper/paper/paper-result/office/points', {
+    paperId: paperId,
+    quId: quId
+  })
+}
+
 /**
  * 题目详情
  * @param data
