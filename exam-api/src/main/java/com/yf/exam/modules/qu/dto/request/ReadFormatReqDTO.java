@@ -5,9 +5,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-@ApiModel(value="word格式读取", description="word格式读取")
-public class WordReadFormatReqDTO {
+@ApiModel(value="office文件格式读取", description="office文件格式读取")
+public class ReadFormatReqDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -17,7 +19,7 @@ public class WordReadFormatReqDTO {
     @ApiModelProperty(value = "方法", required = true)
     String method;
 
-    @ApiModelProperty(value = "段落", required=true)
+    @ApiModelProperty(value = "得分点", required=true)
     String pos;
 
 }

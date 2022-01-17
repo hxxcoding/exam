@@ -18,29 +18,14 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 @ApiModel(value="office题得分详情响应类", description="office题得分详情响应类")
-public class PaperQuOfficePointsRespDTO implements Serializable {
+public class PaperQuPointsRespDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 判分方法
+     * 判分点
      */
-    private String method;
-
-    /**
-     * 判分位置
-     */
-    private String pos;
-
-    /**
-     * 题目答案
-     */
-    private String pointAnswer;
-
-    /**
-     * 学生提交的答案
-     */
-    private String userAnswer;
+    private String point;
 
     /**
      * 题目分数

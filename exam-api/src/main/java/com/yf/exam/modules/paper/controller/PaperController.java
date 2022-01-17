@@ -5,10 +5,7 @@ import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdRespDTO;
-import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
-import com.yf.exam.core.utils.BeanMapper;
-import com.yf.exam.modules.paper.dto.PaperDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
@@ -18,16 +15,12 @@ import com.yf.exam.modules.paper.dto.request.PaperQuQueryDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
-import com.yf.exam.modules.paper.dto.response.PaperQuOfficePointsRespDTO;
-import com.yf.exam.modules.paper.entity.Paper;
+import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
 import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.user.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -159,9 +152,9 @@ public class PaperController extends BaseController {
      */
     @ApiOperation(value = "office题学生得分详情")
     @RequiresPermissions("paper:paper-result")
-    @RequestMapping(value = "/paper-result/office/points", method = { RequestMethod.POST})
-    public ApiRest<List<PaperQuOfficePointsRespDTO>> quOfficePoints(@RequestBody PaperQuQueryDTO reqDTO) {
-        List<PaperQuOfficePointsRespDTO> res = baseService.quOfficePoints(reqDTO.getPaperId(), reqDTO.getQuId());
+    @RequestMapping(value = "/paper-result/office/points", method = { RequestMethod.POST })
+    public ApiRest<List<PaperQuPointsRespDTO>> quOfficePoints(@RequestBody PaperQuQueryDTO reqDTO) {
+        List<PaperQuPointsRespDTO> res = baseService.quOfficePoints(reqDTO.getPaperId(), reqDTO.getQuId());
         return super.success(res);
     }
 

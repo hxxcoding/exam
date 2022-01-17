@@ -139,7 +139,7 @@
         </el-form>
       </div>
 
-      <div v-if="postForm.quType >= 10" class="filter-container" style="margin-top: 25px">
+      <div v-if="postForm.quType === 10" class="filter-container" style="margin-top: 25px">
         <el-form ref="postForm" :model="postForm" :rules="rules" label-position="left" label-width="150px">
           <el-alert
             title="如无解析按钮,请检查附件格式是否正确！"
@@ -147,26 +147,24 @@
             style="margin-bottom: 10px"
           />
           <el-card>
-            <el-form-item label="答案附件" prop="image">
-              <file-upload v-model="postForm.answer" list-type="file" accept=".docx, .xlsx, .pptx" />
+            <el-form-item label="答案附件">
+              <file-upload v-model="postForm.answer" list-type="file" accept=".docx" />
             </el-form-item>
             <el-form-item
-              v-if="(postForm.quType === 10 && postForm.answer != null && postForm.answer.endsWith('.docx'))
-                || (postForm.quType === 11 && postForm.answer != null && postForm.answer.endsWith('.xlsx'))
-                || (postForm.quType === 12 && postForm.answer != null && postForm.answer.endsWith('.pptx'))"
+              v-if="postForm.answer != null && postForm.answer.endsWith('.docx')"
               label="操作"
               prop="image"
             >
-              <el-button class="filter-item" size="small" type="primary" @click="officeAnalyze">
+              <el-button class="filter-item" size="small" type="primary" @click="wordParagraphsAnalyze">
                 解析答案附件
               </el-button>
-              <el-button v-if="wordData.paragraphs.length !== 0" class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
+              <el-button v-if="wordParagraphs.length !== 0" class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
                 添加判分点
               </el-button>
             </el-form-item>
 
             <el-table
-              v-if="wordData.paragraphs.length !== 0"
+              v-if="wordParagraphs.length !== 0"
               :data="postForm.officeAnswerList"
               :border="false"
               empty-text="请点击上面的`解析`进行设置"
@@ -176,7 +174,7 @@
                 <template slot-scope="scope">
                   <el-select v-model="scope.row.pos" placeholder="请选择">
                     <el-option
-                      v-for="item in wordData.paragraphs"
+                      v-for="item in wordParagraphs"
                       :key="item.pos"
                       style="width: 500px;"
                       :label="item.paragraph"
@@ -192,7 +190,7 @@
                     v-model="scope.row.method"
                   >
                     <el-option
-                      v-for="item in wordData.methods"
+                      v-for="item in methods"
                       :key="item"
                       :label="item | wordMethodFilter"
                       :value="item"
@@ -203,7 +201,81 @@
 
               <el-table-column label="提取格式" align="center" width="100">
                 <template slot-scope="scope">
-                  <el-button size="small" @click="readWordFormat(scope.row)">
+                  <el-button size="small" @click="readFormat(scope.row)">
+                    提取格式
+                  </el-button>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="设置答案" align="center">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.answer" disabled />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="设置得分" align="center">
+                <template slot-scope="scope">
+                  <el-input-number v-model="scope.row.score" :min="0" style="width: 150px" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="删除" align="center" width="60">
+                <template slot-scope="scope">
+                  <el-button type="danger" icon="el-icon-delete" circle @click="removeOfficeAnswerItem(scope.$index)" />
+                </template>
+              </el-table-column>
+            </el-table>
+
+          </el-card>
+        </el-form>
+      </div>
+
+      <div v-if="postForm.quType === 11" class="filter-container" style="margin-top: 25px">
+        <el-form ref="postForm" :model="postForm" :rules="rules" label-position="left" label-width="150px">
+          <el-card>
+            <el-form-item label="答案附件">
+              <file-upload v-model="postForm.answer" list-type="file" accept=".xlsx" />
+            </el-form-item>
+            <el-form-item
+              v-if="postForm.answer != null && postForm.answer.endsWith('.xlsx')"
+              label="操作"
+              prop="image"
+            >
+              <el-button class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
+                添加判分点
+              </el-button>
+            </el-form-item>
+
+            <el-table
+              :data="postForm.officeAnswerList"
+              :border="false"
+              empty-text="请点击上方`添加判分点`进行答案"
+              style="width: 100%; margin-top: 15px"
+            >
+              <el-table-column label="目标单元格" align="center">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.pos" placeholder="例:`D9`" clearable @blur="handleCellInputChange(scope.row)" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="选择方法" align="center">
+                <template slot-scope="scope">
+                  <el-select
+                    v-model="scope.row.method"
+                  >
+                    <el-option
+                      v-for="item in methods"
+                      :key="item"
+                      :label="item | excelMethodFilter"
+                      :value="item"
+                    />
+                  </el-select>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="提取格式" align="center" width="100">
+                <template slot-scope="scope">
+                  <el-button size="small" :disabled="scope.row.pos.length < 2" @click="readFormat(scope.row)">
                     提取格式
                   </el-button>
                 </template>
@@ -243,7 +315,7 @@
 </template>
 
 <script>
-import { fetchDetail, saveData, officeAnalyze, readWordFormat } from '@/api/qu/qu'
+import { fetchDetail, saveData, wordParagraphsAnalyze, fetchQuOfficeMethods, readFormat } from '@/api/qu/qu'
 import RepoSelect from '@/components/RepoSelect'
 import FileUpload from '@/components/FileUpload'
 import TinymceEditor from '@/components/TinymceEditor'
@@ -257,10 +329,9 @@ export default {
       quTypeDisabled: false,
       itemImage: true,
 
-      wordData: {
-        paragraphs: [],
-        methods: []
-      },
+      methods: [],
+
+      wordParagraphs: [],
 
       // levels: [
       //   { value: 1, label: '普通' },
@@ -373,9 +444,12 @@ export default {
     fetchData(id) {
       fetchDetail(id).then(response => {
         this.postForm = response.data
-        if (this.postForm.quType >= 10 && this.postForm.id !== null && this.postForm.id !== '' &&
-            this.postForm.answer !== null && this.postForm.answer !== '') {
-          this.officeAnalyze()
+        if (this.postForm.quType >= 10) {
+          this.fetchQuOfficeMethods()
+        }
+        if (this.postForm.quType === 10 && this.postForm.id !== null && this.postForm.id !== '' &&
+          this.postForm.answer !== null && this.postForm.answer !== '') {
+          this.wordParagraphsAnalyze()
         }
         if (this.postForm.quType === 5 && this.postForm.answer !== null) {
           this.blankAnswerTags = this.postForm.answer.split(',')
@@ -463,11 +537,11 @@ export default {
       this.$router.push({ name: 'ListQu' })
     },
 
-    officeAnalyze() {
-      officeAnalyze(this.postForm.answer)
+    wordParagraphsAnalyze() {
+      wordParagraphsAnalyze(this.postForm.answer)
         .then(response => {
-          this.wordData = response.data
-          this.wordData.paragraphs[this.wordData.paragraphs.length] = {
+          this.wordParagraphs = response.data
+          this.wordParagraphs[this.wordParagraphs.length] = {
             paragraph: '全文格式',
             pos: undefined
           }
@@ -480,8 +554,14 @@ export default {
         })
     },
 
-    readWordFormat(row) {
-      readWordFormat(this.postForm.answer, row.pos, row.method)
+    fetchQuOfficeMethods() {
+      fetchQuOfficeMethods(this.postForm.quType).then(response => {
+        this.methods = response.data
+      })
+    },
+
+    readFormat(row) {
+      readFormat(this.postForm.answer, row.pos, row.method)
         .then(response => {
           row.answer = response.data
           this.$notify({
@@ -495,9 +575,9 @@ export default {
 
     handleOfficeAnswerAdd() {
       this.postForm.officeAnswerList.push({
-        pos: undefined,
-        method: null,
-        answer: null,
+        pos: this.postForm.quType === 10 ? undefined : '',
+        method: '',
+        answer: '',
         score: 0
       })
     },
@@ -523,6 +603,13 @@ export default {
       }
       this.inputTagVisible = false
       this.inputTagValue = ''
+    },
+
+    handleCellInputChange(row) {
+      const pattern = /^[A-Z]+[0-9]+$/g
+      if (pattern.exec(row.pos) === null) {
+        row.pos = ''
+      }
     }
 
   }

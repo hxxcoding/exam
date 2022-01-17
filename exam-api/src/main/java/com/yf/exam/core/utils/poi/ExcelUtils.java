@@ -1,7 +1,6 @@
 package com.yf.exam.core.utils.poi;
 
 import com.yf.exam.core.utils.Reflections;
-import lombok.Data;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
@@ -19,7 +18,6 @@ import java.util.Map;
  * @author Xiaoxiao Hu
  * @since 2022-01-11
  */
-@Data
 public class ExcelUtils {
 
     private XSSFWorkbook xssfWorkbook;
@@ -87,6 +85,22 @@ public class ExcelUtils {
     }
 
     /**
+     * 获取受到该单元格函数影响的范围
+     * @param row
+     * @param cell
+     * @return
+     */
+    public String getFuncRefRange(Integer row, Integer cell) {
+        return xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell)
+                .getCTCell().getF().getRef();
+    }
+
+    public String getFuncRefRange(String cellAddress) {
+        CellAddress address = new CellAddress(cellAddress);
+        return getFuncRefRange(address.getRow(), address.getColumn());
+    }
+
+    /**
      * 获取数字单元格的值
      * @param row
      * @param cell
@@ -101,14 +115,6 @@ public class ExcelUtils {
         CellAddress address = new CellAddress(cellAddress);
         return xssfWorkbook.getSheetAt(0).getRow(address.getRow()).getCell(address.getColumn())
                 .getCTCell().getV();
-    }
-
-    /**
-     * 获取整个文件的边框类型种数
-     * @return
-     */
-    public Integer getBorderCount() {
-        return xssfWorkbook.getStylesSource().getBorders().size() - 1;
     }
 
     /**
@@ -201,7 +207,8 @@ public class ExcelUtils {
 
 //    public static void main(String[] args) {
 //        ExcelUtils xlsx = new ExcelUtils("/Users/hxx/Desktop/answer.xlsx");
-//        XSSFWorkbook xssfWorkbook = xlsx.getXssfWorkbook();
-//        CellAddress d10 = new CellAddress("D10");
+//        System.out.println(xlsx.getFuncRefRange("H3"));
+//        CellAddress address = new CellAddress("I3");
+//        System.out.println(xlsx.xssfWorkbook.getSheetAt(0).getRow(address.getRow()).getCell(address.getColumn()).getCTCell());
 //    }
 }

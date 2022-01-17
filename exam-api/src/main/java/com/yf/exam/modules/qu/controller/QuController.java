@@ -14,27 +14,23 @@ import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.excel.ExportExcel;
 import com.yf.exam.core.utils.excel.ImportExcel;
 import com.yf.exam.modules.qu.dto.QuDTO;
+import com.yf.exam.modules.qu.dto.WordParagraphDTO;
 import com.yf.exam.modules.qu.dto.export.QuExportDTO;
 import com.yf.exam.modules.qu.dto.ext.QuDetailDTO;
 import com.yf.exam.modules.qu.dto.request.QuQueryReqDTO;
-import com.yf.exam.modules.qu.dto.response.WordAnalyzeRespDTO;
-import com.yf.exam.modules.qu.dto.request.WordReadFormatReqDTO;
+import com.yf.exam.modules.qu.dto.request.ReadFormatReqDTO;
 import com.yf.exam.modules.qu.entity.Qu;
-import com.yf.exam.modules.qu.entity.QuAnswerOffice;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -144,27 +140,40 @@ public class QuController extends BaseController {
     }
 
     /**
-     * Office文件提取段落,索引,方法
+     * Office文件提取段落,索引
      * @param reqDTO
      * @return
      */
     @ApiOperation(value = "office文件分析")
     @RequiresPermissions("qu:office:analyse")
-    @RequestMapping(value = "/office/analyse", method = { RequestMethod.POST })
-    public ApiRest<WordAnalyzeRespDTO> officeAnalyse(@RequestBody FileUrlReqDTO reqDTO) {
-        WordAnalyzeRespDTO list = quAnswerOfficeService.officeAnalyze(reqDTO.getUrl());
-        return super.success(list);
+    @RequestMapping(value = "/office/analyse/word", method = { RequestMethod.POST })
+    public ApiRest<List<WordParagraphDTO>> officeAnalyse(@RequestBody FileUrlReqDTO reqDTO) {
+        List<WordParagraphDTO> paragraphs = quAnswerOfficeService.wordParagraphAnalyze(reqDTO.getUrl());
+        return super.success(paragraphs);
     }
 
     /**
-     * 读取word格式
+     * 提取Office文件的判分方法
      * @param reqDTO
      * @return
      */
-    @RequiresPermissions("qu:office:word:read-format")
-    @RequestMapping(value = "/office/word/read-format", method = { RequestMethod.POST })
-    public ApiRest<String> readWordFormat(@RequestBody WordReadFormatReqDTO reqDTO) {
-        String format = quAnswerOfficeService.readWordFormat(reqDTO.getUrl(), reqDTO.getMethod(), reqDTO.getPos());
+    @ApiOperation(value = "office题判分方法获取")
+    @RequiresPermissions("qu:office:analyse")
+    @RequestMapping(value = "/office/method", method = { RequestMethod.POST })
+    public ApiRest<List<String>> getQuOfficeMethods(@RequestBody QuQueryReqDTO reqDTO) {
+        List<String> methods = quAnswerOfficeService.listQuOfficeMethods(reqDTO.getQuType());
+        return super.success(methods);
+    }
+
+    /**
+     * 读取office题文件格式
+     * @param reqDTO
+     * @return
+     */
+    @RequiresPermissions("qu:office:analyse")
+    @RequestMapping(value = "/office/read-format", method = { RequestMethod.POST })
+    public ApiRest<String> readFormat(@RequestBody ReadFormatReqDTO reqDTO) {
+        String format = quAnswerOfficeService.readFormat(reqDTO.getUrl(), reqDTO.getMethod(), reqDTO.getPos());
         return super.success(format);
     }
 

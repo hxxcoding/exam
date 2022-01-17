@@ -11,6 +11,7 @@ import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.StringUtils;
+import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
 import com.yf.exam.modules.enums.JoinType;
 import com.yf.exam.modules.exam.dto.ExamDTO;
@@ -27,7 +28,7 @@ import com.yf.exam.modules.paper.dto.request.PaperListReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
-import com.yf.exam.modules.paper.dto.response.PaperQuOfficePointsRespDTO;
+import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 import com.yf.exam.modules.paper.entity.PaperQu;
 import com.yf.exam.modules.paper.entity.PaperQuAnswer;
@@ -211,9 +212,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             } else if (QuType.WORD.equals(item.getQuType())) {
                 wordList.add(item);
             } else if (QuType.EXCEL.equals(item.getQuType())) {
-                saqList.add(item);
+                excelList.add(item);
             } else if (QuType.PPT.equals(item.getQuType())) {
-                blankList.add(item);
+                pptList.add(item);
             }
         }
 
@@ -601,10 +602,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Override
     public Integer calcQuOfficeActualScore(Integer quType, String quId, String filePath) {
         int totalScore = 0;
+        List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
+                .lambda().eq(QuAnswerOffice::getQuId, quId));
         if (quType.equals(QuType.WORD) && filePath.endsWith(".docx")) {
             WordUtils docx = new WordUtils(filePath);
-            List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
-                    .lambda().eq(QuAnswerOffice::getQuId, quId));
             for (QuAnswerOffice an : officeAnswers) {
                 Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
                 Object userAnswer = docx.executeMethod(an.getMethod(), position);
@@ -612,41 +613,73 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     totalScore += an.getScore();
                 }
             }
-            return totalScore;
+        } else if (quType.equals(QuType.EXCEL) && filePath.endsWith(".xlsx")) {
+            ExcelUtils xlsx = new ExcelUtils(filePath);
+            for (QuAnswerOffice an : officeAnswers) {
+                Object userAnswer = xlsx.executeMethod(an.getMethod(), an.getPos());
+                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
+                    totalScore += an.getScore();
+                }
+            }
+        } else if (quType.equals(QuType.PPT) && filePath.endsWith(".pptx")) {
+            // TODO ppt判分
         }
         return totalScore;
     }
 
+    /**
+     * 获取题目的得分详情 上面判分其实也可以用这个函数，但是 参数问题,判分效率问题 可能会受到影响
+     * @param paperId
+     * @param quId
+     * @return
+     */
     @Override
-    public List<PaperQuOfficePointsRespDTO> quOfficePoints(String paperId, String quId) {
+    public List<PaperQuPointsRespDTO> quOfficePoints(String paperId, String quId) {
         PaperQu paperQu = paperQuService.findByKey(paperId, quId);
 
-        List<PaperQuOfficePointsRespDTO> res = null;
+        List<PaperQuPointsRespDTO> res = new ArrayList<>();
 
         String answerFile = paperQu.getAnswer();
+
+        List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new LambdaQueryWrapper<QuAnswerOffice>()
+                .eq(QuAnswerOffice::getQuId, quId));
+
         String realPath = uploadService.getRealPath(answerFile.substring(answerFile.indexOf(Constant.FILE_PREFIX)));
         if (paperQu.getQuType().equals(QuType.WORD) && answerFile.endsWith(".docx")) {
             WordUtils docx = new WordUtils(realPath);
-            res = new ArrayList<>();
-            List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new LambdaQueryWrapper<QuAnswerOffice>()
-                    .eq(QuAnswerOffice::getQuId, quId));
             for (QuAnswerOffice an : officeAnswers) {
                 Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
                 Object userAnswer = docx.executeMethod(an.getMethod(), position);
-                PaperQuOfficePointsRespDTO point = new PaperQuOfficePointsRespDTO()
-                        .setMethod(an.getMethod())
-                        .setPos(an.getPos())
-                        .setPointAnswer(an.getAnswer())
+                PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
+                        .setPoint(an.getMethod())
                         .setPointScore(an.getScore());
-                if (userAnswer == null) point.setUserAnswer("获取失败").setUserScore(0);
+                if (userAnswer == null) point.setUserScore(0);
                 if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
-                    point.setUserAnswer(userAnswer.toString()).setUserScore(an.getScore());
+                    point.setUserScore(an.getScore());
                 }
                 if (userAnswer != null && !an.getAnswer().equals(userAnswer.toString())) {
-                    point.setUserAnswer(userAnswer.toString()).setUserScore(0);
+                    point.setUserScore(0);
                 }
                 res.add(point);
             }
+        } else if (paperQu.getQuType().equals(QuType.EXCEL) && answerFile.endsWith(".xlsx")) {
+            ExcelUtils docx = new ExcelUtils(realPath);
+            for (QuAnswerOffice an : officeAnswers) {
+                Object userAnswer = docx.executeMethod(an.getMethod(), an.getPos());
+                PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
+                        .setPoint(an.getMethod())
+                        .setPointScore(an.getScore());
+                if (userAnswer == null) point.setUserScore(0);
+                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
+                    point.setUserScore(an.getScore());
+                }
+                if (userAnswer != null && !an.getAnswer().equals(userAnswer.toString())) {
+                    point.setUserScore(0);
+                }
+                res.add(point);
+            }
+        } else if (paperQu.getQuType().equals(QuType.PPT) && answerFile.endsWith(".pptx")) {
+            // TODO ppt答案分析
         }
         return res;
     }

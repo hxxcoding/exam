@@ -9,7 +9,7 @@ import com.yf.exam.modules.paper.dto.request.PaperListReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
-import com.yf.exam.modules.paper.dto.response.PaperQuOfficePointsRespDTO;
+import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 
 import java.util.List;
@@ -63,7 +63,7 @@ public interface PaperService extends IService<Paper> {
 
     Integer calcQuOfficeActualScore(Integer quType, String quId, String filePath);
 
-    List<PaperQuOfficePointsRespDTO> quOfficePoints(String paperId, String quId);
+    List<PaperQuPointsRespDTO> quOfficePoints(String paperId, String quId);
 
     /**
      * 交卷操作

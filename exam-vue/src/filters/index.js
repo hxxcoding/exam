@@ -87,3 +87,17 @@ export function wordMethodFilter(value) {
   }
   return map[value]
 }
+
+export function excelMethodFilter(value) {
+  const map = {
+    'getFunction': '获取函数',
+    'getNumFormatCode': '获取数字格式',
+    'getNumValue': '获取数字值',
+    'getBorderStyleTop': '获取顶部边框样式',
+    'getBorderStyleBottom': '获取底部边框样式',
+    'getBorderStyleLeft': '获取左边框样式',
+    'getBorderStyleRight': '获取右边框样式',
+    'getFuncRefRange': '获取函数的影响范围'
+  }
+  return map[value]
+}

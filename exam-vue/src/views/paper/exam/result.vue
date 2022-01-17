@@ -98,7 +98,9 @@
                 label="方法"
               >
                 <template slot-scope="scope">
-                  <div>{{ scope.row.method | wordMethodFilter }}</div>
+                  <div v-if="item.quType === 10">{{ scope.row.point | wordMethodFilter }}</div>
+                  <div v-if="item.quType === 11">{{ scope.row.point | excelMethodFilter }}</div>
+                  <div v-if="item.quType === 12">{{ scope.row.point | pptMethodFilter }}</div>
                 </template>
               </el-table-column>
               <el-table-column

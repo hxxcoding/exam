@@ -105,11 +105,9 @@ public class PaperTest {
 //        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet());
 //        System.out.println(xssfWorkbook.getStylesSource().getCTStylesheet());
         ExcelUtils xlsx = new ExcelUtils("/Users/hxx/Desktop/answer.xlsx");
-        XSSFWorkbook xssfWorkbook = xlsx.getXssfWorkbook();
         System.out.println("数字格式:" + xlsx.getNumFormatCode("D10"));
         System.out.println("获取公式:" + xlsx.getFunction("H2"));
         System.out.println("获取数字值:" + xlsx.getNumValue("D10"));
-        System.out.println("边框类型种数:" + xlsx.getBorderCount());
     }
 
     @Test

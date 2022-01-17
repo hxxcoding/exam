@@ -17,12 +17,22 @@ export function saveData(data) {
 }
 
 /**
- * office文件分析
+ * word文件段落分析
  * @param url
  */
-export function officeAnalyze(url) {
-  return post('/exam/api/qu/qu/office/analyse', {
+export function wordParagraphsAnalyze(url) {
+  return post('/exam/api/qu/qu/office/analyse/word', {
     url: url
+  })
+}
+
+/**
+ * 获取office题判分方法
+ * @param url
+ */
+export function fetchQuOfficeMethods(quType) {
+  return post('/exam/api/qu/qu/office/method', {
+    quType: quType
   })
 }
 
@@ -33,8 +43,8 @@ export function officeAnalyze(url) {
  * @param method
  * @returns {Promise}
  */
-export function readWordFormat(url, pos, method) {
-  return post('/exam/api/qu/qu/office/word/read-format', {
+export function readFormat(url, pos, method) {
+  return post('/exam/api/qu/qu/office/read-format', {
     url: url,
     pos: pos,
     method: method
