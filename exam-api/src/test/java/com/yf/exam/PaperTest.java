@@ -2,6 +2,7 @@ package com.yf.exam;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
@@ -98,16 +99,15 @@ public class PaperTest {
     }
 
     @Test
-    public void testQueryMethodList() {
-        Arrays.stream(WordUtils.class.getDeclaredMethods())
-                .map(Method::getName)
-                .filter(name -> name.startsWith("get") || name.startsWith("is"))
-                .collect(Collectors.toList()).forEach(System.out::println);
-    }
-
-    @Test
-    public void testExcel() throws IOException {
-        XSSFWorkbook xlsx = new XSSFWorkbook(new FileInputStream("/Users/hxx/Desktop/office/excel_answer.xlsx"));
-        System.out.println(xlsx.getCalculationChain().getCTCalcChain());
+    public void testExcelUtils() {
+//        System.out.println(xssfWorkbook.getStylesSource().getCTStylesheet());
+//        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet());
+//        System.out.println(xssfWorkbook.getStylesSource().getCTStylesheet());
+        ExcelUtils xlsx = new ExcelUtils("/Users/hxx/Desktop/answer.xlsx");
+        XSSFWorkbook xssfWorkbook = xlsx.getXssfWorkbook();
+        System.out.println("数字格式:" + xlsx.getNumFormatCode("D10"));
+        System.out.println("获取公式:" + xlsx.getFunction("H2"));
+        System.out.println("获取数字值:" + xlsx.getNumValue("D10"));
+        System.out.println("边框类型种数:" + xlsx.getBorderCount());
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 
 public class WordUtils {
 
-    private XWPFDocument xwpfDocument;
+    private final XWPFDocument xwpfDocument;
 
     public WordUtils(String filePath) {
         try (FileInputStream fis = new FileInputStream(filePath)) { // 自动关闭
@@ -35,10 +35,13 @@ public class WordUtils {
      */
     public Object executeMethod(String methodName, Object... args) {
         try {
+            Class<?>[] classes = null;
             if (args[0] == null) {
                 args = null;
+            } else {
+                classes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
             }
-            return Reflections.invokeMethodByName(this, methodName, args);
+            return Reflections.invokeMethod(this, methodName, classes, args);
         } catch (Exception e) { // 捕获所有异常,发生异常表示获取不到对应答案,判错
             return null;
         }
