@@ -26,8 +26,8 @@ public class QuAnswerOfficeDTO implements Serializable {
     @ApiModelProperty(value = "方法/函数", required=true)
     private String method;
 
-    @ApiModelProperty(value = "段落", required=true)
-    private Integer pos;
+    @ApiModelProperty(value = "定位参数", required=true)
+    private String pos;
 
     @ApiModelProperty(value = "答案", required=true)
     private String answer;

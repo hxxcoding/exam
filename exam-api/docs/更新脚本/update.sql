@@ -24,3 +24,7 @@ ADD PRIMARY KEY (`id`) USING BTREE;
 ALTER TABLE `yf_exam_lite`.`el_qu`
     CHANGE COLUMN `remark` `answer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '填空题/office题答案' AFTER `content`,
     MODIFY COLUMN `analysis` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '整题解析' AFTER `answer`;
+
+
+ALTER TABLE `yf_exam_lite`.`el_qu_answer_office`
+    MODIFY COLUMN `pos` varchar(64) NULL DEFAULT NULL COMMENT '段落' AFTER `method`;

@@ -48,12 +48,13 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
     }
 
     @Override
-    public String readWordFormat(String url, String method, Integer pos) {
+    public String readWordFormat(String url, String method, String pos) {
         String realPath = uploadService.getRealPath(url.substring(url.indexOf(Constant.FILE_PREFIX)));
         if (url.endsWith(".docx")) {
             try {
+                Integer position = pos != null ? Integer.parseInt(pos) : null;
                 WordUtils word = new WordUtils(realPath);
-                return word.executeMethod(method, pos).toString();
+                return word.executeMethod(method, position).toString();
             } catch (RuntimeException e) {
                 throw new ServiceException("无法获取到格式,请检查`段落`和`方法`是否对应");
             }

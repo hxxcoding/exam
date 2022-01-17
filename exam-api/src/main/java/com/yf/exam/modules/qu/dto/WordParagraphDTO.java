@@ -15,7 +15,7 @@ public class WordParagraphDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "段落索引", required=true)
-    Integer pos;
+    String pos;
 
     @ApiModelProperty(value = "段落内容", required=true)
     String paragraph;

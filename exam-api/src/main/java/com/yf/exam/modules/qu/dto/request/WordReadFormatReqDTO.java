@@ -18,6 +18,6 @@ public class WordReadFormatReqDTO {
     String method;
 
     @ApiModelProperty(value = "段落", required=true)
-    Integer pos;
+    String pos;
 
 }

@@ -74,22 +74,23 @@ public class PaperTest {
     public void testOfficeSave() {
         Qu qu = quService.getOne(new QueryWrapper<Qu>().lambda().eq(Qu::getQuType, QuType.WORD));
         quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
-                .setMethod("getIndentationHanging").setPos(2).setAnswer("420").setScore(3));
+                .setMethod("getIndentationHanging").setPos("2").setAnswer("420").setScore(3));
         quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
-                .setMethod("getFontSize").setPos(2).setAnswer("13").setScore(3));
+                .setMethod("getFontSize").setPos("2").setAnswer("13").setScore(3));
         quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
-                .setMethod("getUnderlineType").setPos(2).setAnswer("WAVY_DOUBLE").setScore(3));
+                .setMethod("getUnderlineType").setPos("2").setAnswer("WAVY_DOUBLE").setScore(3));
         quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
                 .setMethod("getPgMarLeft").setAnswer("1985").setScore(3));
     }
 
     @Test
     public void testOffice() {
-        WordUtils docx = new WordUtils("/Users/hxx/Desktop/test.docx");
+        WordUtils docx = new WordUtils("/Users/hxx/Desktop/office/2021word-题目要求8.docx");
         List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list();
         int totalScore = 0;
         for (QuAnswerOffice officeAnswer : officeAnswers) {
-            String answer = docx.executeMethod(officeAnswer.getMethod(), officeAnswer.getPos()).toString();
+            Integer position = Integer.getInteger(officeAnswer.getPos());
+            String answer = docx.executeMethod(officeAnswer.getMethod(), position).toString();
             System.out.println(answer + "," + officeAnswer.getAnswer());
             if (officeAnswer.getAnswer().equals(answer)) {
                 totalScore += officeAnswer.getScore();
@@ -109,5 +110,16 @@ public class PaperTest {
         System.out.println("获取公式:" + xlsx.getFunction("H2"));
         System.out.println("获取数字值:" + xlsx.getNumValue("D10"));
         System.out.println("边框类型种数:" + xlsx.getBorderCount());
+    }
+
+    @Test
+    public void testExcelSave() {
+        Qu qu = quService.getOne(new QueryWrapper<Qu>().lambda().eq(Qu::getQuType, QuType.EXCEL));
+        quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
+                .setMethod("getNumFormatCode").setPos("D10").setAnswer("0.0_").setScore(3));
+        quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
+                .setMethod("getFunction").setPos("H2").setAnswer("SUM(D2:F2)").setScore(4));
+        quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
+                .setMethod("getNumValue").setPos("D10").setAnswer("1590.8333333333333").setScore(3));
     }
 }

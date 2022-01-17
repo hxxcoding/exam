@@ -44,9 +44,9 @@ public class QuAnswerOffice extends Model<QuAnswerOffice> {
     private String method;
 
     /**
-     * 段落号
+     * 定位参数
      */
-    private Integer pos;
+    private String pos;
 
     /**
      * 答案

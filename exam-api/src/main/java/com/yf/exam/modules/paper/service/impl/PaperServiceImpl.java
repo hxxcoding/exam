@@ -605,10 +605,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             WordUtils docx = new WordUtils(filePath);
             List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
                     .lambda().eq(QuAnswerOffice::getQuId, quId));
-            for (QuAnswerOffice officeAnswer : officeAnswers) {
-                Object userAnswer = docx.executeMethod(officeAnswer.getMethod(), officeAnswer.getPos());
-                if (userAnswer != null && officeAnswer.getAnswer().equals(userAnswer.toString())) {
-                    totalScore += officeAnswer.getScore();
+            for (QuAnswerOffice an : officeAnswers) {
+                Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
+                Object userAnswer = docx.executeMethod(an.getMethod(), position);
+                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
+                    totalScore += an.getScore();
                 }
             }
             return totalScore;
@@ -630,7 +631,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new LambdaQueryWrapper<QuAnswerOffice>()
                     .eq(QuAnswerOffice::getQuId, quId));
             for (QuAnswerOffice an : officeAnswers) {
-                Object userAnswer = docx.executeMethod(an.getMethod(), an.getPos());
+                Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
+                Object userAnswer = docx.executeMethod(an.getMethod(), position);
                 PaperQuOfficePointsRespDTO point = new PaperQuOfficePointsRespDTO()
                         .setMethod(an.getMethod())
                         .setPos(an.getPos())

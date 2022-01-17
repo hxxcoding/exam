@@ -12,7 +12,7 @@ public interface QuAnswerOfficeService extends IService<QuAnswerOffice> {
 
     WordAnalyzeRespDTO officeAnalyze(String url);
 
-    String readWordFormat(String url, String method, Integer pos);
+    String readWordFormat(String url, String method, String pos);
 
     List<QuAnswerOfficeDTO> listByQu(String quId);
 

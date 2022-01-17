@@ -30,7 +30,7 @@ public class PaperQuOfficePointsRespDTO implements Serializable {
     /**
      * 判分位置
      */
-    private Integer pos;
+    private String pos;
 
     /**
      * 题目答案

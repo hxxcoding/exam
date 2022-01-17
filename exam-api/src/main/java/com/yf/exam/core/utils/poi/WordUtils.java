@@ -58,7 +58,7 @@ public class WordUtils {
             List<WordParagraphDTO> paragraphText = new ArrayList<>();
             for (int i = 0; i < paragraphs.size(); i++) {
                 if (!StringUtils.isBlank(paragraphs.get(i).getText().trim())) {
-                    paragraphText.add(new WordParagraphDTO(i, paragraphs.get(i).getText()));
+                    paragraphText.add(new WordParagraphDTO(String.valueOf(i), paragraphs.get(i).getText()));
                 }
             }
             return paragraphText;
