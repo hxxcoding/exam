@@ -162,16 +162,18 @@ public class DictAspect {
             // 处理普通字段
             if (field.getAnnotation(Dict.class) != null) {
                 String code = field.getAnnotation(Dict.class).dicCode();
-                String text = field.getAnnotation(Dict.class).dicText();
+                String[] texts = field.getAnnotation(Dict.class).dicText();
                 String table = field.getAnnotation(Dict.class).dictTable();
                 String key = String.valueOf(item.get(field.getName()));
 
                 //翻译字典值对应的txt
-                String textValue = this.translateDictValue(code, text, table, key);
-                if (StringUtils.isEmpty(textValue)) {
-                    textValue = "";
+                for (String text : texts) {
+                    String textValue = this.translateDictValue(code, text, table, key);
+                    if (StringUtils.isEmpty(textValue)) {
+                        textValue = "";
+                    }
+                    item.put(field.getName() + "_" + text, textValue);
                 }
-                item.put(field.getName() + "_dictText", textValue);
                 continue;
             }
 

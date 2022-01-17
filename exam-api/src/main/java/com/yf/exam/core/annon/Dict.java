@@ -15,7 +15,7 @@ public @interface Dict {
 
     String dicCode();
 
-    String dicText() default "";
+    String[] dicText() default {};
 
     String dictTable() default "";
 }

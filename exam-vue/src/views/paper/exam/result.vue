@@ -5,21 +5,25 @@
     <h2 class="text-center">{{ paperData.title }}</h2>
     <p class="text-center" style="color: #666">{{ paperData.createTime }} ~ {{ paperData.updateTime }}</p>
 
-    <el-row :gutter="24" style="margin-top: 30px">
+    <el-row :gutter="10" style="margin-top: 30px">
 
-      <el-col :span="6" class="text-center">
-        考生姓名：{{ paperData.userId_dictText }}
+      <el-col :span="4" class="text-center">
+        考生姓名：{{ paperData.userId_real_name }}
       </el-col>
 
-      <el-col :span="6" class="text-center">
-        考生班级：{{ paperData.departId_dictText }}
+      <el-col :span="5" class="text-center">
+        考生学号：{{ paperData.userId_user_name }}
       </el-col>
 
-      <el-col :span="6" class="text-center">
+      <el-col :span="5" class="text-center">
+        考生班级：{{ paperData.departId_dept_name }}
+      </el-col>
+
+      <el-col :span="5" class="text-center">
         考试用时：{{ paperData.userTime }}分钟
       </el-col>
 
-      <el-col :span="6" class="text-center">
+      <el-col :span="5" class="text-center">
         考试得分：{{ paperData.userScore }}
       </el-col>
 
@@ -99,35 +103,16 @@
               </el-table-column>
               <el-table-column
                 align="center"
-                label="段落"
+                label="答题结果"
               >
                 <template slot-scope="scope">
-                  <div>{{ scope.row.pos !== undefined ? scope.row.pos : '全文格式' }}</div>
+                  <div>{{ scope.row.pointScore === scope.row.userScore ? '正确':'错误' }}</div>
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
-                prop="pointAnswer"
-                label="设定答案"
-                width="200px"
-                show-overflow-tooltip
-              />
-              <el-table-column
-                align="center"
-                prop="userAnswer"
-                label="用户答案"
-                width="200px"
-                show-overflow-tooltip
-              />
-              <el-table-column
-                align="center"
-                prop="pointScore"
-                label="设定分数"
-              />
-              <el-table-column
-                align="center"
                 prop="userScore"
-                label="实际得分"
+                align="center"
+                label="得分"
               />
             </el-table>
           </el-row>
@@ -324,7 +309,11 @@ export default {
     },
 
     saveToPdf() {
-      htmlToPdf.downloadPDF(document.querySelector('#pdfDom'), this.paperData.userId_dictText + '_' + this.paperId)
+      htmlToPdf.downloadPDF(document.querySelector('#pdfDom'),
+        this.paperData.userId_user_name + '_' +
+        this.paperData.userId_real_name + '_' +
+        this.paperData.departId_dept_name + '_' +
+        this.paperData.userScore + '_' + this.paperId)
     }
   }
 }

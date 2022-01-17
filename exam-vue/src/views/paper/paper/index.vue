@@ -51,17 +51,17 @@
         <el-table-column
           label="人员"
           align="center"
-          prop="userId_dictText"
+          prop="userId_real_name"
         />
 
         <el-table-column
           label="部门"
           align="center"
-          prop="departId_dictText"
+          prop="departId_dept_name"
         />
 
         <el-table-column
-          label="考试时长(分钟)"
+          label="考试时长(min)"
           align="center"
           prop="totalTime"
         >
@@ -71,18 +71,6 @@
           </template>
 
         </el-table-column>
-
-        <el-table-column
-          label="客观分"
-          align="center"
-          prop="objScore"
-        />
-
-        <el-table-column
-          label="主观分"
-          align="center"
-          prop="subjScore"
-        />
 
         <el-table-column
           label="考试得分"

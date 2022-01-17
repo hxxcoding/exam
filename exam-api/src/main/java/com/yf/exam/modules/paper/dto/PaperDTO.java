@@ -26,7 +26,7 @@ public class PaperDTO implements Serializable {
     @ApiModelProperty(value = "试卷ID", required=true)
     private String id;
 
-    @Dict(dictTable = "sys_user", dicText = "real_name", dicCode = "id")
+    @Dict(dictTable = "sys_user", dicText = {"real_name", "user_name"}, dicCode = "id")
     @ApiModelProperty(value = "用户ID", required=true)
     private String userId;
 
