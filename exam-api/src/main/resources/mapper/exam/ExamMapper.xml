@@ -84,7 +84,7 @@
         FROM el_exam ex
         LEFT JOIN el_exam_depart dept ON ex.id=dept.exam_id AND ex.open_type=2
         LEFT JOIN sys_user uc ON uc.depart_id=dept.depart_id
-        WHERE (ex.open_type=1 OR ex.open_type=3 OR uc.id='{{userId}}')
+        WHERE (ex.open_type=1 OR ex.open_type=3 OR uc.id='{{userId}}') AND ex.state &lt;&gt; 1
 
 
         <if test="query!=null">
