@@ -3,31 +3,23 @@
 
     <el-button @click="saveToPdf">保存为PDF</el-button>
     <h2 class="text-center">{{ paperData.title }}</h2>
-    <p class="text-center" style="color: #666">{{ paperData.createTime }} ~ {{ paperData.updateTime }}</p>
-
-    <el-row :gutter="10" style="margin-top: 30px">
-
-      <el-col :span="4" class="text-center">
-        考生姓名：{{ paperData.userId_real_name }}
-      </el-col>
-
-      <el-col :span="5" class="text-center">
-        考生学号：{{ paperData.userId_user_name }}
-      </el-col>
-
-      <el-col :span="5" class="text-center">
-        考生班级：{{ paperData.departId_dept_name }}
-      </el-col>
-
-      <el-col :span="5" class="text-center">
-        考试用时：{{ paperData.userTime }}分钟
-      </el-col>
-
-      <el-col :span="5" class="text-center">
-        考试得分：{{ paperData.userScore }}
-      </el-col>
-
-    </el-row>
+    <el-descriptions :content-style="{'text-align': 'center'}" :label-style="{'text-align': 'center'}" border>
+      <el-descriptions-item label="考生姓名">{{ paperData.userId_real_name }}</el-descriptions-item>
+      <el-descriptions-item label="考生学号">{{ paperData.userId_user_name }}</el-descriptions-item>
+      <el-descriptions-item label="考生班级">{{ paperData.departId_dept_name }}</el-descriptions-item>
+      <el-descriptions-item span="2" label="考试时间">{{ paperData.createTime }} ~ {{ paperData.updateTime }}</el-descriptions-item>
+      <el-descriptions-item label="考试用时">{{ paperData.userTime }}分钟</el-descriptions-item>
+      <el-descriptions-item label="单选题得分">{{ paperData.userRadioScore }}</el-descriptions-item>
+      <el-descriptions-item label="多选题得分">{{ paperData.userMultiScore }}</el-descriptions-item>
+      <el-descriptions-item label="判断题得分">{{ paperData.userJudgeScore }}</el-descriptions-item>
+      <el-descriptions-item label="填空题得分">{{ paperData.userBlankScore }}</el-descriptions-item>
+      <el-descriptions-item label="操作题得分">{{ paperData.userOfficeScore }}</el-descriptions-item>
+      <el-descriptions-item label="总得分">
+        <div style="color: #ff0000">
+          <strong>{{ paperData.userScore }}</strong>
+        </div>
+      </el-descriptions-item>
+    </el-descriptions>
 
     <el-card style="margin-top: 20px">
 
@@ -243,14 +235,24 @@ export default {
       await paperResult(params).then(response => {
         // 试卷内容
         this.paperData = response.data
-        this.paperData.quList.forEach(qu => {
-          if (qu.quType >= 10 && qu.answer !== null && qu.answer !== '') {
-            this.fetchQuOfficePoints(id, qu.quId)
-          }
-        })
 
+        this.paperData.userRadioScore = 0
+        this.paperData.userMultiScore = 0
+        this.paperData.userJudgeScore = 0
+        this.paperData.userBlankScore = 0
+        this.paperData.userOfficeScore = 0
         // 填充该题目的答案
         this.paperData.quList.forEach((item) => {
+          if (item.quType >= 10 && item.answer !== null && item.answer !== '') {
+            this.fetchQuOfficePoints(id, item.quId)
+          }
+          if (item.quType === 1 && item.isRight) this.paperData.userRadioScore += item.score
+          if (item.quType === 2 && item.isRight) this.paperData.userMultiScore += item.score
+          if (item.quType === 3 && item.isRight) this.paperData.userJudgeScore += item.score
+          if (item.quType === 5 && item.isRight) this.paperData.userBlankScore += item.score
+          if ((item.quType === 10 || item.quType === 11 || item.quType === 12) && item.isRight) {
+            this.paperData.userOfficeScore += item.score
+          }
           let radioValue = ''
           let radioRight = ''
           let myRadio = ''
