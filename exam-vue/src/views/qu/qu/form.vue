@@ -608,7 +608,11 @@ export default {
     handleCellInputChange(row) {
       const pattern = /^[A-Z]+[0-9]+$/g
       if (pattern.exec(row.pos) === null) {
-        row.pos = ''
+        if (/^[a-z]+[0-9]+$/g.exec(row.pos)) {
+          row.pos = row.pos.toUpperCase()
+        } else {
+          row.pos = ''
+        }
       }
     }
 
