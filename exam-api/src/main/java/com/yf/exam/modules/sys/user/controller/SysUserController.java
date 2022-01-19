@@ -88,7 +88,7 @@ public class SysUserController extends BaseController {
      */
     @ApiOperation(value = "获取会话")
     @RequestMapping(value = "/info", method = {RequestMethod.POST})
-    public ApiRest<?> info(@RequestParam("token") String token) {
+    public ApiRest<SysUserLoginDTO> info(@RequestParam("token") String token) {
         SysUserLoginDTO respDTO = baseService.token(token);
         return success(respDTO);
     }
