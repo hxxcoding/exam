@@ -51,7 +51,7 @@ public class WordUtils {
      * 分析word文件段落
      * @return
      */
-    public static List<WordParagraphDTO> analyzeWord(String filePath) {
+    public static List<WordParagraphDTO> analyzeWordParagraph(String filePath) {
         try (FileInputStream fis = new FileInputStream(filePath)) {
             XWPFDocument xwpfDocument = new XWPFDocument(fis);
             List<XWPFParagraph> paragraphs = xwpfDocument.getParagraphs();

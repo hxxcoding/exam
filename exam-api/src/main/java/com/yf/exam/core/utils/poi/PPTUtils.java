@@ -1,13 +1,17 @@
 package com.yf.exam.core.utils.poi;
 
+import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.Reflections;
+import com.yf.exam.modules.qu.dto.PPTSlideDTO;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTHyperlink;
 import org.openxmlformats.schemas.presentationml.x2006.main.*;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +52,27 @@ public class PPTUtils {
             return Reflections.invokeMethod(this, methodName, classes, args);
         } catch (Exception e) { // 捕获所有异常,发生异常表示获取不到对应答案,判错
             return null;
+        }
+    }
+
+    /**
+     * 分析ppt文件页面
+     * @param filePath
+     * @return
+     */
+    public static List<PPTSlideDTO> analyzePPTSlide(String filePath) {
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            XMLSlideShow xmlSlideShow = new XMLSlideShow(fis);
+            List<XSLFSlide> slides = xmlSlideShow.getSlides();
+            List<PPTSlideDTO> res = new ArrayList<>();
+            for (int i = 0; i < slides.size(); i++) {
+                res.add(new PPTSlideDTO(i, slides.get(i).getSlideName()));
+            }
+            return res;
+        } catch (FileNotFoundException e) {
+            throw new ServiceException("文件不存在！");
+        } catch (IOException e) {
+            throw new ServiceException("文件解析失败！");
         }
     }
 

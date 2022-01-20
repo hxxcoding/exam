@@ -13,6 +13,7 @@ import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.excel.ExportExcel;
 import com.yf.exam.core.utils.excel.ImportExcel;
+import com.yf.exam.modules.qu.dto.PPTSlideDTO;
 import com.yf.exam.modules.qu.dto.QuDTO;
 import com.yf.exam.modules.qu.dto.WordParagraphDTO;
 import com.yf.exam.modules.qu.dto.export.QuExportDTO;
@@ -140,16 +141,29 @@ public class QuController extends BaseController {
     }
 
     /**
-     * Office文件提取段落,索引
+     * word文件提取段落,索引
      * @param reqDTO
      * @return
      */
-    @ApiOperation(value = "office文件分析")
+    @ApiOperation(value = "word文件分析")
     @RequiresPermissions("qu:office:analyse")
     @RequestMapping(value = "/office/analyse/word", method = { RequestMethod.POST })
-    public ApiRest<List<WordParagraphDTO>> officeAnalyse(@RequestBody FileUrlReqDTO reqDTO) {
+    public ApiRest<List<WordParagraphDTO>> wordAnalyse(@RequestBody FileUrlReqDTO reqDTO) {
         List<WordParagraphDTO> paragraphs = quAnswerOfficeService.wordParagraphAnalyze(reqDTO.getUrl());
         return super.success(paragraphs);
+    }
+
+    /**
+     * ppt文件提取段落,索引
+     * @param reqDTO
+     * @return
+     */
+    @ApiOperation(value = "ppt文件分析")
+    @RequiresPermissions("qu:office:analyse")
+    @RequestMapping(value = "/office/analyse/ppt", method = { RequestMethod.POST })
+    public ApiRest<List<PPTSlideDTO>> pptAnalyse(@RequestBody FileUrlReqDTO reqDTO) {
+        List<PPTSlideDTO> slides = quAnswerOfficeService.pptSlideAnalyze(reqDTO.getUrl());
+        return super.success(slides);
     }
 
     /**

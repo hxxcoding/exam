@@ -9,6 +9,7 @@ import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.PPTUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
+import com.yf.exam.modules.qu.dto.PPTSlideDTO;
 import com.yf.exam.modules.qu.dto.QuAnswerDTO;
 import com.yf.exam.modules.qu.dto.QuAnswerOfficeDTO;
 import com.yf.exam.modules.qu.dto.WordParagraphDTO;
@@ -39,7 +40,17 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
     public List<WordParagraphDTO> wordParagraphAnalyze(String url) {
         String realPath = uploadService.getRealPath(url.substring(url.indexOf(Constant.FILE_PREFIX)));
         if (url.endsWith(".docx")) {
-            return WordUtils.analyzeWord(realPath);
+            return WordUtils.analyzeWordParagraph(realPath);
+        } else {
+            throw new ServiceException("文件不支持");
+        }
+    }
+
+    @Override
+    public List<PPTSlideDTO> pptSlideAnalyze(String url) {
+        String realPath = uploadService.getRealPath(url.substring(url.indexOf(Constant.FILE_PREFIX)));
+        if (url.endsWith(".pptx")) {
+            return PPTUtils.analyzePPTSlide(realPath);
         } else {
             throw new ServiceException("文件不支持");
         }
