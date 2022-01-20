@@ -75,24 +75,25 @@ public class PPTUtils {
                 if (hyperlink != null) {
                     String action = hyperlink.getAction();
                     int index = action.indexOf("jump=");
-                    if (index != -1){
+                    if (index != -1) {
                         return action.substring(index);
                     }
                 }
             }
             return null;
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             return null;
         }
     }
 
     /**
+     * 获取动画主序列动作信息
      * 动画样式 只能获取进入/退出动画 需要传一个动画次序的参数 并且每个动画的样式不同内容也不同 看看怎么实现复用
      * @param slidePos 幻灯片的位置
      * @param actionPos 动作在幻灯片中的顺序
-     * @return
+     * @return 动画样式_动画出现时间
      */
-    public String getMainSeqAction(Integer slidePos, Integer actionPos){
+    public String getAnimMainSeqAction(Integer slidePos, Integer actionPos){
         try {
             XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(slidePos);
             CTTLCommonTimeNodeData mainSeq = xslfSlide.getXmlObject().getTiming().getTnLst().getParArray(0).getCTn()
@@ -112,7 +113,7 @@ public class PPTUtils {
      * @param pos
      * @return
      */
-    public String getTransition(Integer pos){
+    public String getTransitionMode(Integer pos){
         try{
             XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(pos);
             CTSlideTransition transition = xslfSlide.getXmlObject().getTransition();
