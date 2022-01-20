@@ -1,16 +1,19 @@
 package com.yf.exam.core.utils.poi;
 
+import com.yf.exam.core.utils.Reflections;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTHyperlink;
 import org.openxmlformats.schemas.presentationml.x2006.main.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * <p>
- *
+ *  PPT判分方法
  * </p>
  *
  * @author Xiaoxiao Hu
@@ -29,27 +32,48 @@ public class PPTUtils {
     }
 
     /**
+     * 通过方法名和参数获取方法并执行
+     * @param methodName
+     * @param args
+     * @return
+     */
+    public Object executeMethod(String methodName, Object... args) {
+        try {
+            Class<?>[] classes = null;
+            if (args[0] == null) {
+                args = null;
+            } else {
+                classes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
+            }
+            return Reflections.invokeMethod(this, methodName, classes, args);
+        } catch (Exception e) { // 捕获所有异常,发生异常表示获取不到对应答案,判错
+            return null;
+        }
+    }
+
+    /**
      * 获取主题/设计模版名称
      * @param pos
      * @return
      */
-    public String getThemeName(int pos) {
+    public String getThemeName(Integer pos) {
         XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(pos);
         return xslfSlide.getTheme().getName();
     }
 
     /**
-     * 只能获取第一个跳转的超链接
+     * 只能获取该页面的第一个跳转的超链接
      * @param pos
      * @return
      */
-    public String getJumpHyperlink(int pos){
+    public String getJumpHyperlink(Integer pos){
         try {
             List<XSLFSlide> slides = xmlSlideShow.getSlides();
             List<CTShape> spList = slides.get(pos).getXmlObject().getCSld().getSpTree().getSpList();
             for (CTShape sp : spList) {
-                if (sp.getNvSpPr().getCNvPr().getHlinkClick() != null) {
-                    String action = sp.getNvSpPr().getCNvPr().getHlinkClick().getAction();
+                CTHyperlink hyperlink = sp.getNvSpPr().getCNvPr().getHlinkClick();
+                if (hyperlink != null) {
+                    String action = hyperlink.getAction();
                     int index = action.indexOf("jump=");
                     if (index != -1){
                         return action.substring(index);
@@ -63,7 +87,7 @@ public class PPTUtils {
     }
 
     /**
-     * 这里的进入动画 需要传一个动画次序的参数 并且每个动画的样式不同内容也不同 看看怎么实现复用
+     * 动画样式 只能获取进入/退出动画 需要传一个动画次序的参数 并且每个动画的样式不同内容也不同 看看怎么实现复用
      * @param slidePos 幻灯片的位置
      * @param actionPos 动作在幻灯片中的顺序
      * @return
@@ -73,9 +97,11 @@ public class PPTUtils {
             XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(slidePos);
             CTTLCommonTimeNodeData mainSeq = xslfSlide.getXmlObject().getTiming().getTnLst().getParArray(0).getCTn()
                     .getChildTnLst().getSeqArray(0).getCTn();
-            CTTLTimeNodeParallel timeNodeParallel = mainSeq.getChildTnLst().getParList().get(actionPos);// 第1个动画
-            CTTimeNodeList childTnLst = timeNodeParallel.getCTn().getChildTnLst().getParArray(0).getCTn().getChildTnLst().getParArray(0).getCTn().getChildTnLst();
-            return childTnLst.getAnimEffectArray(0).getFilter();
+            CTTLTimeNodeParallel timeNodeParallel = mainSeq.getChildTnLst().getParArray(actionPos);// 第actionPos个动画
+            CTTimeNodeList childTnLst = timeNodeParallel.getCTn().getChildTnLst().getParArray(0)
+                    .getCTn().getChildTnLst().getParArray(0).getCTn().getChildTnLst();
+            CTTLAnimateEffectBehavior actionBehavior = childTnLst.getAnimEffectArray(0);
+            return actionBehavior.getFilter() + "_" + actionBehavior.getTransition();
         } catch (NullPointerException e){
             return null;
         }
@@ -86,7 +112,7 @@ public class PPTUtils {
      * @param pos
      * @return
      */
-    public String getTransition(int pos){
+    public String getTransition(Integer pos){
         try{
             XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(pos);
             CTSlideTransition transition = xslfSlide.getXmlObject().getTransition();
