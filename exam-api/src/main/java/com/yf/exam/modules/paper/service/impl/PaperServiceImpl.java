@@ -51,6 +51,8 @@ import com.yf.exam.modules.user.exam.entity.UserExam;
 import com.yf.exam.modules.user.exam.service.UserExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -82,6 +84,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     private QuAnswerService quAnswerService;
 
     @Autowired
+    @Lazy
     private PaperService paperService;
 
     @Autowired
@@ -526,6 +529,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
      * 填充答案并判分
      * @param reqDTO
      */
+    @Async
     @Override
     public void fillAnswer(PaperAnswerDTO reqDTO) {
 
