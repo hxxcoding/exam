@@ -251,7 +251,7 @@ export default {
           if (item.quType === 3 && item.isRight) this.paperData.userJudgeScore += item.score
           if (item.quType === 5 && item.isRight) this.paperData.userBlankScore += item.score
           if ((item.quType === 10 || item.quType === 11 || item.quType === 12) && item.isRight) {
-            this.paperData.userOfficeScore += item.score
+            this.paperData.userOfficeScore += item.actualScore
           }
           let radioValue = ''
           let radioRight = ''
