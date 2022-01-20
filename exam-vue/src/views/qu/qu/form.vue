@@ -304,6 +304,96 @@
         </el-form>
       </div>
 
+      <div v-if="postForm.quType === 12" class="filter-container" style="margin-top: 25px">
+        <el-form ref="postForm" :model="postForm" :rules="rules" label-position="left" label-width="150px">
+          <el-alert
+            title="如无解析按钮,请检查附件格式是否正确！"
+            type="error"
+            style="margin-bottom: 10px"
+          />
+          <el-card>
+            <el-form-item label="答案附件">
+              <file-upload v-model="postForm.answer" list-type="file" accept=".pptx" />
+            </el-form-item>
+            <el-form-item
+              v-if="postForm.answer != null && postForm.answer.endsWith('.pptx')"
+              label="操作"
+              prop="image"
+            >
+              <el-button class="filter-item" size="small" type="primary" @click="pptSlidesAnalyze">
+                解析答案附件
+              </el-button>
+              <el-button v-if="pptSlides.length !== 0" class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
+                添加判分点
+              </el-button>
+            </el-form-item>
+
+            <el-table
+              v-if="pptSlides.length !== 0"
+              :data="postForm.officeAnswerList"
+              :border="false"
+              empty-text="请点击上面的`解析`进行设置"
+              style="width: 100%; margin-top: 15px"
+            >
+              <el-table-column label="选择段落" align="center">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.pos" placeholder="请选择">
+                    <el-option
+                      v-for="item in pptSlides"
+                      :key="item.pos"
+                      :label="item.slideName"
+                      :value="item.pos"
+                    />
+                  </el-select>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="选择方法" align="center">
+                <template slot-scope="scope">
+                  <el-select
+                    v-model="scope.row.method"
+                  >
+                    <el-option
+                      v-for="item in methods"
+                      :key="item"
+                      :label="item | pptMethodFilter"
+                      :value="item"
+                    />
+                  </el-select>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="提取格式" align="center" width="100">
+                <template slot-scope="scope">
+                  <el-button size="small" @click="readFormat(scope.row)">
+                    提取格式
+                  </el-button>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="设置答案" align="center">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.answer" disabled />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="设置得分" align="center">
+                <template slot-scope="scope">
+                  <el-input-number v-model="scope.row.score" :min="0" style="width: 150px" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="删除" align="center" width="60">
+                <template slot-scope="scope">
+                  <el-button type="danger" icon="el-icon-delete" circle @click="removeOfficeAnswerItem(scope.$index)" />
+                </template>
+              </el-table-column>
+            </el-table>
+
+          </el-card>
+        </el-form>
+      </div>
+
       <div style="margin-top: 20px">
         <el-button type="primary" @click="submitForm">保存</el-button>
         <el-button type="info" @click="onCancel">返回</el-button>
@@ -315,7 +405,7 @@
 </template>
 
 <script>
-import { fetchDetail, saveData, wordParagraphsAnalyze, fetchQuOfficeMethods, readFormat } from '@/api/qu/qu'
+import { fetchDetail, saveData, wordParagraphsAnalyze, pptSlidesAnalyze, fetchQuOfficeMethods, readFormat } from '@/api/qu/qu'
 import RepoSelect from '@/components/RepoSelect'
 import FileUpload from '@/components/FileUpload'
 import TinymceEditor from '@/components/TinymceEditor'
@@ -332,6 +422,8 @@ export default {
       methods: [],
 
       wordParagraphs: [],
+
+      pptSlides: [],
 
       // levels: [
       //   { value: 1, label: '普通' },
@@ -451,6 +543,10 @@ export default {
           this.postForm.answer !== null && this.postForm.answer !== '') {
           this.wordParagraphsAnalyze()
         }
+        if (this.postForm.quType === 12 && this.postForm.id !== null && this.postForm.id !== '' &&
+          this.postForm.answer !== null && this.postForm.answer !== '') {
+          this.pptSlidesAnalyze()
+        }
         if (this.postForm.quType === 5 && this.postForm.answer !== null) {
           this.blankAnswerTags = this.postForm.answer.split(',')
         }
@@ -545,6 +641,21 @@ export default {
             paragraph: '全文格式',
             pos: undefined
           }
+          this.fetchQuOfficeMethods()
+          this.$notify({
+            title: '成功',
+            message: '解析文件成功！',
+            type: 'success',
+            duration: 2000
+          })
+        })
+    },
+
+    pptSlidesAnalyze() {
+      pptSlidesAnalyze(this.postForm.answer)
+        .then(response => {
+          this.pptSlides = response.data
+          this.fetchQuOfficeMethods()
           this.$notify({
             title: '成功',
             message: '解析文件成功！',

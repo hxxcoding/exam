@@ -92,8 +92,13 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
                 throw new ServiceException("无法获取到格式,请检查`单元格`和`方法`是否对应");
             }
         } else if (url.endsWith(".pptx")) {
-            // TODO
-            return null;
+            try {
+                Integer position = pos != null ? Integer.parseInt(pos) : null;
+                PPTUtils ppt = new PPTUtils(realPath);
+                return ppt.executeMethod(method, position).toString();
+            } catch (RuntimeException e) {
+                throw new ServiceException("无法获取到格式,请检查`段落`和`方法`是否对应");
+            }
         } else {
             throw new ServiceException("文件不支持");
         }

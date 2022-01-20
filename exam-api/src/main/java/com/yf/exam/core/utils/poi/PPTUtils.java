@@ -66,7 +66,7 @@ public class PPTUtils {
             List<XSLFSlide> slides = xmlSlideShow.getSlides();
             List<PPTSlideDTO> res = new ArrayList<>();
             for (int i = 0; i < slides.size(); i++) {
-                res.add(new PPTSlideDTO(i, slides.get(i).getSlideName()));
+                res.add(new PPTSlideDTO(String.valueOf(i), slides.get(i).getSlideName()));
             }
             return res;
         } catch (FileNotFoundException e) {
@@ -132,6 +132,20 @@ public class PPTUtils {
             return null;
         }
     }
+
+    public String getAnimMainSeqAction(Integer slidePos) {
+        return getAnimMainSeqAction(slidePos, 0);
+    }
+
+//    public String getAnimMainSeqAction(String pos) {
+//        String[] p = pos.split(",");
+//        Integer slidePos = Integer.parseInt(p[0]);
+//        Integer actionPos = null;
+//        if (p.length >= 2) {
+//            actionPos = Integer.parseInt(p[1]);
+//        }
+//        return getAnimMainSeqAction(slidePos, actionPos != null ? actionPos : 0);
+//    }
 
     /**
      * 获取第pos页ppt进入时的过渡方式, 仅支持获取简单的过渡方式, 高级过渡方式待研究

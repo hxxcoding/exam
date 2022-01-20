@@ -12,6 +12,7 @@ import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.core.utils.poi.ExcelUtils;
+import com.yf.exam.core.utils.poi.PPTUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
 import com.yf.exam.modules.enums.JoinType;
 import com.yf.exam.modules.exam.dto.ExamDTO;
@@ -622,7 +623,14 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 }
             }
         } else if (quType.equals(QuType.PPT) && filePath.endsWith(".pptx")) {
-            // TODO ppt判分
+            PPTUtils pptx = new PPTUtils(filePath);
+            for (QuAnswerOffice an : officeAnswers) {
+                Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
+                Object userAnswer = pptx.executeMethod(an.getMethod(), position);
+                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
+                    totalScore += an.getScore();
+                }
+            }
         }
         return totalScore;
     }
@@ -679,7 +687,22 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 res.add(point);
             }
         } else if (paperQu.getQuType().equals(QuType.PPT) && answerFile.endsWith(".pptx")) {
-            // TODO ppt答案分析
+            PPTUtils pptx = new PPTUtils(realPath);
+            for (QuAnswerOffice an : officeAnswers) {
+                Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
+                Object userAnswer = pptx.executeMethod(an.getMethod(), position);
+                PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
+                        .setPoint(an.getMethod())
+                        .setPointScore(an.getScore());
+                if (userAnswer == null) point.setUserScore(0);
+                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
+                    point.setUserScore(an.getScore());
+                }
+                if (userAnswer != null && !an.getAnswer().equals(userAnswer.toString())) {
+                    point.setUserScore(0);
+                }
+                res.add(point);
+            }
         }
         return res;
     }

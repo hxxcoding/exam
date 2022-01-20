@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 public class PPTSlideDTO extends BaseDTO {
 
     @ApiModelProperty(value = "幻灯片页面索引", required=true)
-    Integer pos;
+    String pos;
 
     @ApiModelProperty(value = "段落内容", required=true)
     String slideName;

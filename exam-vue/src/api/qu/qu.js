@@ -27,8 +27,18 @@ export function wordParagraphsAnalyze(url) {
 }
 
 /**
- * 获取office题判分方法
+ * ppt文件段落分析
  * @param url
+ */
+export function pptSlidesAnalyze(url) {
+  return post('/exam/api/qu/qu/office/analyse/ppt', {
+    url: url
+  })
+}
+
+/**
+ * 获取office题判分方法
+ * @param quType
  */
 export function fetchQuOfficeMethods(quType) {
   return post('/exam/api/qu/qu/office/method', {
