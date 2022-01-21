@@ -116,6 +116,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String createPaper(String userId, String examId) {
 
         // 查找考试
@@ -573,7 +574,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             }
         }
 
-        if (reqDTO.getQuType() >= QuType.WORD) {
+        if (reqDTO.getQuType().equals(QuType.WORD) ||
+                reqDTO.getQuType().equals(QuType.EXCEL) ||
+                reqDTO.getQuType().equals(QuType.PPT)) {
             // office操作题判分
             String answerFileUrl = reqDTO.getAnswer();
             if (!StringUtils.isBlank(answerFileUrl)) {
@@ -604,8 +607,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     /**
      * 获取学生作答的office题的得分
      */
-    @Override
-    public Integer calcQuOfficeActualScore(Integer quType, String quId, String filePath) {
+    private Integer calcQuOfficeActualScore(Integer quType, String quId, String filePath) {
         int totalScore = 0;
         List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
                 .lambda().eq(QuAnswerOffice::getQuId, quId));

@@ -61,8 +61,6 @@ public interface PaperService extends IService<Paper> {
      */
     void fillAnswer(PaperAnswerDTO reqDTO);
 
-    Integer calcQuOfficeActualScore(Integer quType, String quId, String filePath);
-
     List<PaperQuPointsRespDTO> quOfficePoints(String paperId, String quId);
 
     /**
@@ -77,7 +75,6 @@ public interface PaperService extends IService<Paper> {
      * @param reqDTO
      */
     void reviewPaper(ExamResultRespDTO reqDTO);
-
 
     /**
      * 试卷列表响应类
