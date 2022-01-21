@@ -582,7 +582,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             if (!StringUtils.isBlank(answerFileUrl)) {
                 right = true; // 设置为true 实际的分看actualScore 与is_right无关
                 String realPath = uploadService.getRealPath(answerFileUrl.substring(answerFileUrl.indexOf(Constant.FILE_PREFIX)));
-                paperQu.setActualScore(this.calcQuOfficeActualScore(reqDTO.getQuType(), reqDTO.getQuId(), realPath));
+                List<PaperQuPointsRespDTO> points = this.quOfficePoints(reqDTO.getQuType(), reqDTO.getQuId(), realPath);
+                int totalScore = points.stream().mapToInt(PaperQuPointsRespDTO::getUserScore).sum();
+                paperQu.setActualScore(totalScore);
             }
         }
 
@@ -605,43 +607,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     /**
-     * 获取学生作答的office题的得分
-     */
-    private Integer calcQuOfficeActualScore(Integer quType, String quId, String filePath) {
-        int totalScore = 0;
-        List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new QueryWrapper<QuAnswerOffice>()
-                .lambda().eq(QuAnswerOffice::getQuId, quId));
-        if (quType.equals(QuType.WORD) && filePath.endsWith(".docx")) {
-            WordUtils docx = new WordUtils(filePath);
-            for (QuAnswerOffice an : officeAnswers) {
-                Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
-                Object userAnswer = docx.executeMethod(an.getMethod(), position);
-                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
-                    totalScore += an.getScore();
-                }
-            }
-        } else if (quType.equals(QuType.EXCEL) && filePath.endsWith(".xlsx")) {
-            ExcelUtils xlsx = new ExcelUtils(filePath);
-            for (QuAnswerOffice an : officeAnswers) {
-                Object userAnswer = xlsx.executeMethod(an.getMethod(), an.getPos());
-                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
-                    totalScore += an.getScore();
-                }
-            }
-        } else if (quType.equals(QuType.PPT) && filePath.endsWith(".pptx")) {
-            PPTUtils pptx = new PPTUtils(filePath);
-            for (QuAnswerOffice an : officeAnswers) {
-                Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
-                Object userAnswer = pptx.executeMethod(an.getMethod(), position);
-                if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
-                    totalScore += an.getScore();
-                }
-            }
-        }
-        return totalScore;
-    }
-
-    /**
      * 获取题目的得分详情 上面判分其实也可以用这个函数，但是 参数问题,判分效率问题 可能会受到影响
      * @param paperId
      * @param quId
@@ -650,17 +615,24 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Override
     public List<PaperQuPointsRespDTO> quOfficePoints(String paperId, String quId) {
         PaperQu paperQu = paperQuService.findByKey(paperId, quId);
-
-        List<PaperQuPointsRespDTO> res = new ArrayList<>();
-
         String answerFile = paperQu.getAnswer();
+        String realPath = uploadService.getRealPath(answerFile.substring(answerFile.indexOf(Constant.FILE_PREFIX)));
+        return this.quOfficePoints(paperQu.getQuType(), paperQu.getQuId(), realPath);
+    }
 
+    /**
+     * 同时做判分用
+     * @param quType
+     * @param quId
+     * @param filePath
+     * @return
+     */
+    private List<PaperQuPointsRespDTO> quOfficePoints(Integer quType, String quId, String filePath) {
+        List<PaperQuPointsRespDTO> res = new ArrayList<>();
         List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new LambdaQueryWrapper<QuAnswerOffice>()
                 .eq(QuAnswerOffice::getQuId, quId));
-
-        String realPath = uploadService.getRealPath(answerFile.substring(answerFile.indexOf(Constant.FILE_PREFIX)));
-        if (paperQu.getQuType().equals(QuType.WORD) && answerFile.endsWith(".docx")) {
-            WordUtils docx = new WordUtils(realPath);
+        if (quType.equals(QuType.WORD) && filePath.endsWith(".docx")) {
+            WordUtils docx = new WordUtils(filePath);
             for (QuAnswerOffice an : officeAnswers) {
                 Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
                 Object userAnswer = docx.executeMethod(an.getMethod(), position);
@@ -676,8 +648,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 }
                 res.add(point);
             }
-        } else if (paperQu.getQuType().equals(QuType.EXCEL) && answerFile.endsWith(".xlsx")) {
-            ExcelUtils docx = new ExcelUtils(realPath);
+        } else if (quType.equals(QuType.EXCEL) && filePath.endsWith(".xlsx")) {
+            ExcelUtils docx = new ExcelUtils(filePath);
             for (QuAnswerOffice an : officeAnswers) {
                 Object userAnswer = docx.executeMethod(an.getMethod(), an.getPos());
                 PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
@@ -692,8 +664,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 }
                 res.add(point);
             }
-        } else if (paperQu.getQuType().equals(QuType.PPT) && answerFile.endsWith(".pptx")) {
-            PPTUtils pptx = new PPTUtils(realPath);
+        } else if (quType.equals(QuType.PPT) && filePath.endsWith(".pptx")) {
+            PPTUtils pptx = new PPTUtils(filePath);
             for (QuAnswerOffice an : officeAnswers) {
                 Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
                 Object userAnswer = pptx.executeMethod(an.getMethod(), position);
