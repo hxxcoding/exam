@@ -106,7 +106,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     private QuAnswerOfficeService quAnswerOfficeService;
 
     private static final Timer timer = new Timer();
-    private static final int delayMinutes = 1; // 默认考试结束后3分钟提交未交卷的试卷
+    private static final int DELAY_MINUTES = 3; // 默认考试结束后3分钟提交未交卷的试卷
 
     /**
      * 展示的选项，ABC这样
@@ -168,7 +168,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         String paperId = savedPaper.getId();
         Calendar executeTime = Calendar.getInstance();
         executeTime.setTime(savedPaper.getLimitTime());
-        executeTime.add(Calendar.MINUTE, delayMinutes);
+        executeTime.add(Calendar.MINUTE, DELAY_MINUTES);
 
         // 向timer队列中添加一个交卷任务 在executeTime执行
         timer.schedule(new TimerTask() {
