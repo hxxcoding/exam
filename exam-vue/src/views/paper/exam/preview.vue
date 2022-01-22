@@ -6,7 +6,8 @@
       <el-col :span="24" style="margin-bottom: 20px">
 
         <el-alert
-          title="点击`开始考试`后将自动进入考试，请诚信考试！"
+          v-if="detailData.examType === 1"
+          title="点击`开始考试`后将自动进入考试，请诚信考试！考试途中请勿关闭或退出考试页面！如若关闭请及时联系监考老师！"
           type="error"
           style="margin-bottom: 10px"
         />
@@ -20,22 +21,51 @@
             <span v-else>不限时</span>
           </div>
           <div><strong>次数限制：</strong>
-            <span v-if="detailData.tryLimit">{{ detailData.limitTimes }}</span>
+            <span v-if="detailData.tryLimit">{{ detailData.limitTimes }}次</span>
             <span v-else>不限次</span>
           </div>
           <div><strong>试卷总分：</strong>{{ detailData.totalScore }}分</div>
           <div><strong>及格分数：</strong>{{ detailData.qualifyScore }}分</div>
           <div><strong>考试描述：</strong>{{ detailData.content }}</div>
+          <div><strong>考试类型：</strong> {{ detailData.examType | examType }}</div>
           <div><strong>开放类型：</strong> {{ detailData.openType | examOpenType }}</div>
+          <div v-if="detailData.isStart && detailData.examType === 1">
+            <strong>考试密码：</strong>
+            <el-input v-model="postForm.password" placeholder="请联系监考老师输入考试密码！" style="width: 250px" show-password clearable />
+          </div>
 
         </el-card>
 
       </el-col>
 
       <el-col :span="24">
+        <el-alert
+          v-if="detailData.isStart && detailData.examType === 1"
+          title="您有未完成的的考试, `继续考试`请联系监考老师输入考试密码！"
+          type="warning"
+          style="margin-bottom: 10px"
+        />
+      </el-col>
 
-        <el-button type="primary" icon="el-icon-caret-right" @click="handleCreate">
+      <el-col :span="24">
+
+        <el-button
+          v-if="!detailData.isStart"
+          type="primary"
+          icon="el-icon-caret-right"
+          @click="handleCreate"
+        >
           开始考试
+        </el-button>
+
+        <el-button
+          v-if="detailData.isStart"
+          type="warning"
+          icon="el-icon-video-pause"
+          :disabled="detailData.examType === 1 && (postForm.password === null || postForm.password === '')"
+          @click="handleCreate"
+        >
+          继续考试
         </el-button>
 
         <el-button @click="handleBack">
@@ -50,7 +80,7 @@
 
 <script>
 import { Loading } from 'element-ui'
-import { fetchDetail } from '@/api/exam/exam'
+import { fetchPreview } from '@/api/exam/exam'
 import { createPaper } from '@/api/paper/exam'
 
 export default {
@@ -61,11 +91,6 @@ export default {
       postForm: {
         examId: '',
         password: ''
-      },
-      rules: {
-        password: [
-          { required: true, message: '考试密码不能为空！' }
-        ]
       }
     }
   },
@@ -78,7 +103,7 @@ export default {
   methods: {
 
     fetchData() {
-      fetchDetail(this.postForm.examId).then(response => {
+      fetchPreview(this.postForm.examId).then(response => {
         this.detailData = response.data
       })
     },
@@ -93,8 +118,6 @@ export default {
       })
 
       createPaper(this.postForm).then(response => {
-        console.log(response)
-
         if (response.code === 0) {
           this.$message({
             message: '试卷读取成功，即将进入考试！',
@@ -104,7 +127,7 @@ export default {
           setTimeout(function() {
             loading.close()
             that.dialogVisible = false
-            that.$router.push({ name: 'StartExam', query: { id: response.data.id }})
+            that.$router.push({ name: 'StartExam', params: { id: response.data.id }})
           }, 1000)
         }
       }).catch(() => {

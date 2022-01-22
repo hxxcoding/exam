@@ -48,6 +48,17 @@ public class Exam extends Model<Exam> {
     private Integer joinType;
 
     /**
+     * 考试类型 0模拟练习,1正式考试
+     */
+    @TableField("exam_type")
+    private Integer examType;
+
+    /**
+     * 正式考试需要的考试密码
+     */
+    private String password;
+
+    /**
      * 难度:0不限,1普通,2较难
      */
     private Integer level;

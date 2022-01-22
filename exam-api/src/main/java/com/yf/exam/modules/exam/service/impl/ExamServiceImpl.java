@@ -1,6 +1,7 @@
 package com.yf.exam.modules.exam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,8 +10,9 @@ import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.StringUtils;
-import com.yf.exam.modules.enums.JoinType;
-import com.yf.exam.modules.enums.OpenType;
+import com.yf.exam.modules.exam.dto.response.ExamPreviewRespDTO;
+import com.yf.exam.modules.exam.enums.JoinType;
+import com.yf.exam.modules.exam.enums.OpenType;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.ExamRepoDTO;
 import com.yf.exam.modules.exam.dto.request.ExamSaveReqDTO;
@@ -22,6 +24,9 @@ import com.yf.exam.modules.exam.mapper.ExamMapper;
 import com.yf.exam.modules.exam.service.ExamDepartService;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
+import com.yf.exam.modules.paper.entity.Paper;
+import com.yf.exam.modules.paper.service.PaperService;
+import com.yf.exam.modules.user.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -51,6 +56,9 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
 
     @Autowired
     private ExamDepartService examDepartService;
+
+    @Autowired
+    private PaperService paperService;
 
     @Override
     @CacheEvict(allEntries = true) // 当保存/修改时 删除所有的缓存记录
@@ -141,6 +149,19 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
         IPage<ExamDTO> pageData = baseMapper.paging(page, reqDTO.getParams());
         return pageData;
      }
+
+    @Override
+    public ExamPreviewRespDTO onlinePreview(String examId) {
+        ExamPreviewRespDTO respDTO = new ExamPreviewRespDTO();
+        Exam exam = this.getById(examId);
+        BeanMapper.copy(exam, respDTO);
+        Paper paper = paperService.getOne(new QueryWrapper<Paper>()
+                .lambda().eq(Paper::getUserId, UserUtils.getUserId())
+                .eq(Paper::getExamId, examId)
+                .eq(Paper::getState, 0));
+        respDTO.setIsStart(paper != null);
+        return respDTO;
+    }
 
     @Override
     @Cacheable

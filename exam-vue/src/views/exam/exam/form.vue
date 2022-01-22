@@ -8,18 +8,6 @@
 
       <div>
 
-        <!--        <div style="margin-bottom: 20px">-->
-        <!--          <el-select v-model="postForm.level" class="filter-item" placeholder="选择难度等级" clearable="">-->
-        <!--            <el-option-->
-        <!--              v-for="item in levels"-->
-        <!--              :key="item.value"-->
-        <!--              :label="item.label"-->
-        <!--              :value="item.value"-->
-        <!--            />-->
-        <!--          </el-select>-->
-
-        <!--        </div>-->
-
         <el-button class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleAdd">
           添加题库
         </el-button>
@@ -172,8 +160,19 @@
           <el-input-number v-model="postForm.totalTime" />
         </el-form-item>
 
-        <el-form-item label="是否限时">
-          <el-checkbox v-model="postForm.timeLimit" />
+        <el-form-item label="考试类型" prop="examType">
+          <el-select v-model="postForm.examType" placeholder="请选择考试类型" class="filter-item">
+            <el-option
+              v-for="item in examTypes"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item v-if="postForm.examType !== undefined" label="是否限时">
+          <el-checkbox v-model="postForm.timeLimit" :checked="postForm.examType === 1" />
         </el-form-item>
 
         <el-form-item v-if="postForm.timeLimit" label="考试时间" prop="timeLimit">
@@ -190,13 +189,21 @@
 
         </el-form-item>
 
-        <el-form-item label="是否限次">
-          <el-checkbox v-model="postForm.tryLimit" />
-        </el-form-item>
+        <div v-if="postForm.examType === 0">
+          <el-form-item label="是否限次" prop="tryLimit">
+            <el-checkbox v-model="postForm.tryLimit" />
+          </el-form-item>
 
-        <el-form-item v-if="postForm.tryLimit" label="限制次数" prop="tryLimit">
-          <el-input-number v-model="postForm.limitTimes" :min="1" :max="100" />
-        </el-form-item>
+          <el-form-item v-if="postForm.tryLimit" label="限制次数" prop="limitTimes">
+            <el-input-number v-model="postForm.limitTimes" :min="1" :max="100" />
+          </el-form-item>
+        </div>
+
+        <div v-if="postForm.examType === 1">
+          <el-form-item label="考试密码" prop="password">
+            <el-input v-model="postForm.password" placeholder="请输入密码" style="width: 50%;" show-password />
+          </el-form-item>
+        </div>
 
       </el-form>
 
@@ -259,6 +266,17 @@ export default {
   components: { RepoSelect },
   data() {
     return {
+
+      examTypes: [
+        {
+          value: 0,
+          label: '模拟练习'
+        },
+        {
+          value: 1,
+          label: '正式考试'
+        }
+      ],
 
       step: 1,
       treeData: [],
@@ -334,8 +352,12 @@ export default {
           { required: true, message: '考试规则不能为空' }
         ],
 
+        examType: [
+          { required: true, message: '考试类型不能为空！' }
+        ],
+
         password: [
-          { required: true, message: '考试口令不能为空！' }
+          { required: true, message: '正式考试的考试密码不能为空！' }
         ]
       }
     }
@@ -469,7 +491,7 @@ export default {
             if ((repo.wordCount > 0 && repo.wordScore === 0) || (repo.wordCount === 0 && repo.wordScore > 0)) {
               this.$notify({
                 title: '提示信息',
-                message: '题库第：[' + (i + 1) + ']项存在无效的填空题配置！',
+                message: '题库第：[' + (i + 1) + ']项存在无效的Word题配置！',
                 type: 'warning',
                 duration: 2000
               })
@@ -479,7 +501,7 @@ export default {
             if ((repo.excelCount > 0 && repo.excelScore === 0) || (repo.excelCount === 0 && repo.excelScore > 0)) {
               this.$notify({
                 title: '提示信息',
-                message: '题库第：[' + (i + 1) + ']项存在无效的填空题配置！',
+                message: '题库第：[' + (i + 1) + ']项存在无效的Excel题配置！',
                 type: 'warning',
                 duration: 2000
               })
@@ -489,7 +511,7 @@ export default {
             if ((repo.pptCount > 0 && repo.pptScore === 0) || (repo.pptCount === 0 && repo.pptScore > 0)) {
               this.$notify({
                 title: '提示信息',
-                message: '题库第：[' + (i + 1) + ']项存在无效的填空题配置！',
+                message: '题库第：[' + (i + 1) + ']项存在无效的PPT题配置！',
                 type: 'warning',
                 duration: 2000
               })
@@ -565,7 +587,6 @@ export default {
               repo.totalPPT = response.data.pptCount
             })
           })
-          console.log(that.repoList)
         }
       })
     },
@@ -573,6 +594,11 @@ export default {
     submitForm() {
       // 校验和处理数据
       this.postForm.repoList = this.repoList
+      // 正式考试的考试默认限制考试次数一次
+      if (this.postForm.examType === 1) {
+        this.postForm.tryLimit = true
+        this.postForm.limitTimes = 1
+      }
 
       saveData(this.postForm).then(() => {
         this.$notify({

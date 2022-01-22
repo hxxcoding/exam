@@ -48,13 +48,23 @@
         align="center"
       >
         <template slot-scope="scope">
+          {{ scope.row.examType | examType }}
+        </template>
+
+      </el-table-column>
+
+      <el-table-column
+        label="开放类型"
+        align="center"
+      >
+        <template slot-scope="scope">
           {{ scope.row.openType | examOpenType }}
         </template>
 
       </el-table-column>
 
       <el-table-column
-        label="考试时间"
+        label="考试时间与时长"
         width="265px"
         align="center"
       >
@@ -63,7 +73,8 @@
           <span v-if="scope.row.timeLimit">
             {{ scope.row.startTime }} ~ {{ scope.row.endTime }}
           </span>
-          <span v-else>不限时</span>
+          <span v-else>不限开始时间</span>
+          (时长{{ scope.row.totalTime }}分钟)
         </template>
 
       </el-table-column>

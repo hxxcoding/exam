@@ -8,20 +8,22 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
-* <p>
-* 考试分页响应类
-* </p>
-*
-* @author 聪明笨狗
-* @since 2020-07-25 16:18
-*/
+ * <p>
+ *  在线考试预览响应类
+ * </p>
+ *
+ * @author Xiaoxiao Hu
+ * @since 2022/1/22 14:56
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@ApiModel(value="在线考试分页响应类", description="在线考试分页响应类")
-public class ExamOnlineRespDTO extends ExamDTO {
+@ApiModel(value="在线考试预览响应类", description="在线考试预览响应类")
+public class ExamPreviewRespDTO extends ExamDTO {
 
     @JSONField(serialize = false)
     @ApiModelProperty(value = "正式考试需要的考试密码", required=true)
     private String password;
+
+    private Boolean isStart;
 
 }

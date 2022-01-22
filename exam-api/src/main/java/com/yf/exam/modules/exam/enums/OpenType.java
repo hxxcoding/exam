@@ -1,4 +1,4 @@
-package com.yf.exam.modules.enums;
+package com.yf.exam.modules.exam.enums;
 
 /**
  * 开放方式

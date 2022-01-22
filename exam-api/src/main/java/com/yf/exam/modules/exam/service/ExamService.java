@@ -6,6 +6,7 @@ import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.request.ExamSaveReqDTO;
 import com.yf.exam.modules.exam.dto.response.ExamOnlineRespDTO;
+import com.yf.exam.modules.exam.dto.response.ExamPreviewRespDTO;
 import com.yf.exam.modules.exam.dto.response.ExamReviewRespDTO;
 import com.yf.exam.modules.exam.entity.Exam;
 
@@ -46,6 +47,12 @@ public interface ExamService extends IService<Exam> {
     */
     IPage<ExamDTO> paging(PagingReqDTO<ExamDTO> reqDTO);
 
+    /**
+    * 分页查询数据
+    * @param reqDTO
+    * @return
+    */
+    ExamPreviewRespDTO onlinePreview(String examId);
 
     /**
      * 在线考试分页响应类-考生视角

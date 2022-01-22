@@ -9,6 +9,8 @@
         <result column="content" property="content" />
         <result column="open_type" property="openType" />
         <result column="join_type" property="joinType" />
+        <result column="exam_type" property="examType" />
+        <result column="password" property="password" />
         <result column="level" property="level" />
         <result column="state" property="state" />
         <result column="time_limit" property="timeLimit" />
@@ -23,7 +25,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        `id`,`title`,`content`,`open_type`,`join_type`,`level`,`state`,`time_limit`,`start_time`,`end_time`,`create_time`,`update_time`,`total_score`,`total_time`,`qualify_score`
+        `id`,`title`,`content`,`open_type`,`join_type`, `exam_type`,`password`,`level`,`state`,
+        `time_limit`,`start_time`,`end_time`,`create_time`,`update_time`,`total_score`,`total_time`,`qualify_score`
     </sql>
 
 

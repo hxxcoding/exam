@@ -14,7 +14,8 @@ import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.PPTUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
-import com.yf.exam.modules.enums.JoinType;
+import com.yf.exam.modules.exam.enums.ExamType;
+import com.yf.exam.modules.exam.enums.JoinType;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.ExamRepoDTO;
 import com.yf.exam.modules.exam.enums.ExamState;
@@ -117,7 +118,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String createPaper(String userId, String examId) {
+    public String createPaper(String userId, String examId, String password) {
 
         // 查找考试
         ExamDTO exam = examService.findById(examId);
@@ -142,12 +143,24 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 throw new ServiceException(1, "考试次数达到上限！");
             }
         }
-        if (paper != null) {
-            return paper.getId();
+        if (paper != null) { // 存在未交卷的试卷
+            if (exam.getExamType().equals(ExamType.PRACTICE)) {
+                return paper.getId();
+            }
+            if (exam.getExamType().equals(ExamType.FINAL_EXAM) && !StringUtils.isBlank(password)) {
+                if (exam.getPassword().equals(password)) {
+                    return paper.getId();
+                } else {
+                    throw new ServiceException("考试密码错误!");
+                }
+            }
+            if (exam.getExamType().equals(ExamType.FINAL_EXAM) && StringUtils.isBlank(password)) {
+                throw new ServiceException("请联系监考老师输入考试密码!");
+            }
         }
 
         if(!ExamState.ENABLE.equals(exam.getState())){
-            throw new ServiceException(1, "考试状态不正确！");
+            throw new ServiceException(1, "考试状态不正确!");
         }
 
         // 考试题目列表

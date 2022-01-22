@@ -11,6 +11,7 @@ import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.request.ExamSaveReqDTO;
 import com.yf.exam.modules.exam.dto.response.ExamOnlineRespDTO;
+import com.yf.exam.modules.exam.dto.response.ExamPreviewRespDTO;
 import com.yf.exam.modules.exam.dto.response.ExamReviewRespDTO;
 import com.yf.exam.modules.exam.entity.Exam;
 import com.yf.exam.modules.exam.service.ExamService;
@@ -104,22 +105,6 @@ public class ExamController extends BaseController {
         return super.success();
     }
 
-
-    /**
-     * 分页查找
-     * @param reqDTO
-     * @return
-     */
-    @ApiOperation(value = "考试视角")
-    @RequiresPermissions("exam:online-paging")
-    @RequestMapping(value = "/online-paging", method = { RequestMethod.POST})
-    public ApiRest<IPage<ExamOnlineRespDTO>> myPaging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
-
-        //分页查询并转换
-        IPage<ExamOnlineRespDTO> page = baseService.onlinePaging(reqDTO);
-        return super.success(page);
-    }
-
     /**
     * 分页查找
     * @param reqDTO
@@ -134,6 +119,34 @@ public class ExamController extends BaseController {
         IPage<ExamDTO> page = baseService.paging(reqDTO);
 
         return super.success(page);
+    }
+
+    /**
+     * 分页查找
+     * @param reqDTO
+     * @return
+     */
+    @ApiOperation(value = "考试视角分页查找考试")
+    @RequiresPermissions("exam:online-paging")
+    @RequestMapping(value = "/online-paging", method = { RequestMethod.POST})
+    public ApiRest<IPage<ExamOnlineRespDTO>> myPaging(@RequestBody PagingReqDTO<ExamDTO> reqDTO) {
+
+        //分页查询并转换
+        IPage<ExamOnlineRespDTO> page = baseService.onlinePaging(reqDTO);
+        return super.success(page);
+    }
+
+    /**
+     * 考试预览准备
+     * @param reqDTO
+     * @return
+     */
+    @ApiOperation(value = "考试预览准备")
+    @RequiresPermissions("exam:online-paging")
+    @RequestMapping(value = "/online-preview", method = { RequestMethod.POST})
+    public ApiRest<ExamPreviewRespDTO> myPreview(@RequestBody BaseIdReqDTO reqDTO) {
+        ExamPreviewRespDTO respDTO = baseService.onlinePreview(reqDTO.getId());
+        return super.success(respDTO);
     }
 
 

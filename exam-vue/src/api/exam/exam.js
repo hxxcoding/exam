@@ -1,11 +1,19 @@
 import { post } from '@/utils/request'
 
 /**
- * 题库详情
- * @param data
+ * 考试详情
+ * @param examId
  */
-export function fetchDetail(id) {
-  return post('/exam/api/exam/exam/detail', { id: id })
+export function fetchDetail(examId) {
+  return post('/exam/api/exam/exam/detail', { id: examId })
+}
+
+/**
+ * 考试详情
+ * @param examId
+ */
+export function fetchPreview(examId) {
+  return post('/exam/api/exam/exam/online-preview', { id: examId })
 }
 
 /**

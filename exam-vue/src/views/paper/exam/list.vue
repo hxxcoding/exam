@@ -61,7 +61,7 @@
 
         <template slot-scope="scope">
           <span v-if="scope.row.tryLimit">
-            {{ scope.row.limitTimes }}
+            {{ scope.row.limitTimes }}次
           </span>
           <span v-else>不限次</span>
         </template>

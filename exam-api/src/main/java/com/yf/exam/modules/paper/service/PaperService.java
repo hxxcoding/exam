@@ -30,7 +30,7 @@ public interface PaperService extends IService<Paper> {
      * @param examId
      * @return
      */
-    String createPaper(String userId, String examId);
+    String createPaper(String userId, String examId, String password);
 
 
     /**

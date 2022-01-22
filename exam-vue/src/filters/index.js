@@ -54,6 +54,14 @@ export function examOpenType(value) {
   return map[value]
 }
 
+export function examType(value) {
+  const map = {
+    '0': '模拟练习',
+    '1': '正式考试'
+  }
+  return map[value]
+}
+
 export function examStateFilter(value) {
   const map = {
     '0': '进行中',

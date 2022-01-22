@@ -1,5 +1,6 @@
 package com.yf.exam.modules.exam.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yf.exam.modules.exam.enums.ExamState;
 import io.swagger.annotations.ApiModel;
@@ -41,9 +42,14 @@ public class ExamDTO implements Serializable {
     @ApiModelProperty(value = "组题方式1题库,2指定", required=true)
     private Integer joinType;
 
+    @ApiModelProperty(value = "考试类型,0模拟练习,1正式考试", required=true)
+    private Integer examType;
+
+    @ApiModelProperty(value = "正式考试需要的考试密码", required=true)
+    private String password;
+
     @ApiModelProperty(value = "难度:0不限,1普通,2较难", required=true)
     private Integer level;
-
 
     @ApiModelProperty(value = "考试状态", required=true)
     private Integer state;

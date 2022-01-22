@@ -28,3 +28,9 @@ ALTER TABLE `yf_exam_lite`.`el_qu`
 
 ALTER TABLE `yf_exam_lite`.`el_qu_answer_office`
     MODIFY COLUMN `pos` varchar(64) NULL DEFAULT NULL COMMENT '段落' AFTER `method`;
+/**
+  2022.1.22 12:11
+ */
+ALTER TABLE `yf_exam_lite`.`el_exam`
+    ADD COLUMN `exam_type` int(11) NOT NULL DEFAULT 0 COMMENT '考试类型 0模拟练习,1正式考试' AFTER `join_type`,
+    ADD COLUMN `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '正式考试需要的考试密码' AFTER `exam_type`;
