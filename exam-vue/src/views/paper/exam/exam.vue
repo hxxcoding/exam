@@ -211,11 +211,15 @@ export default {
   },
   // 回退时无法弹窗
   created() {
-    const id = this.$route.query.id
+    const id = this.$route.params.id
     if (typeof id !== 'undefined') {
       this.paperId = id
       this.fetchData(id)
     }
+    history.pushState(null, null, document.URL)
+    window.addEventListener('popstate', function() {
+      history.pushState(null, null, document.URL)
+    })
   },
 
   methods: {
