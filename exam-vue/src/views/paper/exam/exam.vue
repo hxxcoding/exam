@@ -212,7 +212,7 @@ export default {
   // 回退时无法弹窗
   created() {
     const id = this.$route.params.id
-    if (typeof id !== 'undefined') {
+    if (typeof id !== 'undefined' && id !== null) {
       this.paperId = id
       this.fetchData(id)
     }
@@ -225,7 +225,8 @@ export default {
   methods: {
 
     beforeUnloadHandler(e) {
-      e.returnValue = '离开此页面？' // 此处返回任意字符串，不返回null即可，不能修改默认提示内容
+      e = e || window.event
+      e.returnValue = true // 此处返回任意字符串，不返回null即可，不能修改默认提示内容
     },
 
     // 答题卡样式

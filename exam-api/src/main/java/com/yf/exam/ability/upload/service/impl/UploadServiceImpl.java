@@ -1,6 +1,6 @@
 package com.yf.exam.ability.upload.service.impl;
 
-import com.yf.exam.ability.Constant;
+import com.yf.exam.modules.Constant;
 import com.yf.exam.ability.upload.config.UploadConfig;
 import com.yf.exam.ability.upload.dto.UploadReqDTO;
 import com.yf.exam.ability.upload.dto.UploadRespDTO;

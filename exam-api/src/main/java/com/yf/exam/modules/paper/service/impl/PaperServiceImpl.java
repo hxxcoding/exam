@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yf.exam.ability.Constant;
+import com.yf.exam.modules.Constant;
 import com.yf.exam.ability.upload.service.UploadService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
@@ -50,6 +50,7 @@ import com.yf.exam.modules.sys.user.entity.SysUser;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.exam.entity.UserExam;
 import com.yf.exam.modules.user.exam.service.UserExamService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.context.annotation.Lazy;
@@ -68,6 +69,7 @@ import java.util.*;
 * @author 聪明笨狗
 * @since 2020-05-25 16:33
 */
+@Slf4j
 @Service
 @CacheConfig(cacheNames = "paper", keyGenerator = "keyGenerator") // TODO 答题页面的缓存操作
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements PaperService {
@@ -188,8 +190,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             @Override
             public void run() {
                 try {
+                    log.info("自动交卷执行[userId=" + savedPaper.getUserId() + ",paperId=" + paperId + "]");
                     paperService.handExam(paperId);
-                } catch (ServiceException ignored) {}
+                } catch (Exception ignored) {}
             }
         }, executeTime.getTime());
 

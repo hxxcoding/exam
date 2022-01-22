@@ -11,4 +11,10 @@ public class Constant {
      * 会话
      */
     public static final String TOKEN = "token";
+
+    /**
+     * 文件上传路径
+     */
+    public static final String FILE_PREFIX = "/upload/file/";
+
 }

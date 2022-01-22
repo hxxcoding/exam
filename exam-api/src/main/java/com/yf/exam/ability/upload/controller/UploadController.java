@@ -1,7 +1,7 @@
 package com.yf.exam.ability.upload.controller;
 
 
-import com.yf.exam.ability.Constant;
+import com.yf.exam.modules.Constant;
 import com.yf.exam.ability.upload.dto.FileUrlReqDTO;
 import com.yf.exam.ability.upload.dto.UploadReqDTO;
 import com.yf.exam.ability.upload.dto.UploadRespDTO;

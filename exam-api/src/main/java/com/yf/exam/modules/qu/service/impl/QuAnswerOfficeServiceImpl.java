@@ -2,7 +2,7 @@ package com.yf.exam.modules.qu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yf.exam.ability.Constant;
+import com.yf.exam.modules.Constant;
 import com.yf.exam.ability.upload.service.UploadService;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
