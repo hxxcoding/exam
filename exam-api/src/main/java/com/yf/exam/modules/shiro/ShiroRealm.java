@@ -2,6 +2,7 @@ package com.yf.exam.modules.shiro;
 
 
 import com.yf.exam.core.utils.RedisUtil;
+import com.yf.exam.modules.Constant;
 import com.yf.exam.modules.shiro.jwt.JwtToken;
 import com.yf.exam.modules.shiro.jwt.JwtUtils;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
@@ -121,7 +122,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		}
 
 		// 从缓存中获取当前登录的用户的token
-		Object cacheToken = RedisUtil.get(username);
+		Object cacheToken = RedisUtil.hget(Constant.TOKEN, username);
 
 		if (cacheToken == null) {
 			throw new AuthenticationException("登陆失效，请重试登陆!");
@@ -132,7 +133,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		}
 
 		// 重新设定expireTime
-		RedisUtil.set(username, cacheToken, JwtUtils.getExpireTime());
+		RedisUtil.hset(Constant.TOKEN, username, cacheToken, JwtUtils.getExpireTime() / 1000);
 		// 查找登录用户对象
 		SysUserLoginDTO user = sysUserService.token(token);
 

@@ -17,6 +17,7 @@ import com.yf.exam.core.utils.RedisUtil;
 import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.core.utils.passwd.PassHandler;
 import com.yf.exam.core.utils.passwd.PassInfo;
+import com.yf.exam.modules.Constant;
 import com.yf.exam.modules.shiro.jwt.JwtUtils;
 import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
@@ -121,7 +122,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ServiceException(ApiError.ERROR_90010002);
         }
         SysUserLoginDTO sysUserLoginDTO = this.setToken(user);
-        RedisUtil.set(sysUserLoginDTO.getUserName(), sysUserLoginDTO.getToken(), JwtUtils.getExpireTime() / 1000);
+        RedisUtil.hset(Constant.TOKEN, sysUserLoginDTO.getUserName(), sysUserLoginDTO.getToken(), JwtUtils.getExpireTime() / 1000);
         return sysUserLoginDTO;
     }
 
