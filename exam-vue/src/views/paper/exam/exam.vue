@@ -205,6 +205,12 @@ export default {
     setWaterMark(this.realName, this.name)
     window.addEventListener('beforeunload', this.beforeUnloadHandler, false)
   },
+  beforeDestroy() {
+    this.$nextTick(() => {
+      document.oncontextmenu = new Function()
+      document.onselectstart = new Function()
+    })
+  },
   destroyed() {
     removeWatermark()
     window.removeEventListener('beforeunload', this.beforeUnloadHandler, false)
@@ -219,6 +225,10 @@ export default {
     history.pushState(null, null, document.URL)
     window.addEventListener('popstate', function() {
       history.pushState(null, null, document.URL)
+    })
+    this.$nextTick(() => {
+      document.oncontextmenu = new Function('event.returnValue=false')
+      document.onselectstart = new Function('event.returnValue=false')
     })
   },
 
