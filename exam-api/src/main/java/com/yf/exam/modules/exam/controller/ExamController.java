@@ -8,13 +8,21 @@ import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.BaseStateReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
+import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.request.ExamSaveReqDTO;
+import com.yf.exam.modules.exam.dto.request.SendMsgReqDTO;
 import com.yf.exam.modules.exam.dto.response.ExamOnlineRespDTO;
 import com.yf.exam.modules.exam.dto.response.ExamPreviewRespDTO;
 import com.yf.exam.modules.exam.dto.response.ExamReviewRespDTO;
 import com.yf.exam.modules.exam.entity.Exam;
 import com.yf.exam.modules.exam.service.ExamService;
+import com.yf.exam.modules.paper.dto.request.PaperQuQueryDTO;
+import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
+import com.yf.exam.modules.paper.service.WebSocketServer;
+import com.yf.exam.modules.sys.user.dto.SysUserDTO;
+import com.yf.exam.modules.sys.user.entity.SysUser;
+import com.yf.exam.modules.sys.user.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
@@ -26,7 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
 * <p>
@@ -83,6 +94,32 @@ public class ExamController extends BaseController {
     public ApiRest<ExamSaveReqDTO> find(@RequestBody BaseIdReqDTO reqDTO) {
         ExamSaveReqDTO dto = baseService.findDetail(reqDTO.getId());
         return super.success(dto);
+    }
+
+    /**
+     * 获取正在考试的用户列表(在线监考)
+     */
+    @ApiOperation(value = "获取正在考试的用户列表")
+    @RequiresPermissions("exam:online-user:paging")
+    @RequestMapping(value = "/online-user/paging", method = { RequestMethod.POST })
+    public ApiRest<IPage<SysUserDTO>> monitor(@RequestBody PagingReqDTO<SysUserDTO> reqDTO) {
+        IPage<SysUserDTO> page = baseService.monitorPaging(reqDTO);
+        return super.success(page);
+    }
+
+    /**
+     * 向正在考试的用户发送信息  userId == null 即默认向全体铜壶发送
+     */
+    @ApiOperation(value = "向正在考试的用户发送信息")
+    @RequiresPermissions("exam:send-msg")
+    @RequestMapping(value = "/send-msg", method = { RequestMethod.POST })
+    public ApiRest<List<SysUserDTO>> sendMsgToAll(@RequestBody SendMsgReqDTO reqDTO) {
+        if (reqDTO.getUserId() == null) {
+            WebSocketServer.sendMessageToAll(reqDTO.getMessage());
+        } else {
+            WebSocketServer.sendMessageToUser(reqDTO.getUserId(), reqDTO.getMessage());
+        }
+        return super.success();
     }
 
     /**

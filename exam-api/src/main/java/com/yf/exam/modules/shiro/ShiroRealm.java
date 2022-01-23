@@ -77,8 +77,6 @@ public class ShiroRealm extends AuthorizingRealm {
 		if (!CollectionUtils.isEmpty(permSet)) {
 			info.setStringPermissions(permSet);
 		}
-
-		log.info("++++++++++校验详细权限完成");
 		return info;
 	}
 
@@ -95,7 +93,6 @@ public class ShiroRealm extends AuthorizingRealm {
 			throw new AuthenticationException("token为空!");
 		}
 
-		log.info("++++++++++校验用户："+token);
 		// 校验token有效性
 		SysUserLoginDTO user = this.checkToken(token);
 		return new SimpleAuthenticationInfo(user, token, getName());

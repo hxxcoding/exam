@@ -265,7 +265,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
 
 
         if (CollectionUtils.isEmpty(answers)
-                && !qu.getQuType().equals(QuType.SAQ) && qu.getQuType() < QuType.WORD) {
+                && !qu.getQuType().equals(QuType.BLANK) && qu.getQuType() < QuType.WORD) {
             throw new ServiceException(1, no + "客观题至少要包含一个备选答案！");
         }
 
@@ -286,7 +286,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
             }
         }
 
-        if (trueCount == 0 && !qu.getQuType().equals(QuType.SAQ) && qu.getQuType() < QuType.WORD) {
+        if (trueCount == 0 && !qu.getQuType().equals(QuType.BLANK) && qu.getQuType() < QuType.WORD) {
             throw new ServiceException(1, no + "至少要包含一个正确项！");
         }
 

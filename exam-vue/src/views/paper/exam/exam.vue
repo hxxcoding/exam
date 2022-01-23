@@ -161,6 +161,11 @@ export default {
       loading: false,
       handleText: '交卷',
       pageLoading: false,
+
+      fullUrl: '',
+      timer: null,
+      websocket: null,
+
       // 试卷ID
       paperId: '',
       // 当前答题卡
@@ -197,11 +202,13 @@ export default {
       'sidebar',
       'avatar',
       'device',
+      'userId',
       'name',
       'realName'
     ])
   },
   mounted() {
+    this.initWebSocket()
     setWaterMark(this.realName, this.name)
     window.addEventListener('beforeunload', this.beforeUnloadHandler, false)
   },
@@ -520,6 +527,89 @@ export default {
         // 当前选定
         this.fetchQuData(this.cardItem)
       })
+    },
+
+    initWebSocket() {
+      const api = `${process.env.VUE_APP_BASE_API}`
+      const url = '/api/socket/paper/' + this.userId
+      if (api === null || api === '') {
+        this.fullUrl = ''.concat(location.protocol === 'https:' ? 'wss' : 'ws', '://').concat(location.host).concat(this.url)
+      } else {
+        // 同接口替换
+        this.fullUrl = api.replace('https://', 'wss://').replace('http://', 'ws://')
+        this.fullUrl = ''.concat(this.fullUrl).concat(url)
+      } // 清理
+      console.log(this.fullUrl)
+      this.clear() // 连接socket
+
+      this.connect()
+    },
+    connect() {
+      console.log('++++connect', this.fullUrl)
+      this.websocket = new WebSocket(this.fullUrl)
+      this.websocket.onopen = this.onOpen
+      this.websocket.onerror = this.onError
+      this.websocket.onclose = this.onClose
+      this.websocket.onmessage = this.onMessage
+    },
+    onOpen() {
+      // 维持心跳
+      this.beat()
+    },
+    onError(e) {
+      console.log('socket error', e)
+    },
+    onClose(e) {
+      console.log('socket error', e)
+    },
+    // 收到消息
+    onMessage(e) {
+      var data = e.data
+      if (data !== 'pong') {
+        this.$notify({
+          title: '通知',
+          message: data,
+          type: 'warning',
+          duration: 0
+        })
+      }
+    },
+    // 销毁资源
+    clear() {
+      // 断开上一个连接
+      if (this.websocket != null && this.websocket.readyState === 1) {
+        this.websocket.close()
+      } // 取消任务
+      if (this.timer != null) {
+        clearInterval(this.timer)
+      }
+    },
+
+    // 定时发送心跳
+    beat() {
+      const _this = this
+
+      // 清理定时器
+      if (this.timer != null) {
+        clearInterval(this.timer)
+      } // 10秒联系一次
+
+      this.timer = setInterval(() => {
+        // 发送消息
+        _this.ping()
+      }, 10000) // 首次触发
+
+      this.ping()
+    },
+
+    ping() {
+      if (this.websocket.readyState === 1) {
+        // 首次触发
+        this.websocket.send('ping')
+      } else {
+        // 只要错误就重新连接
+        this.connect()
+      }
     }
 
   }

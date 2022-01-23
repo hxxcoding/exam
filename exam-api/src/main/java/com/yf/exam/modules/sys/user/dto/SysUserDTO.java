@@ -1,8 +1,10 @@
 package com.yf.exam.modules.sys.user.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,6 +19,7 @@ import java.util.List;
 * @since 2020-04-13 16:57
 */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @ApiModel(value="管理用户", description="管理用户")
 public class SysUserDTO implements Serializable {
 
@@ -33,9 +36,11 @@ public class SysUserDTO implements Serializable {
     private String realName;
 
     @ApiModelProperty(value = "密码", required=true)
+    @JSONField(serialize = false)
     private String password;
 
     @ApiModelProperty(value = "密码盐", required=true)
+    @JSONField(serialize = false)
     private String salt;
 
     @ApiModelProperty(value = "角色列表", required=true)

@@ -1,5 +1,8 @@
 package com.yf.exam.modules.exam.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -26,6 +29,11 @@ import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
 import com.yf.exam.modules.paper.entity.Paper;
 import com.yf.exam.modules.paper.service.PaperService;
+import com.yf.exam.modules.paper.service.WebSocketServer;
+import com.yf.exam.modules.sys.depart.service.SysDepartService;
+import com.yf.exam.modules.sys.user.dto.SysUserDTO;
+import com.yf.exam.modules.sys.user.entity.SysUser;
+import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -33,10 +41,13 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
 * <p>
@@ -59,6 +70,12 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
 
     @Autowired
     private PaperService paperService;
+
+    @Autowired
+    private SysUserService sysUserService;
+
+    @Autowired
+    private SysDepartService sysDepartService;
 
     @Override
     @CacheEvict(allEntries = true) // 当保存/修改时 删除所有的缓存记录
@@ -127,6 +144,51 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
         respDTO.setRepoList(repos);
 
         return respDTO;
+    }
+
+    @Override
+    public IPage<SysUserDTO> monitorPaging(PagingReqDTO<SysUserDTO> reqDTO) {
+
+        // 创建分页对象
+        // 也可以使用xml直接写 sql 语句实现, 参考 PaperMapper.paging
+        IPage<SysUser> query = new Page<>(reqDTO.getCurrent(), reqDTO.getSize());
+        Set<String> userIds = WebSocketServer.getSessionPool().keySet();
+
+        //查询条件
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+
+        SysUserDTO params = reqDTO.getParams();
+
+        if(params!=null){
+            if(!StringUtils.isBlank(params.getUserName())){
+                wrapper.lambda().like(SysUser::getUserName, params.getUserName());
+            }
+
+            if(!StringUtils.isBlank(params.getRealName())){
+                wrapper.lambda().like(SysUser::getRealName, params.getRealName());
+            }
+
+            if(!StringUtils.isBlank(params.getDepartId())){
+                List<String> ids = sysDepartService.listAllSubIds(params.getDepartId());
+                wrapper.lambda().in(SysUser::getDepartId, ids);
+            }
+
+            if (!StringUtils.isBlank(params.getRoleIds())) {
+                List<String> roles = JSONObject.parseArray(params.getRoleIds(), String.class);
+                roles.forEach(id -> wrapper.lambda().like(SysUser::getRoleIds, id));
+            }
+        }
+        wrapper.lambda().in(!CollectionUtils.isEmpty(userIds), SysUser::getId, userIds);
+
+        //获得数据
+        IPage<SysUser> page = sysUserService.page(query, wrapper);
+        if (CollectionUtils.isEmpty(userIds)) {
+            page.setRecords(new ArrayList<>());
+            // TODO 无数据时应该在函数执行前返回
+        }
+        //转换结果
+        IPage<SysUserDTO> pageData = JSON.parseObject(JSON.toJSONString(page), new TypeReference<Page<SysUserDTO>>(){});
+        return pageData;
     }
 
     @Override

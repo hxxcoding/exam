@@ -139,8 +139,8 @@ export default {
     /**
      * 查询数据列表
      */
-    getList() {
-      this.listLoading = true
+    getList(listLoading = true) {
+      this.listLoading = listLoading
       this.listQuery.t = new Date().getTime()
       fetchList(this.options.listUrl, this.listQuery).then(response => {
         this.dataList = response.data

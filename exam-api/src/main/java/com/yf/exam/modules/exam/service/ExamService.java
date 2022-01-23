@@ -9,6 +9,9 @@ import com.yf.exam.modules.exam.dto.response.ExamOnlineRespDTO;
 import com.yf.exam.modules.exam.dto.response.ExamPreviewRespDTO;
 import com.yf.exam.modules.exam.dto.response.ExamReviewRespDTO;
 import com.yf.exam.modules.exam.entity.Exam;
+import com.yf.exam.modules.sys.user.dto.SysUserDTO;
+
+import java.util.List;
 
 /**
 * <p>
@@ -32,6 +35,13 @@ public interface ExamService extends IService<Exam> {
      * @return
      */
     ExamSaveReqDTO findDetail(String id);
+
+    /**
+     * 分页查询数据
+     * @param reqDTO
+     * @return
+     */
+    IPage<SysUserDTO> monitorPaging(PagingReqDTO<SysUserDTO> reqDTO);
 
     /**
      * 查找考试详情--简要信息

@@ -75,6 +75,7 @@ public class ShiroConfig {
 
 		// 文件读取
 		map.put("/upload/file/**", "anon");
+		map.put("/api/socket/**", "anon");
 
 		// 添加自己的过滤器并且取名为jwt
 		Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
