@@ -77,9 +77,9 @@
 
     <el-dialog title="发送通知" :visible.sync="dialogVisible" width="500px">
 
-      <el-form :model="formData" label-position="left" label-width="100px">
+      <el-form ref="sendMessage" :model="formData" :rules="rules" label-position="left" label-width="100px">
 
-        <el-form-item label="通知内容">
+        <el-form-item label="通知内容" prop="message">
           <el-input
             v-model="formData.message"
             type="textarea"
@@ -90,7 +90,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSendMsg">确 定</el-button>
+        <el-button type="primary" @click="handleSendMsg">发 送</el-button>
       </div>
 
     </el-dialog>
@@ -106,19 +106,8 @@ import DepartTreeSelect from '@/components/DepartTreeSelect'
 import { fetchTree } from '@/api/sys/depart/depart'
 
 export default {
-  name: 'SysUserList',
+  name: 'Monitor',
   components: { DepartTreeSelect, DataTable },
-  filters: {
-
-    // 订单状态
-    userState(value) {
-      const map = {
-        '0': '正常',
-        '1': '禁用'
-      }
-      return map[value]
-    }
-  },
   data() {
     return {
 
@@ -146,6 +135,12 @@ export default {
         listUrl: '/exam/api/exam/exam/online-user/paging'
       },
 
+      rules: {
+        message: [
+          { required: true, message: '消息内容不能为空！' }
+        ]
+      },
+
       deptName: ''
     }
   },
@@ -159,17 +154,11 @@ export default {
   updated() {
     // 每5秒自动查询一次数据
     setInterval(() => {
-      console.log('setInterval')
       this.$refs.pagingTable.getList(false)
     }, 5000)
   },
 
   methods: {
-
-    handleUploadSuccess(response) {
-      // 上传图片赋值
-      this.formData.avatar = response.data.url
-    },
 
     handleOpenDialog(row = undefined) {
       this.formData = {}
@@ -183,14 +172,19 @@ export default {
       this.formData.departId = data.id
     },
     handleSendMsg() {
-      sendMsg(this.formData.message, this.formData.userId).then(() => {
-        this.$notify({
-          title: '成功',
-          message: '通知发送成功！',
-          type: 'success',
-          duration: 2000
+      this.$refs.sendMessage.validate((valid) => {
+        if (!valid) {
+          return
+        }
+        sendMsg(this.formData.message, this.formData.userId).then(() => {
+          this.$notify({
+            title: '成功',
+            message: '通知发送成功！',
+            type: 'success',
+            duration: 2000
+          })
+          this.dialogVisible = false
         })
-        this.dialogVisible = false
       })
     },
 
