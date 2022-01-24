@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -60,13 +61,8 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
     private ExamDepartService examDepartService;
 
     @Autowired
+    @Lazy
     private PaperService paperService;
-
-    @Autowired
-    private SysUserService sysUserService;
-
-    @Autowired
-    private SysDepartService sysDepartService;
 
     @Override
     @CacheEvict(allEntries = true) // 当保存/修改时 删除所有的缓存记录

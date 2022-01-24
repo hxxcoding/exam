@@ -219,6 +219,7 @@ export default {
     })
   },
   destroyed() {
+    this.clear()
     removeWatermark()
     window.removeEventListener('beforeunload', this.beforeUnloadHandler, false)
   },
@@ -532,15 +533,9 @@ export default {
     },
 
     initWebSocket() {
-      const api = `${process.env.VUE_APP_BASE_API}`
-      const url = '/api/socket/paper/' + this.paperId
-      if (api === null || api === '') {
-        this.fullUrl = ''.concat(location.protocol === 'https:' ? 'wss' : 'ws', '://').concat(location.host).concat(this.url)
-      } else {
-        // 同接口替换
-        this.fullUrl = api.replace('https://', 'wss://').replace('http://', 'ws://')
-        this.fullUrl = ''.concat(this.fullUrl).concat(url)
-      } // 清理
+      // const api = `${process.env.VUE_APP_BASE_API}`
+      const uri = '/api/socket/paper/' + this.paperId
+      this.fullUrl = ''.concat(location.protocol === 'https:' ? 'wss' : 'ws', '://').concat(location.host).concat(uri)
       console.log(this.fullUrl)
       this.clear() // 连接socket
 
