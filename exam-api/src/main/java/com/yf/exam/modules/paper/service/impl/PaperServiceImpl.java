@@ -315,6 +315,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         // 试题基本信息
         Paper paper = paperService.getById(paperId);
+        if (paper == null) {
+            throw new ServiceException("试卷不存在!");
+        }
         if (paper.getState().equals(PaperState.ING)) { // 试卷未提交
             throw new ServiceException("试卷未提交,无法查看结果!");
         }

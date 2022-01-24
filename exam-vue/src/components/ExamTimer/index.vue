@@ -9,12 +9,14 @@
 export default {
   name: 'ExamTimer',
   props: {
+    // eslint-disable-next-line vue/require-default-prop
     value: Number
   },
 
   data() {
     return {
       leftSeconds: 0,
+      hour: '00',
       min: '00',
       sec: '00'
     }
@@ -24,13 +26,13 @@ export default {
     value: {
       handler() {
         this.leftSeconds = this.value
-        this.countdown()
       }
     }
   },
 
   created() {
     this.leftSeconds = this.value
+    this.countdown()
   },
 
   methods: {

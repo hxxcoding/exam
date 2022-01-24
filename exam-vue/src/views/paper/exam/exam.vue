@@ -211,6 +211,7 @@ export default {
     this.initWebSocket()
     setWaterMark(this.realName, this.name)
     window.addEventListener('beforeunload', this.beforeUnloadHandler, false)
+    document.addEventListener('visibilitychange', this.handleVisibilityChange, false)
   },
   beforeDestroy() {
     this.$nextTick(() => {
@@ -222,6 +223,7 @@ export default {
     this.clear()
     removeWatermark()
     window.removeEventListener('beforeunload', this.beforeUnloadHandler, false)
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange, false)
   },
   // 回退时无法弹窗
   created() {
@@ -243,6 +245,14 @@ export default {
   },
 
   methods: {
+    handleVisibilityChange(e) {
+      if (e.target.visibilityState === 'visible') {
+        const limitTime = new Date(this.paperData.limitTime)
+        const nowTime = new Date()
+        this.paperData.leftSeconds = Math.round((limitTime.getTime() - nowTime.getTime()) / 1000)
+        console.log(this.paperData.leftSeconds)
+      }
+    },
 
     beforeUnloadHandler(e) {
       e = e || window.event
@@ -533,9 +543,15 @@ export default {
     },
 
     initWebSocket() {
-      // const api = `${process.env.VUE_APP_BASE_API}`
-      const uri = '/api/socket/paper/' + this.paperId
-      this.fullUrl = ''.concat(location.protocol === 'https:' ? 'wss' : 'ws', '://').concat(location.host).concat(uri)
+      const api = `${process.env.VUE_APP_BASE_API}`
+      const url = '/api/socket/paper/' + this.paperId
+      if (api === null || api === '') {
+        this.fullUrl = ''.concat(location.protocol === 'https:' ? 'wss' : 'ws', '://').concat(location.host).concat(url)
+      } else {
+        // 同接口替换
+        this.fullUrl = api.replace('https://', 'wss://').replace('http://', 'ws://')
+        this.fullUrl = ''.concat(this.fullUrl).concat(url)
+      } // 清理
       console.log(this.fullUrl)
       this.clear() // 连接socket
 

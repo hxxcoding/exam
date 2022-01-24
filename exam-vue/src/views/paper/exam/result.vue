@@ -3,20 +3,21 @@
 
     <el-button v-permission="['sa', 'teacher']" @click="saveToPdf">保存为PDF</el-button>
     <h2 class="text-center">{{ paperData.title }}</h2>
-    <el-descriptions :content-style="{'text-align': 'center'}" :label-style="{'text-align': 'center'}" border>
+    <el-descriptions column="4" :content-style="{'text-align': 'center'}" :label-style="{'text-align': 'center'}" border>
       <el-descriptions-item label="考生姓名">{{ paperData.userId_real_name }}</el-descriptions-item>
       <el-descriptions-item label="考生学号">{{ paperData.userId_user_name }}</el-descriptions-item>
       <el-descriptions-item label="考生班级">{{ paperData.departId_dept_name }}</el-descriptions-item>
+      <el-descriptions-item label="考场座位号">{{ paperData.seat }}</el-descriptions-item>
       <el-descriptions-item span="2" label="考试时间">{{ paperData.createTime }} ~ {{ paperData.updateTime }}</el-descriptions-item>
       <el-descriptions-item label="考试用时">{{ paperData.userTime }}分钟</el-descriptions-item>
-      <el-descriptions-item label="单选题得分">{{ paperData.userRadioScore }}</el-descriptions-item>
-      <el-descriptions-item label="多选题得分">{{ paperData.userMultiScore }}</el-descriptions-item>
-      <el-descriptions-item label="判断题得分">{{ paperData.userJudgeScore }}</el-descriptions-item>
-      <el-descriptions-item label="填空题得分">{{ paperData.userBlankScore }}</el-descriptions-item>
-      <el-descriptions-item label="操作题得分">{{ paperData.userOfficeScore }}</el-descriptions-item>
-      <el-descriptions-item label="总得分">
+      <el-descriptions-item label="单选题得分">{{ paperData.userRadioScore }}分</el-descriptions-item>
+      <el-descriptions-item label="多选题得分">{{ paperData.userMultiScore }}分</el-descriptions-item>
+      <el-descriptions-item label="判断题得分">{{ paperData.userJudgeScore }}分</el-descriptions-item>
+      <el-descriptions-item label="填空题得分">{{ paperData.userBlankScore }}分</el-descriptions-item>
+      <el-descriptions-item label="操作题得分">{{ paperData.userOfficeScore }}分</el-descriptions-item>
+      <el-descriptions-item span="3" label="总得分">
         <div style="color: #ff0000">
-          <strong>{{ paperData.userScore }}</strong>
+          <strong>{{ paperData.userScore }}分</strong>
         </div>
       </el-descriptions-item>
     </el-descriptions>
