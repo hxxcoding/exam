@@ -151,7 +151,7 @@ export default {
     })
   },
 
-  updated() {
+  mounted() {
     // 每5秒自动查询一次数据
     setInterval(() => {
       this.$refs.pagingTable.getList(false)
