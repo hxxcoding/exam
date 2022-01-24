@@ -533,7 +533,7 @@ export default {
 
     initWebSocket() {
       const api = `${process.env.VUE_APP_BASE_API}`
-      const url = '/api/socket/paper/' + this.userId
+      const url = '/api/socket/paper/' + this.paperId
       if (api === null || api === '') {
         this.fullUrl = ''.concat(location.protocol === 'https:' ? 'wss' : 'ws', '://').concat(location.host).concat(this.url)
       } else {

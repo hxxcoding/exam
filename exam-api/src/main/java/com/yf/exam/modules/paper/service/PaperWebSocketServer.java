@@ -2,7 +2,6 @@ package com.yf.exam.modules.paper.service;
 
 import com.yf.exam.core.exception.ServiceException;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * <p>
- *
+ *  在线试卷websocket 用于监考在线试卷,发送通知等功能
  * </p>
  *
  * @author Xiaoxiao Hu
@@ -24,15 +23,15 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 
 @Component
-@ServerEndpoint("/api/socket/paper/{userId}")
+@ServerEndpoint("/api/socket/paper/{paperId}")
 @Slf4j
 @EqualsAndHashCode
-public class WebSocketServer {
+public class PaperWebSocketServer {
 
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
      */
-    private static final CopyOnWriteArraySet<WebSocketServer> WEB_SOCKET_SET = new CopyOnWriteArraySet<>();
+    private static final CopyOnWriteArraySet<PaperWebSocketServer> WEB_SOCKET_SET = new CopyOnWriteArraySet<>();
     private static final Map<String, Session> SESSION_POOL = new ConcurrentHashMap<>();
 
     /**
@@ -40,18 +39,18 @@ public class WebSocketServer {
      */
     private Session session;
 
-    private String userId;
+    private String paperId;
 
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("userId") String userId) throws IOException {
+    public void onOpen(Session session, @PathParam("paperId") String paperId) throws IOException {
         this.session = session;
-        this.userId = userId;
+        this.paperId = paperId;
         // 加入set中
         WEB_SOCKET_SET.add(this);
-        SESSION_POOL.put(userId, session);
+        SESSION_POOL.put(paperId, session);
         log.info("有一个客户端连接！当前在线人数为" + SESSION_POOL.size());
     }
 
@@ -62,7 +61,7 @@ public class WebSocketServer {
     public void onClose() {
         //从set中删除
         WEB_SOCKET_SET.remove(this);
-        SESSION_POOL.remove(this.userId);
+        SESSION_POOL.remove(this.paperId);
         log.info("有一个客户端连接关闭！当前在线人数为" + SESSION_POOL.size());
     }
 
@@ -97,7 +96,7 @@ public class WebSocketServer {
      * 群发自定义消息
      */
     public static void sendMessageToAll(String message) {
-        for (WebSocketServer item : WEB_SOCKET_SET) {
+        for (PaperWebSocketServer item : WEB_SOCKET_SET) {
             try {
                 item.sendMessage(message);
             } catch (IOException e) {
@@ -107,22 +106,17 @@ public class WebSocketServer {
         }
     }
 
-    public static void sendMessageToUser(String userId, String message) {
-        System.out.println("[websocket消息] 单点消息:" + message);
-        Session session = SESSION_POOL.get(userId);
+    public static void sendMessageToPaper(String paperId, String message) {
+        Session session = SESSION_POOL.get(paperId);
         if (session != null) {
             try {
                 session.getAsyncRemote().sendText(message);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new ServiceException("发送失败");
             }
         } else {
             throw new ServiceException("用户已离线");
         }
-    }
-
-    public static CopyOnWriteArraySet<WebSocketServer> getWebSocketSet() {
-        return WEB_SOCKET_SET;
     }
 
     public static Map<String, Session> getSessionPool() {

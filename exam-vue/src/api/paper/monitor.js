@@ -2,12 +2,12 @@ import { post } from '@/utils/request'
 
 /**
  * 向在线考生发送通知
- * @param userId
  * @param message
+ * @param paperId
  */
-export function sendMsg(message, userId) {
-  return post('/exam/api/exam/exam/send-msg', {
-    userId: userId,
+export function sendMsg(message, paperId) {
+  return post('/exam/api/paper/paper/send-msg', {
+    paperId: paperId,
     message: message
   })
 }

@@ -19,8 +19,8 @@ import lombok.EqualsAndHashCode;
 @ApiModel(value="发送信息请求类", description="发送信息请求类")
 public class SendMsgReqDTO extends BaseDTO {
 
-    @ApiModelProperty(value = "用户ID", required=true)
-    String userId;
+    @ApiModelProperty(value = "试卷ID", required=true)
+    String paperId;
 
     @ApiModelProperty(value = "需要发送的信息", required=true)
     String message;

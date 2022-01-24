@@ -6,6 +6,8 @@ import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdRespDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
+import com.yf.exam.modules.exam.dto.request.SendMsgReqDTO;
+import com.yf.exam.modules.paper.dto.PaperDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
@@ -17,6 +19,8 @@ import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
 import com.yf.exam.modules.paper.service.PaperService;
+import com.yf.exam.modules.paper.service.PaperWebSocketServer;
+import com.yf.exam.modules.sys.user.dto.SysUserDTO;
 import com.yf.exam.modules.user.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -87,6 +91,34 @@ public class PaperController extends BaseController {
         //根据ID查找试卷的试题
         ExamDetailRespDTO respDTO = baseService.paperDetail(reqDTO.getId());
         return super.success(respDTO);
+    }
+
+    /**
+     * 获取正在考试的用户列表(在线监考)
+     * @param reqDTO
+     * @return
+     */
+    @ApiOperation(value = "获取正在考试的用户列表")
+    @RequiresPermissions("paper:online-paper:paging")
+    @RequestMapping(value = "/online-paper/paging", method = { RequestMethod.POST })
+    public ApiRest<IPage<PaperDTO>> monitor(@RequestBody PagingReqDTO<PaperDTO> reqDTO) {
+        IPage<PaperDTO> page = baseService.onlinePaperPaging(reqDTO);
+        return super.success(page);
+    }
+
+    /**
+     * 向正在考试的用户发送信息  paperId == null 即默认向全体铜壶发送
+     */
+    @ApiOperation(value = "向正在考试的用户发送信息")
+    @RequiresPermissions("paper:send-msg")
+    @RequestMapping(value = "/send-msg", method = { RequestMethod.POST })
+    public ApiRest<List<SysUserDTO>> sendMsgToAll(@RequestBody SendMsgReqDTO reqDTO) {
+        if (reqDTO.getPaperId() == null) {
+            PaperWebSocketServer.sendMessageToAll(reqDTO.getMessage());
+        } else {
+            PaperWebSocketServer.sendMessageToPaper(reqDTO.getPaperId(), reqDTO.getMessage());
+        }
+        return super.success();
     }
 
     /**

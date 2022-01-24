@@ -15,9 +15,8 @@
     >
 
       <template slot="filter-content">
-
-        <el-input v-model="listQuery.params.userName" style="width: 130px" placeholder="搜索学号" class="filter-item" clearable />
-        <el-input v-model="listQuery.params.realName" style="width: 130px" placeholder="搜索姓名" class="filter-item" clearable />
+        <exam-select v-model="listQuery.params.examId" class="filter-item" />
+        <el-input v-model="listQuery.params.seat" style="width: 130px" placeholder="搜索考场座位号" class="filter-item" clearable />
         <depart-tree-select
           v-model="listQuery.params.departId"
           class="el-select filter-item el-select--medium"
@@ -37,29 +36,34 @@
         <el-table-column
           align="center"
           label="学号"
-          prop="userName"
+          prop="userId_user_name"
         />
 
         <el-table-column
           align="center"
           label="姓名"
-          prop="realName"
+          prop="userId_real_name"
+        />
+
+        <el-table-column
+          align="center"
+          label="考试名称"
+          prop="title"
+          show-overflow-tooltip
         />
 
         <el-table-column
           align="center"
           label="班级/学院"
-          prop="deptName"
-        >
-          <template slot-scope="scope">
-            <div>{{ queryTree(treeData, scope.row.departId) }}</div>
-          </template>
-        </el-table-column>
+          prop="departId_dept_name"
+        />
+
         <el-table-column
           align="center"
-          label="状态"
-        >答题中
-        </el-table-column>
+          label="考场座位号"
+          prop="seat"
+        />
+
         <el-table-column
           align="center"
           label="操作"
@@ -104,10 +108,11 @@ import DataTable from '@/components/DataTable'
 import { sendMsg } from '@/api/paper/monitor'
 import DepartTreeSelect from '@/components/DepartTreeSelect'
 import { fetchTree } from '@/api/sys/depart/depart'
+import ExamSelect from '@/components/ExamSelect'
 
 export default {
   name: 'Monitor',
-  components: { DepartTreeSelect, DataTable },
+  components: { ExamSelect, DepartTreeSelect, DataTable },
   data() {
     return {
 
@@ -132,7 +137,7 @@ export default {
 
       options: {
         // 列表请求URL
-        listUrl: '/exam/api/exam/exam/online-user/paging'
+        listUrl: '/exam/api/paper/paper/online-paper/paging'
       },
 
       rules: {
@@ -163,7 +168,7 @@ export default {
     handleOpenDialog(row = undefined) {
       this.formData = {}
       if (row !== undefined) {
-        this.formData.userId = row.id
+        this.formData.paperId = row.id
       }
       this.dialogVisible = true
     },
@@ -176,7 +181,7 @@ export default {
         if (!valid) {
           return
         }
-        sendMsg(this.formData.message, this.formData.userId).then(() => {
+        sendMsg(this.formData.message, this.formData.paperId).then(() => {
           this.$notify({
             title: '成功',
             message: '通知发送成功！',
@@ -186,22 +191,6 @@ export default {
           this.dialogVisible = false
         })
       })
-    },
-
-    // 搜索树状数据中的 ID
-    queryTree(tree, id) {
-      let stark = []
-      stark = stark.concat(tree)
-      while (stark.length) {
-        const temp = stark.shift()
-        if (temp['children']) {
-          stark = stark.concat(temp['children'])
-        }
-        if (temp['id'] === id) {
-          return temp['deptName']
-        }
-      }
-      return ''
     }
   }
 }

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yf.exam.modules.Constant;
 import com.yf.exam.ability.upload.service.UploadService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
@@ -14,13 +14,15 @@ import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.PPTUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
-import com.yf.exam.modules.exam.enums.ExamType;
-import com.yf.exam.modules.exam.enums.JoinType;
+import com.yf.exam.modules.Constant;
 import com.yf.exam.modules.exam.dto.ExamDTO;
 import com.yf.exam.modules.exam.dto.ExamRepoDTO;
 import com.yf.exam.modules.exam.enums.ExamState;
+import com.yf.exam.modules.exam.enums.ExamType;
+import com.yf.exam.modules.exam.enums.JoinType;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
+import com.yf.exam.modules.paper.dto.PaperDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuAnswerExtDTO;
@@ -39,6 +41,7 @@ import com.yf.exam.modules.paper.mapper.PaperMapper;
 import com.yf.exam.modules.paper.service.PaperQuAnswerService;
 import com.yf.exam.modules.paper.service.PaperQuService;
 import com.yf.exam.modules.paper.service.PaperService;
+import com.yf.exam.modules.paper.service.PaperWebSocketServer;
 import com.yf.exam.modules.qu.entity.Qu;
 import com.yf.exam.modules.qu.entity.QuAnswer;
 import com.yf.exam.modules.qu.entity.QuAnswerOffice;
@@ -46,11 +49,13 @@ import com.yf.exam.modules.qu.enums.QuType;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuAnswerService;
 import com.yf.exam.modules.qu.service.QuService;
+import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import com.yf.exam.modules.sys.user.entity.SysUser;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.exam.entity.UserExam;
 import com.yf.exam.modules.user.exam.service.UserExamService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.context.annotation.Lazy;
@@ -108,6 +113,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Autowired
     private QuAnswerOfficeService quAnswerOfficeService;
 
+    @Autowired
+    private SysDepartService sysDepartService;
+
     private static final Timer timer = new Timer();
     private static final int DELAY_MINUTES = 3; // 默认考试结束后3分钟提交未交卷的试卷
 
@@ -129,7 +137,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             throw new ServiceException(1, "考试不存在！");
         }
 
-        // 查找该用户是否已经创建过试卷且未交卷 返回未完成的试卷
+        // 查找该用户是否已经创建过该考试的试卷且未交卷 返回未完成的试卷
         Paper paper = paperService.getOne(new QueryWrapper<Paper>()
                 .lambda().eq(Paper::getUserId, userId)
                 .eq(Paper::getExamId, examId)
@@ -255,6 +263,49 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         respDTO.setExcelList(excelList);
         respDTO.setPptList(pptList);
         return respDTO;
+    }
+
+    @Override
+    public IPage<PaperDTO> onlinePaperPaging(PagingReqDTO<PaperDTO> reqDTO) {
+        // 创建分页对象
+        // 也可以使用xml直接写 sql 语句实现, 参考 PaperMapper.paging
+        IPage<Paper> query = new Page<>(reqDTO.getCurrent(), reqDTO.getSize());
+        Set<String> paperIds = PaperWebSocketServer.getSessionPool().keySet();
+
+        if (CollectionUtils.isEmpty(paperIds)) {
+            return new Page<>(reqDTO.getCurrent(), reqDTO.getSize());
+        }
+
+        //查询条件
+        QueryWrapper<Paper> wrapper = new QueryWrapper<>();
+
+        PaperDTO params = reqDTO.getParams();
+
+        if(params!=null){
+            if(!StringUtils.isBlank(params.getSeat())){ // 按考场座位搜索
+                wrapper.lambda().like(Paper::getSeat, params.getSeat());
+            }
+
+            if(!StringUtils.isBlank(params.getExamId())){ // 按考试搜索
+                wrapper.lambda().eq(Paper::getExamId, params.getExamId());
+            }
+
+            if(!StringUtils.isBlank(params.getDepartId())){ // 按部门搜索
+                List<String> ids = sysDepartService.listAllSubIds(params.getDepartId());
+                wrapper.lambda().in(Paper::getDepartId, ids);
+            }
+        }
+        wrapper.lambda().in(Paper::getId, paperIds);
+
+        //获得数据
+        IPage<Paper> page = paperService.page(query, wrapper);
+        LambdaQueryWrapper<Paper> paperWrapper = new LambdaQueryWrapper<>();
+        IPage<PaperDTO> pageData = page.convert(item -> {
+            PaperDTO paperDTO = new PaperDTO();
+            BeanUtils.copyProperties(item, paperDTO);
+            return paperDTO;
+        });
+        return pageData;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.yf.exam.modules.paper.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
+import com.yf.exam.modules.paper.dto.PaperDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
 import com.yf.exam.modules.paper.dto.request.PaperListReqDTO;
@@ -32,13 +33,19 @@ public interface PaperService extends IService<Paper> {
      */
     String createPaper(String userId, String examId, String seat, String password);
 
-
     /**
      * 查找详情
      * @param paperId
      * @return
      */
     ExamDetailRespDTO paperDetail(String paperId);
+
+    /**
+     * 正在考试的试卷(监考)分页请求
+     * @param reqDTO
+     * @return
+     */
+    IPage<PaperDTO> onlinePaperPaging(PagingReqDTO<PaperDTO> reqDTO);
 
     /**
      * 考试结果
