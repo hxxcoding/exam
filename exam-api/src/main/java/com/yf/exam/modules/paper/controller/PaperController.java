@@ -71,7 +71,7 @@ public class PaperController extends BaseController {
     @RequestMapping(value = "/create-paper", method = { RequestMethod.POST})
     public ApiRest<BaseIdRespDTO> save(@RequestBody PaperCreateReqDTO reqDTO) {
         //复制参数
-        String paperId = baseService.createPaper(UserUtils.getUserId(), reqDTO.getExamId(), reqDTO.getPassword());
+        String paperId = baseService.createPaper(UserUtils.getUserId(), reqDTO.getExamId(), reqDTO.getSeat(), reqDTO.getPassword());
         return super.success(new BaseIdRespDTO(paperId));
     }
 

@@ -24,4 +24,10 @@ public class PaperCreateReqDTO extends BaseDTO {
     @ApiModelProperty(value = "考试密码", required=true)
     private String password;
 
+    /**
+     * 考场号-座位号 e.g. 3-021
+     */
+    @ApiModelProperty(value = "考试座位号", required=true)
+    private String seat;
+
 }

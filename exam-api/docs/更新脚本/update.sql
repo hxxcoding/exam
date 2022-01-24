@@ -34,3 +34,11 @@ ALTER TABLE `yf_exam_lite`.`el_qu_answer_office`
 ALTER TABLE `yf_exam_lite`.`el_exam`
     ADD COLUMN `exam_type` int(11) NOT NULL DEFAULT 0 COMMENT '考试类型 0模拟练习,1正式考试' AFTER `join_type`,
     ADD COLUMN `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '正式考试需要的考试密码' AFTER `exam_type`;
+
+/**
+  2022.1.24 13:36
+ */
+ALTER TABLE `yf_exam_lite`.`el_paper`
+    ADD COLUMN `seat` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '考场座位' AFTER `user_time`,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`id`) USING BTREE;

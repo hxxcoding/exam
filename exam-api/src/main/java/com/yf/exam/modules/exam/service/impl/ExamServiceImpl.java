@@ -221,7 +221,12 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
                 .lambda().eq(Paper::getUserId, UserUtils.getUserId())
                 .eq(Paper::getExamId, examId)
                 .eq(Paper::getState, 0));
-        respDTO.setIsStart(paper != null);
+        if (paper != null) {
+            respDTO.setIsStart(true);
+            respDTO.setSeat(paper.getSeat());
+        } else {
+            respDTO.setIsStart(false);
+        }
         return respDTO;
     }
 

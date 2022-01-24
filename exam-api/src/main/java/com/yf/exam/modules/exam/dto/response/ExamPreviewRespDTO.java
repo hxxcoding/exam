@@ -24,6 +24,10 @@ public class ExamPreviewRespDTO extends ExamDTO {
     @ApiModelProperty(value = "正式考试需要的考试密码", required=true)
     private String password;
 
+    @ApiModelProperty(value = "是否已经开始", required=true)
     private Boolean isStart;
+
+    @ApiModelProperty(value = "考场座位", required=true)
+    private String seat;
 
 }

@@ -120,7 +120,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String createPaper(String userId, String examId, String password) {
+    public String createPaper(String userId, String examId, String seat, String password) {
 
         // 查找考试
         ExamDTO exam = examService.findById(examId);
@@ -146,18 +146,25 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             }
         }
         if (paper != null) { // 存在未交卷的试卷
-            if (exam.getExamType().equals(ExamType.PRACTICE)) {
-                return paper.getId();
-            }
-            if (exam.getExamType().equals(ExamType.FINAL_EXAM) && !StringUtils.isBlank(password)) {
-                if (exam.getPassword().equals(password)) {
+            try {
+                if (exam.getExamType().equals(ExamType.PRACTICE)) { // 模拟练习直接返回数据
                     return paper.getId();
-                } else {
-                    throw new ServiceException("考试密码错误!");
                 }
-            }
-            if (exam.getExamType().equals(ExamType.FINAL_EXAM) && StringUtils.isBlank(password)) {
-                throw new ServiceException("请联系监考老师输入考试密码!");
+                if (exam.getExamType().equals(ExamType.FINAL_EXAM) && !StringUtils.isBlank(password)) { // 正式考试重新进入输入密码
+                    if (exam.getPassword().equals(password)) {
+                        return paper.getId();
+                    } else {
+                        throw new ServiceException("考试密码错误!");
+                    }
+                }
+                if (exam.getExamType().equals(ExamType.FINAL_EXAM) && StringUtils.isBlank(password)) { // 正式考试重新进入未输入密码
+                    throw new ServiceException("请联系监考老师输入考试密码!");
+                }
+            } finally {
+                if (!paper.getSeat().equals(seat)) {
+                    paper.setSeat(seat);
+                    paperService.updateById(paper);
+                }
             }
         }
 
@@ -179,7 +186,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         }
 
         //保存试卷内容
-        Paper savedPaper = this.savePaper(userId, exam, quList);
+        Paper savedPaper = this.savePaper(userId, seat, exam, quList);
         String paperId = savedPaper.getId();
         Calendar executeTime = Calendar.getInstance();
         executeTime.setTime(savedPaper.getLimitTime());
@@ -453,7 +460,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
      * @param quList
      * @return
      */
-    private Paper savePaper(String userId, ExamDTO exam, List<PaperQu> quList) {
+    private Paper savePaper(String userId, String seat, ExamDTO exam, List<PaperQu> quList) {
 
 
         // 查找用户
@@ -472,6 +479,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paper.setQualifyScore(exam.getQualifyScore());
         paper.setState(PaperState.ING);
         paper.setHasSaq(false);
+        paper.setSeat(seat);
 
         // 截止时间
         Calendar cl = Calendar.getInstance();

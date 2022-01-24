@@ -46,6 +46,9 @@ public class PaperDTO implements Serializable {
     @ApiModelProperty(value = "用户时长", required=true)
     private Integer userTime;
 
+    @ApiModelProperty(value = "考场座位", required=true)
+    private String seat;
+
     @ApiModelProperty(value = "试卷总分", required=true)
     private Integer totalScore;
 

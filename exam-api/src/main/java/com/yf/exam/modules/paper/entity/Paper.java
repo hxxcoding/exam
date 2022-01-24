@@ -62,6 +62,11 @@ public class Paper extends Model<Paper> {
     private Integer userTime;
 
     /**
+     * 考场座位
+     */
+    private String seat;
+
+    /**
      * 试卷总分
      */
     @TableField("total_score")

@@ -229,10 +229,12 @@ export default {
       this.paperId = id
       this.fetchData(id)
     }
+    // 禁止回退
     history.pushState(null, null, document.URL)
     window.addEventListener('popstate', function() {
       history.pushState(null, null, document.URL)
     })
+    // 禁止右键菜单和选择文字
     this.$nextTick(() => {
       document.oncontextmenu = new Function('event.returnValue=false')
       document.onselectstart = new Function('event.returnValue=false')

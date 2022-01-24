@@ -29,6 +29,10 @@
           <div><strong>考试描述：</strong>{{ detailData.content }}</div>
           <div><strong>考试类型：</strong> {{ detailData.examType | examType }}</div>
           <div><strong>开放类型：</strong> {{ detailData.openType | examOpenType }}</div>
+          <div>
+            <strong>考场座位：</strong>
+            <el-input v-model="postForm.seat" placeholder="请输入考场座位号(例:3-021)" style="width: 250px" clearable @blur="handleSeatInputChange" />
+          </div>
           <div v-if="detailData.isStart && detailData.examType === 1">
             <strong>考试密码：</strong>
             <el-input v-model="postForm.password" placeholder="请联系监考老师输入考试密码！" style="width: 250px" show-password clearable />
@@ -53,6 +57,7 @@
           v-if="!detailData.isStart"
           type="primary"
           icon="el-icon-caret-right"
+          :disabled="postForm.seat === ''"
           @click="handleCreate"
         >
           开始考试
@@ -62,7 +67,8 @@
           v-if="detailData.isStart"
           type="warning"
           icon="el-icon-video-pause"
-          :disabled="detailData.examType === 1 && (postForm.password === null || postForm.password === '')"
+          :disabled="(detailData.examType === 1 && (postForm.password === null || postForm.password === '' || postForm.seat === ''))
+            || (detailData.examType === 0 && (postForm.seat === ''))"
           @click="handleCreate"
         >
           继续考试
@@ -90,7 +96,8 @@ export default {
       detailData: {},
       postForm: {
         examId: '',
-        password: ''
+        password: '',
+        seat: ''
       }
     }
   },
@@ -105,6 +112,9 @@ export default {
     fetchData() {
       fetchPreview(this.postForm.examId).then(response => {
         this.detailData = response.data
+        if (this.detailData.isStart) {
+          this.postForm.seat = this.detailData.seat
+        }
       })
     },
 
@@ -137,6 +147,17 @@ export default {
 
     handleBack() {
       this.$router.push({ name: 'ExamOnline' })
+    },
+
+    handleSeatInputChange() {
+      const pattern = /^[0-9]-[0-9]{3}$/g
+      if (pattern.exec(this.postForm.seat) === null) {
+        this.postForm.seat = ''
+        this.$message({
+          message: '座位号输入格式有误, 请重新输入!',
+          type: 'warning'
+        })
+      }
     }
 
   }
