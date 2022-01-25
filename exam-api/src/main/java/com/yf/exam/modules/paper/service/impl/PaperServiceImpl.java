@@ -22,11 +22,13 @@ import com.yf.exam.modules.exam.enums.ExamType;
 import com.yf.exam.modules.exam.enums.JoinType;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
+import com.yf.exam.modules.paper.dto.export.PaperExportDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuAnswerExtDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
+import com.yf.exam.modules.paper.dto.request.PaperQuQueryDTO;
 import com.yf.exam.modules.paper.dto.request.PaperQueryReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
@@ -49,6 +51,7 @@ import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuAnswerService;
 import com.yf.exam.modules.qu.service.QuService;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
+import com.yf.exam.modules.sys.system.service.SysDictService;
 import com.yf.exam.modules.sys.user.entity.SysUser;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.exam.entity.UserExam;
@@ -63,7 +66,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
 * <p>
@@ -114,6 +119,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Autowired
     private SysDepartService sysDepartService;
+
+    @Autowired
+    private SysDictService sysDictService;
 
     private static final Timer timer = new Timer();
     private static final int DELAY_MINUTES = 3; // 默认考试结束后3分钟提交未交卷的试卷
@@ -869,5 +877,64 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paper.setState(PaperState.BREAK);
         paper.setUpdateTime(new Date());
         this.updateById(paper);
+    }
+
+    @Override
+    public List<PaperExportDTO> listForExport(PaperQueryReqDTO reqDTO) {
+        List<PaperExportDTO> res = new ArrayList<>();
+        // 设置导出条件
+        LambdaQueryWrapper<Paper> wrapper = new LambdaQueryWrapper<>();
+        if (!StringUtils.isBlank(reqDTO.getExamId())) {
+            wrapper.eq(Paper::getExamId, reqDTO.getExamId());
+        }
+        if (!StringUtils.isBlank(reqDTO.getDepartId())) {
+            List<String> departIds = sysDepartService.listAllSubIds(reqDTO.getDepartId());
+            wrapper.in(Paper::getDepartId, departIds);
+        }
+        if (reqDTO.getState() != null) {
+            wrapper.eq(Paper::getState, reqDTO.getState());
+        }
+        if (!StringUtils.isBlank(reqDTO.getUserName())) {
+            List<String> userIds = sysUserService.list(new LambdaQueryWrapper<SysUser>().like(SysUser::getUserName, reqDTO.getUserName()))
+                    .stream().map(SysUser::getId).collect(Collectors.toList());
+            wrapper.in(Paper::getUserId, userIds);
+        }
+        List<Paper> paperList = paperService.list(wrapper);
+        int no = 1;
+        // 计算各个题型分数
+        for (Paper paper : paperList) {
+            PaperExportDTO exportDTO = new PaperExportDTO();
+            SysUser user = sysUserService.getById(paper.getUserId());
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // 查询每种题目的得分
+            int radioScore = 0, multiScore = 0, judgeScore = 0, blankScore = 0, officeScore = 0;
+            List<PaperQuDetailDTO> paperQuList = paperQuService.listForPaperResult(paper.getId());
+            for (PaperQuDetailDTO paperQu : paperQuList) {
+                if (paperQu.getQuType().equals(QuType.RADIO) && paperQu.getIsRight()) radioScore += paperQu.getScore();
+                if (paperQu.getQuType().equals(QuType.MULTI) && paperQu.getIsRight()) multiScore += paperQu.getScore();
+                if (paperQu.getQuType().equals(QuType.JUDGE) && paperQu.getIsRight()) judgeScore += paperQu.getScore();
+                if (paperQu.getQuType().equals(QuType.BLANK) && paperQu.getIsRight()) blankScore += paperQu.getScore();
+                if (paperQu.getQuType().equals(QuType.WORD) || paperQu.getQuType().equals(QuType.EXCEL) || paperQu.getQuType().equals(QuType.PPT)) {
+                    officeScore += paperQu.getActualScore();
+                }
+            }
+            exportDTO.setNo(no)
+                    .setTitle(paper.getTitle())
+                    .setRealName(user.getRealName())
+                    .setUserName(user.getUserName())
+                    .setDeptName(sysDictService.findDict("sys_depart", "dept_name", "id", paper.getDepartId()))
+                    .setSeat(paper.getSeat())
+                    .setTimeRange(formatter.format(paper.getCreateTime()) + " ~ " + formatter.format(paper.getUpdateTime()))
+                    .setUserTime(paper.getUserTime())
+                    .setRadioScore(radioScore)
+                    .setMultiScore(multiScore)
+                    .setJudgeScore(judgeScore)
+                    .setBlankScore(blankScore)
+                    .setOfficeScore(officeScore)
+                    .setTitleScore(paper.getUserScore());
+            res.add(exportDTO);
+            no++;
+        }
+        return res;
     }
 }

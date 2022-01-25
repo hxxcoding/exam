@@ -3,8 +3,10 @@ package com.yf.exam.modules.paper.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
+import com.yf.exam.modules.paper.dto.export.PaperExportDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
+import com.yf.exam.modules.paper.dto.request.PaperQuQueryDTO;
 import com.yf.exam.modules.paper.dto.request.PaperQueryReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
@@ -101,5 +103,10 @@ public interface PaperService extends IService<Paper> {
      */
     void breakExam(String paperId);
 
+    /**
+     * 导出成绩
+     * @param reqDTO
+     */
+    List<PaperExportDTO> listForExport(PaperQueryReqDTO reqDTO);
 
 }

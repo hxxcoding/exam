@@ -10,6 +10,7 @@ import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdRespDTO;
 import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
+import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.excel.ExportExcel;
 import com.yf.exam.core.utils.excel.ImportExcel;
@@ -196,7 +197,7 @@ public class QuController extends BaseController {
      */
     @RequiresPermissions("qu:export")
     @RequestMapping(value = "/export")
-    public ApiRest exportFile(HttpServletResponse response, @RequestBody QuQueryReqDTO reqDTO) {
+    public void exportFile(HttpServletResponse response, @RequestBody QuQueryReqDTO reqDTO) {
 
 
         // 导出文件名
@@ -221,9 +222,8 @@ public class QuController extends BaseController {
                 item.setNo(String.valueOf(no));
             }
             new ExportExcel("试题", QuExportDTO.class).setDataList(list).write(response, fileName).dispose();
-            return super.success();
         } catch (Exception e) {
-            return failure(e.getMessage());
+            throw new ServiceException("导出失败:" + e.getMessage());
         }
     }
 
@@ -251,7 +251,7 @@ public class QuController extends BaseController {
      */
     @RequiresPermissions("qu:import:template")
     @RequestMapping(value = "import/template")
-    public ApiRest importFileTemplate(HttpServletResponse response) {
+    public void importFileTemplate(HttpServletResponse response) {
         try {
             String fileName = "试题导入模板.xlsx";
             List<QuExportDTO> list = Lists.newArrayList();
@@ -298,9 +298,8 @@ public class QuController extends BaseController {
             list.add(l4);
 
             new ExportExcel("试题数据", QuExportDTO.class, 1).setDataList(list).write(response, fileName).dispose();
-            return super.success();
         } catch (Exception e) {
-            return super.failure("导入模板下载失败！失败信息："+e.getMessage());
+            throw new ServiceException("导出失败:" + e.getMessage());
         }
     }
 }

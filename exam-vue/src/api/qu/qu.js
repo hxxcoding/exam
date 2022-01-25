@@ -66,7 +66,7 @@ export function readFormat(url, pos, method) {
  * @param data
  */
 export function exportExcel(data) {
-  return download('/exam/api/qu/qu/export', data, '导出的数据.xlsx')
+  return download('/exam/api/qu/qu/export', data, '导出题目-' + new Date().getTime() + '.xlsx')
 }
 
 /**

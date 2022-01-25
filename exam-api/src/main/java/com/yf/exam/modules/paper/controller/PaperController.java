@@ -6,7 +6,10 @@ import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdRespDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
+import com.yf.exam.core.exception.ServiceException;
+import com.yf.exam.core.utils.excel.ExportExcel;
 import com.yf.exam.modules.exam.dto.request.SendMsgReqDTO;
+import com.yf.exam.modules.paper.dto.export.PaperExportDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
@@ -19,6 +22,8 @@ import com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
 import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.paper.service.PaperWebSocketServer;
+import com.yf.exam.modules.qu.dto.export.QuExportDTO;
+import com.yf.exam.modules.qu.dto.request.QuQueryReqDTO;
 import com.yf.exam.modules.sys.user.dto.SysUserDTO;
 import com.yf.exam.modules.user.UserUtils;
 import io.swagger.annotations.Api;
@@ -30,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -187,6 +193,22 @@ public class PaperController extends BaseController {
     public ApiRest<List<PaperQuPointsRespDTO>> quOfficePoints(@RequestBody PaperQuQueryDTO reqDTO) {
         List<PaperQuPointsRespDTO> res = baseService.quOfficePoints(reqDTO.getPaperId(), reqDTO.getQuId());
         return super.success(res);
+    }
+
+    /**
+     * 导出excel文件
+     */
+    @RequiresPermissions("paper:export")
+    @RequestMapping(value = "/export", method = { RequestMethod.POST })
+    public void exportFile(HttpServletResponse response, @RequestBody PaperQueryReqDTO reqDTO) {
+        try {
+            List<PaperExportDTO> list = baseService.listForExport(reqDTO);
+            // 导出文件名
+            String fileName = "导出成绩-" + System.currentTimeMillis() + ".xlsx";
+            new ExportExcel("成绩单", PaperExportDTO.class).setDataList(list).write(response, fileName).dispose();
+        } catch (Exception e) {
+            throw new ServiceException("导出失败:" + e.getMessage());
+        }
     }
 
 }

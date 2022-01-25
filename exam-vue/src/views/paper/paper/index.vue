@@ -31,6 +31,10 @@
 
         <el-input v-model="listQuery.params.userName" placeholder="搜索学号" style="width: 200px;" class="filter-item" clearable />
 
+        <el-button-group class="filter-item" style="float:  right">
+          <el-button size="mini" icon="el-icon-download" @click="exportExcel">导出成绩</el-button>
+        </el-button-group>
+
       </template>
 
       <template slot="data-columns">
@@ -144,6 +148,7 @@
 import DataTable from '@/components/DataTable'
 import DepartTreeSelect from '@/components/DepartTreeSelect'
 import { fetchTree } from '@/api/sys/depart/depart'
+import { exportExcel } from '@/api/paper/paper'
 import ExamSelect from '@/components/ExamSelect'
 
 export default {
@@ -218,6 +223,10 @@ export default {
           window.open(routeData.href, '_blank')
         })
       }
+    },
+
+    exportExcel() {
+      exportExcel(this.listQuery.params)
     }
   }
 }
