@@ -29,6 +29,8 @@
           />
         </el-select>
 
+        <el-input v-model="listQuery.params.userName" placeholder="搜索学号" style="width: 200px;" class="filter-item" clearable />
+
       </template>
 
       <template slot="data-columns">

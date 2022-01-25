@@ -32,6 +32,9 @@ public class PaperDetailReqDTO implements Serializable {
     @ApiModelProperty(value = "用户昵称", required=true)
     private String realName;
 
+    @ApiModelProperty(value = "学号/用户名", required=true)
+    private String userName;
+
     @ApiModelProperty(value = "试卷状态", required=true)
     private Integer state;
 

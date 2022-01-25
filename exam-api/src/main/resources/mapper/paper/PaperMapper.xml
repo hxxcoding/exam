@@ -44,10 +44,6 @@
                     AND pp.exam_id=#{query.examId}
                 </if>
 
-                <if test="query.userId!=null and query.userId!=''">
-                    AND pp.user_id=#{query.userId}
-                </if>
-
                 <if test="query.departId!=null and query.departId!=''">
                     AND uc.depart_id IN (
                         SELECT id FROM sys_depart
@@ -60,8 +56,9 @@
                 <if test="query.state!=null">
                     AND pp.state=#{query.state}
                 </if>
-                <if test="query.realName!=null and query.realName!=''">
-                    AND uc.real_name  LIKE '%${query.realName}%'
+
+                <if test="query.userName!=null and query.userName!=''">
+                    AND uc.user_name  LIKE '%${query.userName}%'
                 </if>
             </if>
         </where>
