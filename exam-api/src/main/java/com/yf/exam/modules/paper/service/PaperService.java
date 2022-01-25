@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
-import com.yf.exam.modules.paper.dto.request.PaperDetailReqDTO;
+import com.yf.exam.modules.paper.dto.request.PaperQueryReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO;
@@ -87,7 +87,7 @@ public interface PaperService extends IService<Paper> {
      * @param reqDTO
      * @return
      */
-    IPage<PaperDetailRespDTO> paging(PagingReqDTO<PaperDetailReqDTO> reqDTO);
+    IPage<PaperDetailRespDTO> paging(PagingReqDTO<PaperQueryReqDTO> reqDTO);
 
     /**
      * 查找到期未交卷的考试

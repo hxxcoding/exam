@@ -8,15 +8,15 @@ import java.io.Serializable;
 
 /**
 * <p>
-* 试卷请求类
+* 试卷查询请求类
 * </p>
 *
 * @author 聪明笨狗
 * @since 2020-05-25 17:31
 */
 @Data
-@ApiModel(value="试卷", description="试卷")
-public class PaperDetailReqDTO implements Serializable {
+@ApiModel(value="试卷查询请求类", description="试卷查询请求类")
+public class PaperQueryReqDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

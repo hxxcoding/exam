@@ -11,7 +11,7 @@ import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
 import com.yf.exam.modules.paper.dto.request.PaperCreateReqDTO;
-import com.yf.exam.modules.paper.dto.request.PaperDetailReqDTO;
+import com.yf.exam.modules.paper.dto.request.PaperQueryReqDTO;
 import com.yf.exam.modules.paper.dto.request.PaperQuQueryDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
@@ -56,7 +56,7 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "分页查找")
     @RequiresPermissions("paper:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
-    public ApiRest<IPage<PaperDetailRespDTO>> paging(@RequestBody PagingReqDTO<PaperDetailReqDTO> reqDTO) {
+    public ApiRest<IPage<PaperDetailRespDTO>> paging(@RequestBody PagingReqDTO<PaperQueryReqDTO> reqDTO) {
 
         //分页查询并转换
         IPage<PaperDetailRespDTO> page = baseService.paging(reqDTO);

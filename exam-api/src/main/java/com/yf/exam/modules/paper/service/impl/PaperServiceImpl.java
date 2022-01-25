@@ -27,7 +27,7 @@ import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuAnswerExtDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
-import com.yf.exam.modules.paper.dto.request.PaperDetailReqDTO;
+import com.yf.exam.modules.paper.dto.request.PaperQueryReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO;
@@ -839,7 +839,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
-    public IPage<PaperDetailRespDTO> paging(PagingReqDTO<PaperDetailReqDTO> reqDTO) {
+    public IPage<PaperDetailRespDTO> paging(PagingReqDTO<PaperQueryReqDTO> reqDTO) {
         return baseMapper.paging(reqDTO.toPage(), reqDTO.getParams());
     }
 
