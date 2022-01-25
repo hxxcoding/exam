@@ -3,13 +3,12 @@ package com.yf.exam.modules.paper.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yf.exam.core.api.dto.PagingReqDTO;
-import com.yf.exam.modules.paper.dto.PaperDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
-import com.yf.exam.modules.paper.dto.request.PaperListReqDTO;
+import com.yf.exam.modules.paper.dto.request.PaperDetailReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
-import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
+import com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 
@@ -45,7 +44,7 @@ public interface PaperService extends IService<Paper> {
      * @param reqDTO
      * @return
      */
-    IPage<PaperDTO> onlinePaperPaging(PagingReqDTO<PaperDTO> reqDTO);
+    IPage<PaperDetailRespDTO> onlinePaperPaging(PagingReqDTO<PaperDetailRespDTO> reqDTO);
 
     /**
      * 考试结果
@@ -88,7 +87,7 @@ public interface PaperService extends IService<Paper> {
      * @param reqDTO
      * @return
      */
-    IPage<PaperListRespDTO> paging(PagingReqDTO<PaperListReqDTO> reqDTO);
+    IPage<PaperDetailRespDTO> paging(PagingReqDTO<PaperDetailReqDTO> reqDTO);
 
     /**
      * 查找到期未交卷的考试

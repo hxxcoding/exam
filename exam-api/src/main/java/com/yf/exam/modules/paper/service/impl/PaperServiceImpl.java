@@ -22,16 +22,15 @@ import com.yf.exam.modules.exam.enums.ExamType;
 import com.yf.exam.modules.exam.enums.JoinType;
 import com.yf.exam.modules.exam.service.ExamRepoService;
 import com.yf.exam.modules.exam.service.ExamService;
-import com.yf.exam.modules.paper.dto.PaperDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuAnswerExtDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
-import com.yf.exam.modules.paper.dto.request.PaperListReqDTO;
+import com.yf.exam.modules.paper.dto.request.PaperDetailReqDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
-import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
+import com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 import com.yf.exam.modules.paper.entity.PaperQu;
@@ -266,7 +265,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
-    public IPage<PaperDTO> onlinePaperPaging(PagingReqDTO<PaperDTO> reqDTO) {
+    public IPage<PaperDetailRespDTO> onlinePaperPaging(PagingReqDTO<PaperDetailRespDTO> reqDTO) {
         // 创建分页对象
         // 也可以使用xml直接写 sql 语句实现, 参考 PaperMapper.paging
         IPage<Paper> query = new Page<>(reqDTO.getCurrent(), reqDTO.getSize());
@@ -279,7 +278,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         //查询条件
         QueryWrapper<Paper> wrapper = new QueryWrapper<>();
 
-        PaperDTO params = reqDTO.getParams();
+        PaperDetailRespDTO params = reqDTO.getParams();
 
         if(params!=null){
             if(!StringUtils.isBlank(params.getSeat())){ // 按考场座位搜索
@@ -300,8 +299,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         //获得数据
         IPage<Paper> page = paperService.page(query, wrapper);
         LambdaQueryWrapper<Paper> paperWrapper = new LambdaQueryWrapper<>();
-        IPage<PaperDTO> pageData = page.convert(item -> {
-            PaperDTO paperDTO = new PaperDTO();
+        IPage<PaperDetailRespDTO> pageData = page.convert(item -> {
+            PaperDetailRespDTO paperDTO = new PaperDetailRespDTO();
             BeanUtils.copyProperties(item, paperDTO);
             return paperDTO;
         });
@@ -840,7 +839,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
-    public IPage<PaperListRespDTO> paging(PagingReqDTO<PaperListReqDTO> reqDTO) {
+    public IPage<PaperDetailRespDTO> paging(PagingReqDTO<PaperDetailReqDTO> reqDTO) {
         return baseMapper.paging(reqDTO.toPage(), reqDTO.getParams());
     }
 

@@ -16,7 +16,7 @@ import java.io.Serializable;
 */
 @Data
 @ApiModel(value="试卷", description="试卷")
-public class PaperListReqDTO implements Serializable {
+public class PaperDetailReqDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

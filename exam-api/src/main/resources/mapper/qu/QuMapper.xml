@@ -95,6 +95,7 @@
         q.qu_type,
         q.content AS q_content,
         q.analysis as q_analysis,
+        IFNULL(a.id, UUID_SHORT()) as a_id,
         a.content as a_content,
         a.is_right as a_is_right,
         a.analysis as a_analysis
@@ -102,7 +103,7 @@
         LEFT JOIN el_qu_answer a ON q.id=a.qu_id
         LEFT JOIN el_qu_repo po ON q.id=po.qu_id
         <include refid="query" />
-        GROUP BY a.id ORDER BY q.id
+        GROUP BY a_id ORDER BY q.id
         LIMIT 10000
     </select>
 

@@ -49,7 +49,7 @@
         </el-table-column>
 
         <el-table-column
-          label="人员"
+          label="姓名"
           align="center"
           prop="userId_real_name"
         />
@@ -58,6 +58,18 @@
           label="部门"
           align="center"
           prop="departId_dept_name"
+        />
+
+        <el-table-column
+          label="学号"
+          align="center"
+          prop="userId_user_name"
+        />
+
+        <el-table-column
+          label="考场座位号"
+          align="center"
+          prop="seat"
         />
 
         <el-table-column

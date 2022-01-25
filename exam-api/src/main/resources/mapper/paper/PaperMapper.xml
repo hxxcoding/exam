@@ -31,8 +31,7 @@
 
     <resultMap id="ListResultMap"
                extends="BaseResultMap"
-               type="com.yf.exam.modules.paper.dto.response.PaperListRespDTO">
-        <result column="real_name" property="realName" />
+               type="com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO">
         <result column="dept_id" property="departId" />
     </resultMap>
 

@@ -9,7 +9,7 @@
       <el-descriptions-item label="考生班级">{{ paperData.departId_dept_name }}</el-descriptions-item>
       <el-descriptions-item label="考场座位号">{{ paperData.seat }}</el-descriptions-item>
       <el-descriptions-item span="2" label="考试时间">{{ paperData.createTime }} ~ {{ paperData.updateTime }}</el-descriptions-item>
-      <el-descriptions-item label="考试用时">{{ paperData.userTime }}分钟</el-descriptions-item>
+      <el-descriptions-item span="2" label="考试用时">{{ paperData.userTime }}分钟</el-descriptions-item>
       <el-descriptions-item label="单选题得分">{{ paperData.userRadioScore }}分</el-descriptions-item>
       <el-descriptions-item label="多选题得分">{{ paperData.userMultiScore }}分</el-descriptions-item>
       <el-descriptions-item label="判断题得分">{{ paperData.userJudgeScore }}分</el-descriptions-item>

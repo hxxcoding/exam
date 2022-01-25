@@ -7,16 +7,15 @@ import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdRespDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.modules.exam.dto.request.SendMsgReqDTO;
-import com.yf.exam.modules.paper.dto.PaperDTO;
 import com.yf.exam.modules.paper.dto.ext.OnlinePaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.request.PaperAnswerDTO;
 import com.yf.exam.modules.paper.dto.request.PaperCreateReqDTO;
-import com.yf.exam.modules.paper.dto.request.PaperListReqDTO;
+import com.yf.exam.modules.paper.dto.request.PaperDetailReqDTO;
 import com.yf.exam.modules.paper.dto.request.PaperQuQueryDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
-import com.yf.exam.modules.paper.dto.response.PaperListRespDTO;
+import com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO;
 import com.yf.exam.modules.paper.dto.response.PaperQuPointsRespDTO;
 import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.paper.service.PaperWebSocketServer;
@@ -57,10 +56,10 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "分页查找")
     @RequiresPermissions("paper:paging")
     @RequestMapping(value = "/paging", method = { RequestMethod.POST})
-    public ApiRest<IPage<PaperListRespDTO>> paging(@RequestBody PagingReqDTO<PaperListReqDTO> reqDTO) {
+    public ApiRest<IPage<PaperDetailRespDTO>> paging(@RequestBody PagingReqDTO<PaperDetailReqDTO> reqDTO) {
 
         //分页查询并转换
-        IPage<PaperListRespDTO> page = baseService.paging(reqDTO);
+        IPage<PaperDetailRespDTO> page = baseService.paging(reqDTO);
 
         return super.success(page);
     }
@@ -101,8 +100,8 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "获取正在考试的用户列表")
     @RequiresPermissions("paper:online-paper:paging")
     @RequestMapping(value = "/online-paper/paging", method = { RequestMethod.POST })
-    public ApiRest<IPage<PaperDTO>> monitor(@RequestBody PagingReqDTO<PaperDTO> reqDTO) {
-        IPage<PaperDTO> page = baseService.onlinePaperPaging(reqDTO);
+    public ApiRest<IPage<PaperDetailRespDTO>> monitor(@RequestBody PagingReqDTO<PaperDetailRespDTO> reqDTO) {
+        IPage<PaperDetailRespDTO> page = baseService.onlinePaperPaging(reqDTO);
         return super.success(page);
     }
 
