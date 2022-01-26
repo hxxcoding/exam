@@ -203,7 +203,7 @@ export default {
       },
       // 试卷信息
       paperData: {
-        leftSeconds: 99999,
+        leftSeconds: 86400,
         radioList: [],
         multiList: [],
         judgeList: [],

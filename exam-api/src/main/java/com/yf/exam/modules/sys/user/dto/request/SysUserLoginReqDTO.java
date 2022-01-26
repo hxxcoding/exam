@@ -25,5 +25,8 @@ public class SysUserLoginReqDTO implements Serializable {
 
     @ApiModelProperty(value = "密码", required=true)
     private String password;
+
+    @ApiModelProperty(value = "验证码", required=true)
+    private String captchaVerification;
     
 }

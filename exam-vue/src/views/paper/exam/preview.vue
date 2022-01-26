@@ -120,7 +120,16 @@ export default {
 
     handleCreate() {
       const that = this
-
+      if (!this.handleSeatInputChange()) {
+        return
+      }
+      if (this.detailData.examType === 1 && (this.postForm.password === null || this.postForm.password === '')) {
+        this.$message({
+          message: '请重新输入考试密码!',
+          type: 'warning'
+        })
+        return
+      }
       // 打开
       const loading = Loading.service({
         text: '正在进入考试...',
@@ -157,7 +166,9 @@ export default {
           message: '座位号输入格式有误, 请重新输入!',
           type: 'warning'
         })
+        return false
       }
+      return true
     }
 
   }

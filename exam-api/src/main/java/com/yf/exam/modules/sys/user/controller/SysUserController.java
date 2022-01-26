@@ -1,5 +1,6 @@
 package com.yf.exam.modules.sys.user.controller;
 
+import com.anji.captcha.model.vo.CaptchaVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yf.exam.core.annon.LogInject;
@@ -65,7 +66,9 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "用户登录")
     @RequestMapping(value = "/login", method = {RequestMethod.POST})
     public ApiRest<SysUserLoginDTO> login(@RequestBody SysUserLoginReqDTO reqDTO) {
-        SysUserLoginDTO respDTO = baseService.login(reqDTO.getUsername(), reqDTO.getPassword());
+        CaptchaVO captchaVO = new CaptchaVO();
+        captchaVO.setCaptchaVerification(reqDTO.getCaptchaVerification());
+        SysUserLoginDTO respDTO = baseService.login(reqDTO.getUsername(), reqDTO.getPassword(), captchaVO);
         return super.success(respDTO);
     }
 

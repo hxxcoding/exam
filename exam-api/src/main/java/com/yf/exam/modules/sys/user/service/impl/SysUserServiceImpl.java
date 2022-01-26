@@ -3,6 +3,9 @@ package com.yf.exam.modules.sys.user.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.anji.captcha.model.common.ResponseModel;
+import com.anji.captcha.model.vo.CaptchaVO;
+import com.anji.captcha.service.CaptchaService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -60,6 +63,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private SysUserRoleService sysUserRoleService;
     @Autowired
     private SysDepartService sysDepartService;
+    @Autowired
+    private CaptchaService captchaService;
 
 
     @Override
@@ -102,7 +107,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      }
 
     @Override
-    public SysUserLoginDTO login(String userName, String password) {
+    public SysUserLoginDTO login(String userName, String password, CaptchaVO captchaVO) {
+
+        ResponseModel response = captchaService.verification(captchaVO);
+        if (!response.isSuccess()) {
+            throw new ServiceException(response.getRepMsg());
+        }
 
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(SysUser::getUserName, userName);

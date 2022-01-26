@@ -54,7 +54,7 @@
             <el-row :gutter="10">
 
               <el-col :span="12">
-                <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+                <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click="showVerify">登录</el-button>
               </el-col>
 
               <el-col :span="12">
@@ -71,6 +71,14 @@
 
     </el-main>
 
+    <verify
+      ref="verify"
+      :mode="'pop'"
+      :captcha-type="'blockPuzzle'"
+      :img-size="{ width: '330px', height: '155px' }"
+      @success="handleLogin"
+    />
+
   </el-container>
 
 </template>
@@ -79,13 +87,12 @@
 import { mapGetters } from 'vuex'
 import { validUsername } from '@/utils/validate'
 import 'element-ui/lib/theme-chalk/display.css'
+import verify from '@/components/Captcha/Verify'
 
 export default {
   name: 'Login',
-  computed: {
-    ...mapGetters([
-      'siteData'
-    ])
+  components: {
+    verify
   },
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -118,6 +125,13 @@ export default {
       otherQuery: {}
     }
   },
+
+  computed: {
+    ...mapGetters([
+      'siteData'
+    ])
+  },
+
   watch: {
     $route: {
       handler: function(route) {
@@ -171,10 +185,11 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
+    handleLogin(params) {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          this.loginForm.captchaVerification = params.captchaVerification
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
@@ -196,6 +211,10 @@ export default {
         }
         return acc
       }, {})
+    },
+    showVerify() {
+      // 当mode="pop"时,调用组件实例的show方法显示组件
+      this.$refs.verify.show()
     }
   }
 }

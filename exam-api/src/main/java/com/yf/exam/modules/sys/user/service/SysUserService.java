@@ -1,5 +1,6 @@
 package com.yf.exam.modules.sys.user.service;
 
+import com.anji.captcha.model.vo.CaptchaVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yf.exam.modules.sys.user.dto.SysUserDTO;
@@ -34,7 +35,7 @@ public interface SysUserService extends IService<SysUser> {
      * @param password
      * @return
      */
-    SysUserLoginDTO login(String userName, String password);
+    SysUserLoginDTO login(String userName, String password, CaptchaVO captchaVO);
 
     /**
      * 获取管理会话
