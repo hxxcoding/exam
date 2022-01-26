@@ -119,10 +119,17 @@
               回答：
               <el-input v-model="item.answer" size="large" style="width: 50%" disabled />
             </el-col>
-          </el-row>
-          <el-row :gutter="24">
-            <el-col :span="12" style="color: #24da70">
-              正确答案：{{ blankValues[item.id] }}
+
+            <el-col v-if="!item.answered" :span="12" style="text-align: right; color: #ff0000;">
+              答题结果：未答
+            </el-col>
+
+            <el-col v-if="item.answered && !item.isRight" :span="12" style="text-align: right; color: #ff0000;">
+              答题结果：错误
+            </el-col>
+
+            <el-col v-if="item.answered && item.isRight" :span="12" style="text-align: right; color: #24da70;">
+              答题结果：正确
             </el-col>
           </el-row>
         </div>
@@ -188,7 +195,6 @@ export default {
       },
       radioValues: {},
       multiValues: {},
-      blankValues: {},
       radioRights: {},
       multiRights: {},
       myRadio: {},
@@ -243,6 +249,7 @@ export default {
         this.paperData.userBlankScore = 0
         this.paperData.userOfficeScore = 0
         // 填充该题目的答案
+        console.log(this.paperData)
         this.paperData.quList.forEach((item) => {
           if (item.quType >= 10 && item.answer !== null && item.answer !== '') {
             this.fetchQuOfficePoints(id, item.quId)
@@ -260,7 +267,6 @@ export default {
           const multiValue = []
           const multiRight = []
           const myMulti = []
-          let blankValue = ''
 
           item.answerList.forEach((an) => {
             // 用户选定的
@@ -282,10 +288,6 @@ export default {
                 multiRight.push(an.abc)
               }
             }
-
-            if (item.quType === 5) {
-              blankValue = an.content
-            }
           })
 
           this.multiValues[item.id] = multiValue
@@ -296,8 +298,6 @@ export default {
 
           this.myRadio[item.id] = myRadio
           this.myMulti[item.id] = myMulti
-
-          this.blankValues[item.id] = blankValue
         })
       })
       if (isPrint) {
