@@ -19,46 +19,72 @@
 
         <el-card>
 
-          <p class="card-title">答题卡</p>
+          <p class="card-title"><strong>答题卡</strong></p>
           <el-row :gutter="24" class="card-line" style="padding-left: 10px">
             <el-tag type="info">未作答</el-tag>
-            <el-tag type="success">已作答</el-tag>
+            <el-tag effect="dark">已作答</el-tag>
+            <el-tag type="warning" effect="dark">当前试题</el-tag>
           </el-row>
 
-          <div v-if="paperData.radioList!==undefined && paperData.radioList.length > 0">
-            <p class="card-title">单选题</p>
+          <div v-if="paperData.radioList !== undefined && paperData.radioList.length > 0">
+            <p class="card-item-title">
+              <strong style="margin-left: 15px">单选题</strong>
+              <span style="float: right; margin-right: 10px; font-size: 12px">
+                (总{{ paperData.radioList.length }}题/共{{ paperData.radioList.length * paperData.radioList[0].score }}分)
+              </span>
+            </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.radioList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)"> {{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.radioList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)"> {{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
-          <div v-if="paperData.multiList!==undefined && paperData.multiList.length > 0">
-            <p class="card-title">多选题</p>
+          <div v-if="paperData.multiList !== undefined && paperData.multiList.length > 0">
+            <p class="card-item-title">
+              <strong style="margin-left: 15px">多选题</strong>
+              <span style="float: right; margin-right: 10px; font-size: 12px">
+                (总{{ paperData.multiList.length }}题/共{{ paperData.multiList.length * paperData.multiList[0].score }}分)
+              </span>
+            </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.multiList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.multiList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
-          <div v-if="paperData.judgeList!==undefined && paperData.judgeList.length > 0">
-            <p class="card-title">判断题</p>
+          <div v-if="paperData.judgeList !== undefined && paperData.judgeList.length > 0">
+            <p class="card-item-title">
+              <strong style="margin-left: 15px">判断题</strong>
+              <span style="float: right; margin-right: 10px; font-size: 12px">
+                (总{{ paperData.judgeList.length }}题/共{{ paperData.judgeList.length * paperData.judgeList[0].score }}分)
+              </span>
+            </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.judgeList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.judgeList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
-          <div v-if="paperData.blankList!==undefined && paperData.blankList.length > 0">
-            <p class="card-title">填空题</p>
+          <div v-if="paperData.blankList !== undefined && paperData.blankList.length > 0">
+            <p class="card-item-title">
+              <strong style="margin-left: 15px">填空题</strong>
+              <span style="float: right; margin-right: 10px; font-size: 12px">
+                (总{{ paperData.blankList.length }}题/共{{ paperData.blankList.length * paperData.blankList[0].score }}分)
+              </span>
+            </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.blankList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.blankList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
-          <div v-if="paperData.wordList!==undefined && paperData.wordList.length > 0">
-            <p class="card-title">操作题</p>
+          <div v-if="paperData.officeQuCount !== undefined && paperData.officeQuCount > 0">
+            <p class="card-item-title">
+              <strong style="margin-left: 15px">操作题</strong>
+              <span style="float: right; margin-right: 10px; font-size: 12px">
+                (总{{ paperData.officeQuCount }}题/共{{ paperData.officeQuScore }}分)
+              </span>
+            </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.wordList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
-              <el-tag v-for="item in paperData.excelList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
-              <el-tag v-for="item in paperData.pptList" :key="item.id" :type="cardItemClass(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.wordList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.excelList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.pptList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
@@ -260,17 +286,27 @@ export default {
     },
 
     // 答题卡样式
-    cardItemClass(answered, quId) {
+    cardItemType(answered, quId) {
       if (quId === this.cardItem.quId) {
         return 'warning'
       }
 
       if (answered) {
-        return 'success'
+        return ''
       }
 
       if (!answered) {
         return 'info'
+      }
+    },
+
+    cardItemEffect(answered, quId) {
+      if (quId === this.cardItem.quId || answered) {
+        return 'dark'
+      }
+
+      if (!answered) {
+        return ''
       }
     },
 
@@ -539,6 +575,13 @@ export default {
 
         // 当前选定
         this.fetchQuData(this.cardItem)
+
+        // 计算操作题的题目数量和总分
+        this.paperData.officeQuCount = this.paperData.wordList.length + this.paperData.excelList.length + this.paperData.pptList.length
+        this.paperData.officeQuScore = 0
+        if (this.paperData.wordList.length !== 0) this.paperData.officeQuScore += this.paperData.wordList.length * this.paperData.wordList[0].score
+        if (this.paperData.excelList.length !== 0) this.paperData.officeQuScore += this.paperData.excelList.length * this.paperData.excelList[0].score
+        if (this.paperData.pptList.length !== 0) this.paperData.officeQuScore += this.paperData.pptList.length * this.paperData.pptList[0].score
       })
     },
 
@@ -643,6 +686,13 @@ export default {
     background: #eee;
     line-height: 35px;
     text-align: center;
+    font-size: 14px;
+  }
+
+  .card-item-title{
+    background: #eee;
+    line-height: 35px;
+    text-align: left;
     font-size: 14px;
   }
   .card-line{
