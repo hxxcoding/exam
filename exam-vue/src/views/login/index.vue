@@ -53,13 +53,13 @@
 
             <el-row :gutter="10">
 
-              <el-col :span="12">
+              <el-col :span="24">
                 <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click="showVerify">登录</el-button>
               </el-col>
 
-              <el-col :span="12">
-                <el-button type="warning" style="width:100%;margin-bottom:30px;" @click.native.prevent="studentRegister">学员注册</el-button>
-              </el-col>
+              <!--              <el-col :span="12">-->
+              <!--                <el-button type="warning" style="width:100%;margin-bottom:30px;" @click.native.prevent="studentRegister">学员注册</el-button>-->
+              <!--              </el-col>-->
 
             </el-row>
 
