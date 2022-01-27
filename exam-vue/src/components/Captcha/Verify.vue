@@ -57,7 +57,7 @@ export default {
     },
     captchaType: {
       type: String,
-      required: true
+      default: 'blockPuzzle'
     },
     figure: {
       type: Number

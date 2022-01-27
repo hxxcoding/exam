@@ -78,6 +78,7 @@ instance.interceptors.response.use(
 /**
  * 上传
  * @param url
+ * @param file
  * @param data
  */
 export function upload(url, file, data) {
@@ -118,6 +119,7 @@ export function upload(url, file, data) {
  * 下载
  * @param url
  * @param data
+ * @param fileName
  */
 export function download(url, data, fileName) {
   return new Promise((resolve, reject) => {

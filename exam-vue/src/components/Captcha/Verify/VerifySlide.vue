@@ -28,12 +28,12 @@
       <span class="verify-msg" v-text="text" />
       <div
         class="verify-left-bar"
-        :style="{width: (leftBarWidth!==undefined)?leftBarWidth: barSize.height, height: barSize.height, 'border-color': leftBarBorderColor, transaction: transitionWidth}"
+        :style="{width: (leftBarWidth !== undefined) ? leftBarWidth: barSize.width, height: barSize.height, 'border-color': leftBarBorderColor, transaction: transitionWidth}"
       >
         <span class="verify-msg" v-text="finishText" />
         <div
           class="verify-move-block"
-          :style="{width: barSize.height, height: barSize.height, 'background-color': moveBlockBackgroundColor, left: moveBlockLeft, transition: transitionLeft}"
+          :style="{width: barSize.width, height: barSize.height, 'background-color': moveBlockBackgroundColor, left: moveBlockLeft, transition: transitionLeft}"
           @touchstart="start"
           @mousedown="start"
         >
@@ -71,7 +71,8 @@ export default {
   name: 'VerifySlide',
   props: {
     captchaType: {
-      type: String
+      type: String,
+      default: 'blockPuzzle'
     },
     type: {
       type: String,
@@ -112,7 +113,7 @@ export default {
       type: Object,
       default() {
         return {
-          width: '310px',
+          width: '40px',
           height: '40px'
         }
       }
@@ -237,7 +238,7 @@ export default {
       }
       this.startLeft = Math.floor(x - this.barArea.getBoundingClientRect().left)
       this.startMoveTime = +new Date() // 开始滑动的时间
-      if (this.isEnd == false) {
+      if (this.isEnd === false) {
         this.text = ''
         this.moveBlockBackgroundColor = '#337ab7'
         this.leftBarBorderColor = '#337AB7'
@@ -275,7 +276,7 @@ export default {
       this.endMovetime = +new Date()
       var _this = this
       // 判断是否重合
-      if (this.status && this.isEnd == false) {
+      if (this.status && this.isEnd === false) {
         var moveLeftDistance = parseInt((this.moveBlockLeft || '').replace('px', ''))
         moveLeftDistance = moveLeftDistance * 310 / parseInt(this.setSize.imgWidth)
         const data = {
@@ -284,14 +285,14 @@ export default {
           'token': this.backToken
         }
         reqCheck(data).then(res => {
-          if (res.repCode == '0000') {
+          if (res.repCode === '0000') {
             this.moveBlockBackgroundColor = '#5cb85c'
             this.leftBarBorderColor = '#5cb85c'
             this.iconColor = '#fff'
             this.iconClass = 'icon-check'
             this.showRefresh = false
             this.isEnd = true
-            if (this.mode == 'pop') {
+            if (this.mode === 'pop') {
               setTimeout(() => {
                 this.$parent.clickShow = false
                 this.refresh()
@@ -357,7 +358,7 @@ export default {
         ts: Date.now() // 现在的时间戳
       }
       reqGet(data).then(res => {
-        if (res.repCode == '0000') {
+        if (res.repCode === '0000') {
           this.backImgBase = res.repData.originalImageBase64
           this.blockBackImgBase = res.repData.jigsawImageBase64
           this.backToken = res.repData.token
@@ -367,7 +368,7 @@ export default {
         }
 
         // 判断接口请求次数是否失效
-        if (res.repCode == '6201') {
+        if (res.repCode === '6201') {
           this.backImgBase = null
           this.blockBackImgBase = null
         }

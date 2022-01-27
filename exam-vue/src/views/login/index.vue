@@ -41,7 +41,7 @@
                 autocomplete="on"
                 @keyup.native="checkCapslock"
                 @blur="capsTooltip = false"
-                @keyup.enter.native="handleLogin"
+                @keyup.enter.native="showVerify"
               />
               <span class="show-pwd" @click="showPwd">
                 <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
@@ -74,7 +74,6 @@
     <verify
       ref="verify"
       :mode="'pop'"
-      :captcha-type="'blockPuzzle'"
       :img-size="{ width: '330px', height: '155px' }"
       @success="handleLogin"
     />
