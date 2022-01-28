@@ -16,6 +16,12 @@ export function userReg(data) {
   return post('/exam/api/sys/user/reg', data)
 }
 
+export function kickout(userName) {
+  return post('/exam/api/sys/user/kickout', {
+    id: userName
+  })
+}
+
 /**
  * 导入模板
  * @param data

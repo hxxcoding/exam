@@ -174,6 +174,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    public void kickout(String userName) {
+        if (userName.equals("*")) { // userName == "*" 强退所有用户
+            RedisUtil.delete(Constant.TOKEN);
+        } else {
+            RedisUtil.hdel(Constant.TOKEN, userName);
+        }
+    }
+
+    @Override
     @CacheEvict(allEntries = true)
     public void update(SysUserDTO reqDTO) {
 

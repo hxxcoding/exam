@@ -13,7 +13,7 @@
 
         <el-input v-model="listQuery.params.userName" style="width: 130px" placeholder="搜索学号" class="filter-item" clearable />
         <el-input v-model="listQuery.params.realName" style="width: 130px" placeholder="搜索姓名" class="filter-item" clearable />
-        <meet-role v-model="listQuery.params.roleIds" style="width: 200px" class="filter-item" />
+        <meet-role v-model="listQuery.params.roleIds" style="width: 130px" class="filter-item" />
         <depart-tree-select
           v-model="listQuery.params.departId"
           class="el-select filter-item el-select--medium"
@@ -22,8 +22,12 @@
           placeholder="请选择班级/学院"
         />
 
-        <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="handleAdd">
+        <el-button class="filter-item" type="primary" size="small" icon="el-icon-plus" @click="handleAdd">
           添加
+        </el-button>
+
+        <el-button class="filter-item" type="warning" size="small" @click="kickout('*')">
+          强退全部用户
         </el-button>
 
         <el-button-group class="filter-item" style="float:  right">
@@ -83,9 +87,17 @@
           align="center"
           label="状态"
         >
-
           <template slot-scope="scope">
-            {{ scope.row.state | stateFilter }}
+            <el-tag :type="scope.row.state === 0 ? '' : 'danger'">{{ scope.row.state | stateFilter }}</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          align="center"
+          label="操作"
+        >
+          <template slot-scope="scope">
+            <el-button size="mini" type="warning" @click="kickout(scope.row.userName)">强制下线</el-button>
           </template>
         </el-table-column>
 
@@ -142,7 +154,7 @@ import MeetRole from '@/components/MeetRole'
 import { saveData } from '@/api/sys/user/user'
 import DepartTreeSelect from '@/components/DepartTreeSelect'
 import { fetchTree } from '@/api/sys/depart/depart'
-import { importTemplate, importExcel } from '@/api/sys/user/user'
+import { kickout, importTemplate, importExcel } from '@/api/sys/user/user'
 
 export default {
   name: 'SysUserList',
@@ -266,6 +278,23 @@ export default {
         }
       }
       return ''
+    },
+
+    kickout(userName) {
+      this.$confirm('确认将用户`' + (userName === '*' ? '全部用户' : userName) + '`强制下线？', '提示', {
+        type: 'warning',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        kickout(userName).then(res => {
+          this.$notify({
+            title: '成功',
+            message: '`' + (userName === '*' ? '全部用户' : userName) + '`已强制下线',
+            type: 'success',
+            duration: 1000
+          })
+        })
+      })
     },
 
     downloadTemplate() {

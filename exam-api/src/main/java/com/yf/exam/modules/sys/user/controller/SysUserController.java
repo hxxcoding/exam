@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yf.exam.core.annon.LogInject;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
+import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.BaseStateReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
@@ -82,6 +83,17 @@ public class SysUserController extends BaseController {
     public ApiRest<?> logout(HttpServletRequest request) {
         String token = request.getHeader("token");
         baseService.logout(token);
+        return super.success();
+    }
+
+    /**
+     * 踢人下线
+     * @return
+     */
+    @ApiOperation(value = "踢人下线")
+    @RequestMapping(value = "/kickout", method = {RequestMethod.POST})
+    public ApiRest<?> kickout(@RequestBody BaseIdReqDTO reqDTO) {
+        baseService.kickout(reqDTO.getId());
         return super.success();
     }
 

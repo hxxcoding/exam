@@ -51,6 +51,12 @@ public interface SysUserService extends IService<SysUser> {
     void logout(String token);
 
     /**
+     * 踢人下线
+     * @param userName 用户登录名
+     */
+    void kickout(String userName);
+
+    /**
      * 修改用户资料
      * @param reqDTO
      */

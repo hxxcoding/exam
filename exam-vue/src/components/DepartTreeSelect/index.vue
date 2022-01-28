@@ -4,6 +4,7 @@
     ref="popover"
     placement="bottom-start"
     trigger="click"
+    style="margin-top: 3px"
     @show="onShowPopover"
     @hide="onHidePopover"
   >
