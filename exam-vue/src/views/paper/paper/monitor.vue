@@ -25,7 +25,7 @@
           placeholder="请选择班级/学院"
         />
 
-        <el-button class="filter-item" type="primary" style="float: right" icon="el-icon-s-promotion" @click="handleOpenDialog">
+        <el-button class="filter-item" type="primary" style="float: right" icon="el-icon-s-promotion" @click="handleOpenDialog('*')">
           发送全员消息
         </el-button>
 
@@ -70,7 +70,7 @@
         >
 
           <template slot-scope="scope">
-            <el-button class="filter-item" type="primary" icon="el-icon-s-promotion" @click="handleOpenDialog(scope.row)">
+            <el-button class="filter-item" type="primary" icon="el-icon-s-promotion" @click="handleOpenDialog(scope.row.id)">
               发送消息
             </el-button>
           </template>
@@ -165,11 +165,9 @@ export default {
 
   methods: {
 
-    handleOpenDialog(row = undefined) {
+    handleOpenDialog(paperId) {
       this.formData = {}
-      if (row !== undefined) {
-        this.formData.paperId = row.id
-      }
+      this.formData.paperId = paperId
       this.dialogVisible = true
     },
 

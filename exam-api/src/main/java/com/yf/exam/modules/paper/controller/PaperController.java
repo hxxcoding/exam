@@ -112,13 +112,13 @@ public class PaperController extends BaseController {
     }
 
     /**
-     * 向正在考试的用户发送信息  paperId == null 即默认向全体铜壶发送
+     * 向正在考试的用户发送信息  if (paperId == "*") sendAll即向全体在考试同学发送
      */
     @ApiOperation(value = "向正在考试的用户发送信息")
     @RequiresPermissions("paper:send-msg")
     @RequestMapping(value = "/send-msg", method = { RequestMethod.POST })
     public ApiRest<List<SysUserDTO>> sendMsgToAll(@RequestBody SendMsgReqDTO reqDTO) {
-        if (reqDTO.getPaperId() == null) {
+        if (reqDTO.getPaperId().equals("*")) { // 全部用户
             PaperWebSocketServer.sendMessageToAll(reqDTO.getMessage());
         } else {
             PaperWebSocketServer.sendMessageToPaper(reqDTO.getPaperId(), reqDTO.getMessage());
