@@ -70,6 +70,8 @@ export default {
           listUrl: '/exam/api',
           // 删除请求URL
           deleteUrl: '',
+          // 删除提示
+          deleteMsg: '确认要删除吗?',
           // 启用禁用
           stateUrl: '',
           // 可批量操作
@@ -213,7 +215,8 @@ export default {
       }
 
       // 删除
-      this.$confirm('确实要删除吗?', '提示', {
+      const delMsg = this.options.deleteMsg === undefined ? '确认删除吗？' : this.options.deleteMsg
+      this.$confirm(delMsg, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

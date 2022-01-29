@@ -196,6 +196,7 @@ export default {
         listUrl: '/exam/api/qu/qu/paging',
         // 删除请求URL
         deleteUrl: '/exam/api/qu/qu/delete',
+        deleteMsg: '删除题目可能导致已作答试卷无法查看,确认删除吗？',
         // 添加数据路由
         addRoute: 'SaveQu'
       }
