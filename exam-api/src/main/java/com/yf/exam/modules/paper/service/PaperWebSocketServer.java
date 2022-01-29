@@ -99,10 +99,10 @@ public class PaperWebSocketServer {
         for (PaperWebSocketServer item : WEB_SOCKET_SET) {
             try {
                 item.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new ServiceException("发送失败");
             }
-            log.info("推送信息内容=>{}", message);
+            log.info("发送消息 => {}", message);
         }
     }
 
@@ -117,6 +117,7 @@ public class PaperWebSocketServer {
         } else {
             throw new ServiceException("用户已离线");
         }
+        log.info("发送消息 => {}", message);
     }
 
     public static Map<String, Session> getSessionPool() {

@@ -117,7 +117,7 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "向正在考试的用户发送信息")
     @RequiresPermissions("paper:send-msg")
     @RequestMapping(value = "/send-msg", method = { RequestMethod.POST })
-    public ApiRest<List<SysUserDTO>> sendMsgToAll(@RequestBody SendMsgReqDTO reqDTO) {
+    public ApiRest<?> sendMsg(@RequestBody SendMsgReqDTO reqDTO) {
         if (reqDTO.getPaperId().equals("*")) { // 全部用户
             PaperWebSocketServer.sendMessageToAll(reqDTO.getMessage());
         } else {
@@ -148,7 +148,7 @@ public class PaperController extends BaseController {
     @ApiOperation(value = "填充答案")
     @RequiresPermissions("paper:fill-answer")
     @RequestMapping(value = "/fill-answer", method = { RequestMethod.POST})
-    public ApiRest<PaperQuDetailDTO> fillAnswer(@RequestBody PaperAnswerDTO reqDTO) {
+    public ApiRest<?> fillAnswer(@RequestBody PaperAnswerDTO reqDTO) {
         //根据ID填充
         baseService.fillAnswer(reqDTO);
         return super.success();
