@@ -66,9 +66,8 @@ public class RepoController extends BaseController {
     @ApiOperation(value = "批量删除")
     @RequiresPermissions("repo:delete")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
-    public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
-        //根据ID删除
-        baseService.removeByIds(reqDTO.getIds());
+    public ApiRest<?> edit(@RequestBody BaseIdsReqDTO reqDTO) {
+        baseService.deleteBatch(reqDTO.getIds());
         return super.success();
     }
 

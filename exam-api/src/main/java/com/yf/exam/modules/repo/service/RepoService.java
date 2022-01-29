@@ -7,6 +7,8 @@ import com.yf.exam.modules.repo.dto.RepoDTO;
 import com.yf.exam.modules.repo.dto.response.RepoRespDTO;
 import com.yf.exam.modules.repo.entity.Repo;
 
+import java.util.List;
+
 /**
 * <p>
 * 题库业务类
@@ -30,6 +32,13 @@ public interface RepoService extends IService<Repo> {
      * @param reqDTO
      */
     void save(RepoDTO reqDTO);
+
+
+    /**
+     * 保存
+     * @param reqDTO
+     */
+    boolean deleteBatch(List<String> ids);
 
     /**
      * 更新统计数量

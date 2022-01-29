@@ -1,17 +1,24 @@
 package com.yf.exam.modules.repo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.utils.BeanMapper;
+import com.yf.exam.modules.qu.entity.QuRepo;
+import com.yf.exam.modules.qu.service.QuRepoService;
 import com.yf.exam.modules.repo.dto.RepoDTO;
 import com.yf.exam.modules.repo.dto.response.RepoRespDTO;
 import com.yf.exam.modules.repo.entity.Repo;
 import com.yf.exam.modules.repo.mapper.RepoMapper;
 import com.yf.exam.modules.repo.service.RepoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
 * <p>
@@ -23,6 +30,9 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class RepoServiceImpl extends ServiceImpl<RepoMapper, Repo> implements RepoService {
+
+    @Autowired
+    private QuRepoService quRepoService;
 
     @Override
     public IPage<RepoRespDTO> paging(PagingReqDTO<RepoDTO> reqDTO) {
@@ -40,6 +50,16 @@ public class RepoServiceImpl extends ServiceImpl<RepoMapper, Repo> implements Re
         Repo entity = new Repo();
         BeanMapper.copy(reqDTO, entity);
         this.saveOrUpdate(entity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteBatch(List<String> ids) {
+        this.removeByIds(ids);
+        // 同步删除quRepo
+        quRepoService.remove(new LambdaQueryWrapper<QuRepo>()
+                .in(QuRepo::getRepoId, ids));
+        return true;
     }
 
     @Override
