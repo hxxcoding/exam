@@ -57,6 +57,12 @@ public interface QuService extends IService<Qu> {
     void save(QuDetailDTO reqDTO);
 
     /**
+     * 批量删除试题 删除试题可能导致已作答试卷试题无法查看
+     * @param reqDTO
+     */
+    boolean deleteBatch(List<String> ids);
+
+    /**
      * 查找导出列表
      * @param query
      * @return

@@ -82,9 +82,9 @@ public class QuController extends BaseController {
     @ApiOperation(value = "批量删除")
     @RequiresPermissions("qu:delete")
     @RequestMapping(value = "/delete", method = {RequestMethod.POST})
-    public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
+    public ApiRest<?> deleteBatch(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
-        baseService.removeByIds(reqDTO.getIds());
+        baseService.deleteBatch(reqDTO.getIds());
         return super.success();
     }
 

@@ -1,6 +1,6 @@
 package com.yf.exam.modules.qu.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -16,7 +16,9 @@ import com.yf.exam.modules.qu.dto.export.QuExportDTO;
 import com.yf.exam.modules.qu.dto.ext.QuDetailDTO;
 import com.yf.exam.modules.qu.dto.request.QuQueryReqDTO;
 import com.yf.exam.modules.qu.entity.Qu;
+import com.yf.exam.modules.qu.entity.QuAnswer;
 import com.yf.exam.modules.qu.entity.QuAnswerOffice;
+import com.yf.exam.modules.qu.entity.QuRepo;
 import com.yf.exam.modules.qu.enums.QuType;
 import com.yf.exam.modules.qu.mapper.QuMapper;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
@@ -40,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -143,6 +146,32 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
         quRepoService.saveAll(qu.getId(), qu.getQuType(), reqDTO.getRepoIds());
 
 
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteBatch(List<String> ids) {
+        for (String quId : ids) {
+            Qu qu = this.getById(quId);
+            // 同时删除题目答案
+            if (qu.getQuType().equals(QuType.RADIO) || qu.getQuType().equals(QuType.MULTI) || qu.getQuType().equals(QuType.JUDGE)) {
+                quAnswerService.remove(new LambdaQueryWrapper<QuAnswer>().eq(QuAnswer::getQuId, quId));
+            }
+            if (qu.getQuType().equals(QuType.WORD) || qu.getQuType().equals(QuType.EXCEL) || qu.getQuType().equals(QuType.PPT)) {
+                quAnswerOfficeService.remove(new LambdaQueryWrapper<QuAnswerOffice>().eq(QuAnswerOffice::getQuId, quId));
+            }
+            List<QuRepo> quRepoList = quRepoService.list(new LambdaQueryWrapper<QuRepo>().eq(QuRepo::getQuId, quId));
+            if (quRepoList != null) {
+                List<String> repoIds = quRepoList.stream().map(QuRepo::getRepoId).collect(Collectors.toList());
+                // 删除题库关联
+                quRepoService.remove(new LambdaQueryWrapper<QuRepo>().eq(QuRepo::getQuId, quId));
+                // 更新题库数量
+                repoIds.forEach(repoId -> repoService.refreshStat(repoId));
+            }
+            // 最后删除题目
+            this.removeById(quId);
+        }
+        return true;
     }
 
     @Override
