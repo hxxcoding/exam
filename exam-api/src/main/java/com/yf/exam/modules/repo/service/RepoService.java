@@ -26,17 +26,15 @@ public interface RepoService extends IService<Repo> {
     */
     IPage<RepoRespDTO> paging(PagingReqDTO<RepoDTO> reqDTO);
 
-
     /**
      * 保存
      * @param reqDTO
      */
     void save(RepoDTO reqDTO);
 
-
     /**
-     * 保存
-     * @param reqDTO
+     * 批量删除
+     * @param ids 需要删除的id列表
      */
     boolean deleteBatch(List<String> ids);
 
@@ -45,7 +43,6 @@ public interface RepoService extends IService<Repo> {
      * @param repoId
      */
     void refreshStat(String repoId);
-
 
     /**
      * 根据名称查找题库
