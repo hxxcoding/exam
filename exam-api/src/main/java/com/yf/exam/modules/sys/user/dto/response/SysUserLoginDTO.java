@@ -49,6 +49,9 @@ public class SysUserLoginDTO implements Serializable {
     @ApiModelProperty(value = "角色列表", required=true)
     private List<String> roles;
 
+    @ApiModelProperty(value = "权限列表", required=true)
+    private List<String> perms;
+
     @ApiModelProperty(value = "登录令牌", required=true)
     private String token;
     

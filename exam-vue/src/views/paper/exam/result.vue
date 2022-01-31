@@ -1,7 +1,7 @@
 <template>
   <div id="pdfDom" class="app-container">
 
-    <el-button v-permission="['sa', 'teacher']" @click="saveToPdf">保存为PDF</el-button>
+    <el-button v-role="['sa', 'teacher']" @click="saveToPdf">保存为PDF</el-button>
     <h2 class="text-center">{{ paperData.title }}</h2>
     <el-descriptions column="4" :content-style="{'text-align': 'center'}" :label-style="{'text-align': 'center'}" border>
       <el-descriptions-item label="考生姓名">{{ paperData.userId_real_name }}</el-descriptions-item>

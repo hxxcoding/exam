@@ -6,13 +6,13 @@ export default {
     const roles = store.getters && store.getters.roles
 
     if (value && value instanceof Array && value.length > 0) {
-      const permissionRoles = value
+      const needRoles = value
 
-      const hasPermission = roles.some(role => {
-        return permissionRoles.includes(role)
+      const hasRole = roles.some(role => {
+        return needRoles.includes(role)
       })
 
-      if (!hasPermission) {
+      if (!hasRole) {
         el.parentNode && el.parentNode.removeChild(el)
       }
     } else {

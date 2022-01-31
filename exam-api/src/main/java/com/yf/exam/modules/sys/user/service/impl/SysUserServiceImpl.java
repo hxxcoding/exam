@@ -30,6 +30,7 @@ import com.yf.exam.modules.sys.user.dto.request.SysUserSaveReqDTO;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
 import com.yf.exam.modules.sys.user.entity.SysUser;
 import com.yf.exam.modules.sys.user.mapper.SysUserMapper;
+import com.yf.exam.modules.sys.user.service.SysRoleMenuService;
 import com.yf.exam.modules.sys.user.service.SysUserRoleService;
 import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.UserUtils;
@@ -42,10 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
 * <p>
@@ -61,6 +59,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     private SysUserRoleService sysUserRoleService;
+    @Autowired
+    private SysRoleMenuService sysRoleMenuService;
     @Autowired
     private SysDepartService sysDepartService;
     @Autowired
@@ -300,8 +300,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         // 填充角色
         List<String> roles = sysUserRoleService.listRoles(user.getId());
+        Set<String> perms = new HashSet<>();
+        roles.forEach(role -> perms.addAll(sysRoleMenuService.listPermsByRoleId(role)));
         respDTO.setRoles(roles);
-
+        respDTO.setPerms(new ArrayList<>(perms));
         return respDTO;
     }
 

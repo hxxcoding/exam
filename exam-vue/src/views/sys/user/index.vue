@@ -26,7 +26,7 @@
           添加
         </el-button>
 
-        <el-button class="filter-item" type="warning" size="small" @click="kickout('*')">
+        <el-button v-perm="['sys:user:kickout']" class="filter-item" type="warning" size="small" @click="kickout('*')">
           强退全部用户
         </el-button>
 
@@ -97,7 +97,7 @@
           label="操作"
         >
           <template slot-scope="scope">
-            <el-button size="mini" type="warning" @click="kickout(scope.row.userName)">强制下线</el-button>
+            <el-button v-perm="['sys:user:kickout']" size="mini" type="warning" @click="kickout(scope.row.userName)">强制下线</el-button>
           </template>
         </el-table-column>
 

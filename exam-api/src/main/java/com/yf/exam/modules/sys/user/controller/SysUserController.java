@@ -91,6 +91,7 @@ public class SysUserController extends BaseController {
      * @return
      */
     @ApiOperation(value = "踢人下线")
+    @RequiresPermissions("sys:user:kickout")
     @RequestMapping(value = "/kickout", method = {RequestMethod.POST})
     public ApiRest<?> kickout(@RequestBody BaseIdReqDTO reqDTO) {
         baseService.kickout(reqDTO.getId());

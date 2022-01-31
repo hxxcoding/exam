@@ -10,6 +10,7 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
+  perms: [],
   departId: ''
 }
 
@@ -34,6 +35,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_PERMS: (state, perms) => {
+    state.perms = perms
   },
   SET_DEPART_ID: (state, departId) => {
     state.departId = departId
@@ -84,7 +88,7 @@ const actions = {
           reject('校验失败，请重新登录！.')
         }
 
-        const { id, roles, userName, realName, avatar, introduction, departId } = data
+        const { id, roles, perms, userName, realName, avatar, introduction, departId } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -93,6 +97,7 @@ const actions = {
 
         commit('SET_ID', id)
         commit('SET_ROLES', roles)
+        commit('SET_PERMS', perms)
         commit('SET_REAL_NAME', realName)
         commit('SET_NAME', userName)
         commit('SET_AVATAR', avatar)
@@ -111,6 +116,7 @@ const actions = {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
+        commit('SET_PERMS', [])
         removeToken()
         resetRouter()
 
@@ -130,6 +136,7 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
+      commit('SET_PERMS', [])
       removeToken()
       resolve()
     })
