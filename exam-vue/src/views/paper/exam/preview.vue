@@ -123,9 +123,9 @@ export default {
       if (!this.handleSeatInputChange()) {
         return
       }
-      if (this.detailData.examType === 1 && (this.postForm.password === null || this.postForm.password === '')) {
+      if (this.detailData.examType === 1 && this.detailData.isStart && (this.postForm.password === null || this.postForm.password === '')) {
         this.$message({
-          message: '请重新输入考试密码!',
+          message: '请输入考试密码!',
           type: 'warning'
         })
         return

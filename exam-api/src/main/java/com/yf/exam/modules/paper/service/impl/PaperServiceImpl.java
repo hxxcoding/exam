@@ -381,6 +381,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 if(item.getRadioCount() > 0){
                     List<Qu> radioList = quService.listByRandom(item.getRepoId(), QuType.RADIO, level, excludes,
                             item.getRadioCount());
+                    if (item.getRadioCount() > radioList.size()) { // 题目不足
+                        throw new ServiceException(1, "考试题库`单选题`题目数量不足,请联系监考老师!");
+                    }
                     for (Qu qu : radioList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -392,6 +395,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 if(item.getMultiCount() > 0) {
                     List<Qu> multiList = quService.listByRandom(item.getRepoId(), QuType.MULTI, level, excludes,
                             item.getMultiCount());
+                    if (item.getMultiCount() > multiList.size()) { // 题目不足
+                        throw new ServiceException(1, "考试题库`多选题`题目数量不足,请联系监考老师!");
+                    }
                     for (Qu qu : multiList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -403,6 +409,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 if(item.getJudgeCount() > 0) {
                     List<Qu> judgeList = quService.listByRandom(item.getRepoId(), QuType.JUDGE, level, excludes,
                             item.getJudgeCount());
+                    if (item.getJudgeCount() > judgeList.size()) { // 题目不足
+                        throw new ServiceException(1, "考试题库`判断题`题目数量不足,请联系监考老师!");
+                    }
                     for (Qu qu : judgeList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -414,6 +423,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 if(item.getBlankCount() > 0) {
                     List<Qu> blankList = quService.listByRandom(item.getRepoId(), QuType.BLANK, level, excludes,
                             item.getBlankCount());
+                    if (item.getBlankCount() > blankList.size()) { // 题目不足
+                        throw new ServiceException(1, "考试题库`填空题`题目数量不足,请联系监考老师!");
+                    }
                     for (Qu qu : blankList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -425,6 +437,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 if(item.getSaqCount() > 0) {
                     List<Qu> saqList = quService.listByRandom(item.getRepoId(), QuType.SAQ, level, excludes,
                             item.getSaqCount());
+                    if (item.getSaqCount() > saqList.size()) { // 题目不足
+                        throw new ServiceException(1, "考试题库`简答题`题目数量不足,请联系监考老师!");
+                    }
                     for (Qu qu : saqList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -436,6 +451,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 if(item.getWordCount() > 0) {
                     List<Qu> wordList = quService.listByRandom(item.getRepoId(), QuType.WORD, level, excludes,
                             item.getWordCount());
+                    if (item.getWordCount() > wordList.size()) { // 题目不足
+                        throw new ServiceException(1, "考试题库`word题`题目数量不足,请联系监考老师!");
+                    }
                     for (Qu qu : wordList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -447,6 +465,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 if(item.getExcelCount() > 0) {
                     List<Qu> excelList = quService.listByRandom(item.getRepoId(), QuType.EXCEL, level, excludes,
                             item.getExcelCount());
+                    if (item.getExcelCount() > excelList.size()) { // 题目不足
+                        throw new ServiceException(1, "考试题库`excel题`题目数量不足,请联系监考老师!");
+                    }
                     for (Qu qu : excelList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
@@ -458,6 +479,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 if(item.getPptCount() > 0) {
                     List<Qu> pptList = quService.listByRandom(item.getRepoId(), QuType.PPT, level, excludes,
                             item.getPptCount());
+                    if (item.getPptCount() > pptList.size()) { // 题目不足
+                        throw new ServiceException(1, "考试题库`ppt题`题目数量不足,请联系监考老师!");
+                    }
                     for (Qu qu : pptList) {
                         PaperQu paperQu = this.processPaperQu(item, qu);
                         quList.add(paperQu);
