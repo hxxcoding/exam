@@ -5,6 +5,7 @@
       :action="server"
       :accept="accept"
       :before-remove="beforeRemove"
+      :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleSuccess"
       :on-exceed="handleExceed"
@@ -86,6 +87,14 @@ export default {
     // 删除文件之前的钩子
     beforeRemove() {
       return this.$confirm(`确定移除文件吗？`, `提示`)
+    },
+
+    beforeUpload(file) {
+      const isOversize = file.size / 1024 / 1024 < 10
+      if (!isOversize) {
+        this.$message.error('超出文件大小限制, 上传文件大小限制为10MB!')
+      }
+      return isOversize
     },
 
     // 文件列表移除文件时的钩子
