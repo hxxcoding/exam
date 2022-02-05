@@ -102,6 +102,12 @@
         <input ref="upFile" class="file" name="file" type="file" style="display: none" @change="doImport">
       </el-row>
 
+      <el-alert
+        title="导入试题暂仅支持`选择题``判断题`导入！"
+        type="warning"
+        style="margin-top: 20px"
+      />
+
     </el-dialog>
 
   </div>

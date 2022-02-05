@@ -25,11 +25,6 @@
         </el-form-item>
         <el-form-item label="题目内容" prop="content">
           <tinymce-editor v-model="postForm.content" />
-          <el-alert
-            title="请勿直接粘贴`带格式文本`,否则数据量过大可能导致`无法插入`,建议粘贴`无格式文本`后,在`富文本编辑器`中设置格式！"
-            type="error"
-            style="margin-top: 10px"
-          />
         </el-form-item>
 
         <el-form-item label="试题附件">

@@ -34,7 +34,8 @@ export default {
         height: 150, // 编辑器高度
         branding: false, // 是否禁用“Powered by TinyMCE”
         paste_data_images: true, // 允许粘贴图像
-        plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media kityformula-editor template code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount imagetools textpattern help emoticons autosave bdmap indent2em autoresize formatpainter axupimgs',
+        paste_as_text: true,
+        plugins: 'paste print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media kityformula-editor template code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount imagetools textpattern help emoticons autosave bdmap indent2em autoresize formatpainter axupimgs',
         toolbar: 'code preview |' +
           ' fullscreen |' +
           ' forecolor backcolor bold italic underline strikethrough link anchor |' +
