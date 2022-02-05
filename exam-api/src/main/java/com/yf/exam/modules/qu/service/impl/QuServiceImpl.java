@@ -231,13 +231,16 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
                 qu.setAnalysis(im.getQAnalysis());
                 qu.setQuType(Integer.parseInt(im.getQuType()));
                 qu.setCreateTime(new Date());
-
-                //设置回答列表
-                List<QuAnswerDTO> answerList = this.processAnswerList(anMap.get(key));
-                //设置题目
-                qu.setAnswerList(answerList);
+                if (im.getQuType().equals(QuType.BLANK.toString())) { // 如果是填空题
+                    qu.setAnswer(im.getQAnswer());
+                } else {
+                    //设置回答列表
+                    List<QuAnswerDTO> answerList = this.processAnswerList(anMap.get(key));
+                    //设置题目
+                    qu.setAnswerList(answerList);
+                }
                 //设置引用题库
-                qu.setRepoIds(im.getRepoList()); // TODO 可以改为Excel输入题库名称，目前是输入题库ID
+                qu.setRepoIds(im.getRepoList());
                 // 保存答案
                 this.save(qu);
                 count++;
@@ -245,7 +248,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
 
         } catch (ServiceException e) {
             e.printStackTrace();
-            throw new ServiceException(1, "导入出现问题，行：" + count + "，" + e.getMessage());
+            throw new ServiceException(1, "导入出现问题，行：" + count + "，" + e.getMsg());
         }
 
         return count;
@@ -288,6 +291,12 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
 
         if (CollectionUtils.isEmpty(qu.getRepoIds())) {
             throw new ServiceException(1, no + "至少要选择一个题库！");
+        } else {
+            qu.getRepoIds().forEach(repoId -> {
+                if (repoService.getById(repoId) == null) {
+                    throw new ServiceException(1, no + "不存在提供的题库ID！");
+                }
+            });
         }
 
         List<QuAnswerDTO> answers = qu.getAnswerList();
@@ -300,18 +309,20 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
 
 
         int trueCount = 0;
-        for (QuAnswerDTO a : answers) {
+        if (answers != null) {
+            for (QuAnswerDTO a : answers) {
 
-            if (a.getIsRight() == null) {
-                throw new ServiceException(1, no + "必须定义选项是否正确项！");
-            }
+                if (a.getIsRight() == null) {
+                    throw new ServiceException(1, no + "必须定义选项是否正确项！");
+                }
 
-            if (StringUtils.isEmpty(a.getContent())) {
-                throw new ServiceException(1, no + "选项内容不为空！");
-            }
+                if (StringUtils.isEmpty(a.getContent())) {
+                    throw new ServiceException(1, no + "选项内容不为空！");
+                }
 
-            if (a.getIsRight()) {
-                trueCount += 1;
+                if (a.getIsRight()) {
+                    trueCount += 1;
+                }
             }
         }
 
@@ -349,32 +360,31 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
                 continue;
             }
 
-            Integer no;
+            int no;
             try {
                 no = Integer.parseInt(item.getNo());
             } catch (Exception e) {
                 line++;
                 continue;
             }
-            if (no == null) {
-                sb.append("第").append(line).append("行题目序号不能为空/");
-            }
             if (quNo == null || !quNo.equals(no)) {
                 if (item.getQuType().equals("")) {
-                    sb.append("第").append(line).append("行题目类型不能为空/");
+                    sb.append("第").append(line).append("行题目类型不能为空");
                 }
                 if (org.apache.commons.lang3.StringUtils.isBlank(item.getQContent())) {
-                    sb.append("第").append(line).append("行题目内容不能为空/");
+                    sb.append("第").append(line).append("行题目内容不能为空");
                 }
                 if (CollectionUtils.isEmpty(item.getRepoList())) {
-                    sb.append("第").append(line).append("行题目必须包含一个题库/");
+                    sb.append("第").append(line).append("行题目必须包含一个题库");
                 }
             }
-            if (org.apache.commons.lang3.StringUtils.isBlank(item.getAIsRight())) {
-                sb.append("第").append(line).append("行选项是否正确不能为空/");
-            }
-            if (org.apache.commons.lang3.StringUtils.isBlank(item.getAContent()) && org.apache.commons.lang3.StringUtils.isBlank(item.getAImage())) {
-                sb.append("第").append(line).append("行选项内容和选项图片必须有一个不为空/");
+            if (!item.getQuType().equals(QuType.BLANK.toString())) { // 不是填空题
+                if (org.apache.commons.lang3.StringUtils.isBlank(item.getAIsRight())) {
+                    sb.append("第").append(line).append("行选项是否正确不能为空");
+                }
+                if (org.apache.commons.lang3.StringUtils.isBlank(item.getAContent()) && org.apache.commons.lang3.StringUtils.isBlank(item.getAImage())) {
+                    sb.append("第").append(line).append("行选项内容和选项图片必须有一个不为空");
+                }
             }
             quNo = no;
             line++;

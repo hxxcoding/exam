@@ -83,14 +83,14 @@ public class ExportExcel {
 		Field[] fs = cls.getDeclaredFields();
 		for (Field f : fs){
 			ExcelField ef = f.getAnnotation(ExcelField.class);
-			if (ef != null && (ef.type()==0 || ef.type()==type)){
-				if (groups!=null && groups.length>0){
+			if (ef != null && (ef.type() == 0 || ef.type() == type)){
+				if (groups != null && groups.length > 0){
 					boolean inGroup = false;
-					for (int g : groups){
-						if (inGroup){
+					for (int g : groups) {
+						if (inGroup) {
 							break;
 						}
-						for (int efg : ef.groups()){
+						for (int efg : ef.groups()) {
 							if (g == efg){
 								inGroup = true;
 								annotationList.add(new Object[]{ef, f});
@@ -98,7 +98,7 @@ public class ExportExcel {
 							}
 						}
 					}
-				}else{
+				} else {
 					annotationList.add(new Object[]{ef, f});
 				}
 			}
@@ -140,7 +140,7 @@ public class ExportExcel {
 		for (Object[] os : annotationList){
 			String t = ((ExcelField)os[0]).title();
 			// 如果是导出，则去掉注释
-			if (type==1){
+			if (type == 1){
 				String[] ss = StringUtils.split(t, "**", 2);
 				if (ss.length==2){
 					t = ss[0];
@@ -179,19 +179,19 @@ public class ExportExcel {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellStyle(styles.get("header"));
 			String[] ss = StringUtils.split(headerList.get(i), "**", 2);
-			if (ss.length==2){
+			if (ss.length == 2) {
 				cell.setCellValue(ss[0]);
 				Comment comment = this.sheet.createDrawingPatriarch().createCellComment(
 						new XSSFClientAnchor(0, 0, 0, 0, (short) 3, 3, (short) 5, 6));
 				comment.setString(new XSSFRichTextString(ss[1]));
 				cell.setCellComment(comment);
-			}else{
+			} else {
 				cell.setCellValue(headerList.get(i));
 			}
 		}
 		for (int i = 0; i < headerList.size(); i++) {  
 			int colWidth = sheet.getColumnWidth(i)*2;
-	        sheet.setColumnWidth(i, colWidth < 3000 ? 3000 : colWidth);  
+	        sheet.setColumnWidth(i, Math.max(colWidth, 3000));
 		}
 		log.debug("Initialize success.");
 	}

@@ -38,7 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -260,10 +260,11 @@ public class QuController extends BaseController {
             l1.setNo("正式导入，请删除此说明行：数字，相同的数字表示同一题的序列");
             l1.setQContent("问题内容");
             l1.setQAnalysis("整个问题的解析");
-            l1.setQuType("只能填写1、2、3、4、5；1表示单选题，2表示多选题，3表示判断题，4表示操作题，5表示填空题");
+            l1.setQuType("只能填写1、2、3、4、5；1表示单选题，2表示多选题，3表示判断题，5表示填空题");
             l1.setQImage("题目附件，完整URL"); // TODO
+            l1.setQAnswer("多个答案用英文`;`分割, 非填空题请留空");
             l1.setAImage("答案图片，完整URL，只限一个");
-            l1.setRepoList(Arrays.asList(new String[]{"已存在题库的ID，多个用逗号隔开，题库ID错误无法导入"}));
+            l1.setRepoList(Collections.singletonList("已存在题库的ID，多个用逗号隔开，题库ID错误无法导入"));
             l1.setAContent("候选答案1");
             l1.setAIsRight("只能填写0或1，0表示否，1表示是");
             l1.setAAnalysis("这个项是正确的");
@@ -290,12 +291,18 @@ public class QuController extends BaseController {
             l4.setAContent("数字：6");
             l4.setAAnalysis("6除以2=3，对的");
 
-
+            QuExportDTO l5 = new QuExportDTO();
+            l5.setNo("2");
+            l5.setQuType("5");
+            l5.setQContent("32位计算机地址大小是多少");
+            l5.setQAnalysis("32位二进制数的大小为4G");
+            l5.setQAnswer("4G;4g;4GB;4gb");
 
             list.add(l1);
             list.add(l2);
             list.add(l3);
             list.add(l4);
+            list.add(l5);
 
             new ExportExcel("试题数据", QuExportDTO.class, 1).setDataList(list).write(response, fileName).dispose();
         } catch (Exception e) {

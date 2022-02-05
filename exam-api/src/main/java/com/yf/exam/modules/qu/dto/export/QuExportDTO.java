@@ -32,12 +32,14 @@ public class QuExportDTO {
     private String qImage;
     @ExcelField(title="所属题库", align=2, sort=6, fieldType = ListType.class)
     private List<String> repoList;
-    @ExcelField(title="是否正确项", align=2, sort=7)
+    @ExcelField(title="填空题答案", align=2, sort=7)
+    private String qAnswer;
+    @ExcelField(title="是否正确项", align=2, sort=8)
     private String aIsRight;
-    @ExcelField(title="选项内容", align=2, sort=8)
+    @ExcelField(title="选项内容", align=2, sort=9)
     private String aContent;
-    @ExcelField(title="选项解析", align=2, sort=9)
+    @ExcelField(title="选项解析", align=2, sort=10)
     private String aAnalysis;
-    @ExcelField(title="选项图片", align=2, sort=10)
+    @ExcelField(title="选项图片", align=2, sort=11)
     private String aImage;
 }
