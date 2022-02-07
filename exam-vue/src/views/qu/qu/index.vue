@@ -99,6 +99,9 @@
       <el-row>
         <el-button type="primary" @click="chooseFile">上传导入</el-button>
         <el-button type="warning" @click="downloadTemplate">下载导入模板</el-button>
+        <a :href="quFormatConversionFileUrl" style="margin-left: 10px">
+          <el-button type="warning">下载试题转换模板</el-button>
+        </a>
         <input ref="upFile" class="file" name="file" type="file" style="display: none" @change="doImport">
       </el-row>
 
@@ -177,6 +180,8 @@ export default {
           label: 'PPT操作题'
         }
       ],
+
+      quFormatConversionFileUrl: 'http://1.14.65.11/upload/file/static/qu/import/qu-import-template-choice-qu-format-conversion.xlsm',
 
       options: {
 
