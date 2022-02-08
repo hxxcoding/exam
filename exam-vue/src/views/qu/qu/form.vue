@@ -543,7 +543,7 @@ export default {
           this.pptSlidesAnalyze()
         }
         if (this.postForm.quType === 5 && this.postForm.answer !== null) {
-          this.blankAnswerTags = this.postForm.answer.split(',')
+          this.blankAnswerTags = this.postForm.answer.split(';')
         }
       })
     },
@@ -600,7 +600,7 @@ export default {
         } else {
           this.postForm.answer = ''
           this.blankAnswerTags.forEach(tag => {
-            this.postForm.answer += tag + ','
+            this.postForm.answer += tag + ';'
           })
           this.postForm.answer = this.postForm.answer.substring(0, this.postForm.answer.length - 1)
         }

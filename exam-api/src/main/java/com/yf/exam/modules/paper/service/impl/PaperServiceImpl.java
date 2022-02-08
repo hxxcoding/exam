@@ -660,7 +660,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             if (!StringUtils.isBlank(reqDTO.getAnswer())) {
                 Qu blankQu = quService.getOne(new QueryWrapper<Qu>()
                         .lambda().eq(Qu::getId, reqDTO.getQuId()));
-                String[] answers = blankQu.getAnswer().split(",");
+                String[] answers = blankQu.getAnswer().split(";");
                 for (String answer : answers) {
                     if (reqDTO.getAnswer().equals(answer)) {
                         right = true;
