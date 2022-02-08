@@ -1,6 +1,7 @@
 package com.yf.exam;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
@@ -8,9 +9,11 @@ import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
 import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.qu.entity.Qu;
+import com.yf.exam.modules.qu.entity.QuAnswer;
 import com.yf.exam.modules.qu.entity.QuAnswerOffice;
 import com.yf.exam.modules.qu.enums.QuType;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
+import com.yf.exam.modules.qu.service.QuAnswerService;
 import com.yf.exam.modules.qu.service.QuService;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
@@ -27,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PaperTest {
 
@@ -35,6 +38,8 @@ public class PaperTest {
     private PaperService examService;
     @Autowired
     private QuAnswerOfficeService quAnswerOfficeService;
+    @Autowired
+    private QuAnswerService quAnswerService;
     @Autowired
     private QuService quService;
 
@@ -119,5 +124,17 @@ public class PaperTest {
                 .setMethod("getFunction").setPos("H2").setAnswer("SUM(D2:F2)").setScore(4));
         quAnswerOfficeService.save(new QuAnswerOffice().setQuId(qu.getId())
                 .setMethod("getNumValue").setPos("D10").setAnswer("1590.8333333333333").setScore(3));
+    }
+
+    /**
+     * 删除选项内容前后的空格和换行
+     */
+    @Test
+    public void trimString() {
+        List<QuAnswer> list = quAnswerService.list();
+        list.forEach(item -> {
+            item.setContent(item.getContent().trim());
+        });
+        quAnswerService.updateBatchById(list);
     }
 }
