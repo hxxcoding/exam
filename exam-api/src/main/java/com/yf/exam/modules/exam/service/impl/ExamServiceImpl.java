@@ -50,6 +50,8 @@ import java.util.List;
 @CacheConfig(cacheNames = "exam", keyGenerator = "keyGenerator")
 public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements ExamService {
 
+    @Autowired
+    private ExamService examService;
 
     @Autowired
     private ExamRepoService examRepoService;
@@ -138,10 +140,9 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
      * @param id examId
      */
     @Override
-    @Cacheable(sync = true)
     public ExamDTO findById(String id) {
         ExamDTO respDTO = new ExamDTO();
-        Exam exam = this.getById(id);
+        Exam exam = examService.getById(id);
         BeanMapper.copy(exam, respDTO);
         return respDTO;
     }
@@ -165,10 +166,9 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
      * @param examId 考试ID
      */
     @Override
-    @Cacheable(sync = true)
     public ExamPreviewRespDTO onlinePreview(String examId) {
         ExamPreviewRespDTO respDTO = new ExamPreviewRespDTO();
-        Exam exam = this.getById(examId);
+        Exam exam = examService.getById(examId);
         BeanMapper.copy(exam, respDTO);
         Paper paper = paperService.getOne(new QueryWrapper<Paper>()
                 .lambda().eq(Paper::getUserId, UserUtils.getUserId())
@@ -290,5 +290,11 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
     @CacheEvict(allEntries = true)
     public boolean removeByIds(Collection<? extends Serializable> idList) {
         return super.removeByIds(idList);
+    }
+
+    @Override
+    @Cacheable(sync = true)
+    public Exam getById(Serializable id) {
+        return super.getById(id);
     }
 }
