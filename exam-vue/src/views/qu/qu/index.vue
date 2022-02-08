@@ -106,7 +106,7 @@
       </el-row>
 
       <el-alert
-        title="导入试题暂仅支持`选择题``判断题`导入！"
+        title="导入试题暂仅支持`选择题``判断题``填空题`导入！"
         type="warning"
         style="margin-top: 20px"
       />
@@ -181,7 +181,7 @@ export default {
         }
       ],
 
-      quFormatConversionFileUrl: 'http://1.14.65.11/upload/file/static/qu/import/qu-import-template-choice-qu-format-conversion.xlsm',
+      quFormatConversionFileUrl: `${process.env.VUE_APP_BASE_API}/upload/file/static/qu/import/qu-import-template-choice-qu-format-conversion.xlsm`,
 
       options: {
 

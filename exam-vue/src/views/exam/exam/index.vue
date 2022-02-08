@@ -41,6 +41,8 @@
       <el-table-column
         label="考试名称"
         prop="title"
+        align="center"
+        show-overflow-tooltip
       />
 
       <el-table-column
