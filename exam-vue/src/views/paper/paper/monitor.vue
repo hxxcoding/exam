@@ -22,7 +22,7 @@
           class="el-select filter-item el-select--medium"
           :options="treeData"
           :props="defaultProps"
-          placeholder="请选择班级/学院"
+          placeholder="请选择学期/教师/选课号"
         />
 
         <el-button class="filter-item" type="primary" style="float: right" icon="el-icon-s-promotion" @click="handleOpenDialog('*')">
@@ -54,7 +54,7 @@
 
         <el-table-column
           align="center"
-          label="班级/学院"
+          label="选课号"
           prop="departId_dept_name"
         />
 

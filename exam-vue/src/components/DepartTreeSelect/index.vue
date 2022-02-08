@@ -10,7 +10,7 @@
   >
     <el-tree
       ref="tree"
-      placeholder="选择班级/学院"
+      placeholder="选择学期/教师/选课号"
       class="select-tree"
       check-strictly="false"
       highlight-current

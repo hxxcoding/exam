@@ -3,7 +3,7 @@
     <el-form-item label="用户名">
       <el-input v-model.trim="user.name" readonly />
     </el-form-item>
-    <el-form-item label="班级/学院">
+    <el-form-item label="选课号">
       <el-input v-model.trim="deptName" readonly />
     </el-form-item>
     <el-form-item label="密码">

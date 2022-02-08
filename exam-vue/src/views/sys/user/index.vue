@@ -19,7 +19,7 @@
           class="el-select filter-item el-select--medium"
           :options="treeData"
           :props="defaultProps"
-          placeholder="请选择班级/学院"
+          placeholder="请选择学期/教师/选课号"
         />
 
         <el-button class="filter-item" type="primary" size="small" icon="el-icon-plus" @click="handleAdd">
@@ -63,7 +63,7 @@
 
         <el-table-column
           align="center"
-          label="班级/学院"
+          label="选课号"
           prop="deptName"
         >
           <template slot-scope="scope">
@@ -120,7 +120,7 @@
           <el-input v-model="formData.password" placeholder="不修改请留空" type="password" />
         </el-form-item>
 
-        <el-form-item label="部门">
+        <el-form-item label="选课号">
           <depart-tree-select v-model="formData.departId" :options="treeData" :props="defaultProps" />
         </el-form-item>
 

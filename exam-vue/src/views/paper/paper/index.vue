@@ -18,7 +18,7 @@
           :options="treeData"
           :props="defaultProps"
           width="200px"
-          placeholder="请选择班级/学院"
+          placeholder="请选择学期/教师/选课号"
         />
         <el-select v-model="listQuery.params.state" placeholder="考试状态" class="filter-item" clearable>
           <el-option
@@ -61,7 +61,7 @@
         />
 
         <el-table-column
-          label="部门"
+          label="选课号"
           align="center"
           prop="departId_dept_name"
         />

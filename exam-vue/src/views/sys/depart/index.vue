@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
 
-      <el-input v-model="listQuery.params.deptName" style="width: 200px" placeholder="搜索班级/学院/学校名称" class="filter-item" />
+      <el-input v-model="listQuery.params.deptName" style="width: 200px" placeholder="搜索学期/教师/选课号" class="filter-item" clearable />
 
       <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="formDialog(0)">
         添加
