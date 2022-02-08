@@ -7,16 +7,16 @@
   >
     <template slot="filter-content">
 
-      <el-select v-model="listQuery.params.openType" class="filter-item" placeholder="开放类型" clearable>
-        <el-option
-          v-for="item in openTypes"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+      <!--      <el-select v-model="listQuery.params.openType" class="filter-item" placeholder="开放类型" clearable>-->
+      <!--        <el-option-->
+      <!--          v-for="item in openTypes"-->
+      <!--          :key="item.value"-->
+      <!--          :label="item.label"-->
+      <!--          :value="item.value"-->
+      <!--        />-->
+      <!--      </el-select>-->
 
-      <el-input v-model="listQuery.params.title" placeholder="搜索考试名称" style="width: 200px;" class="filter-item" />
+      <!--      <el-input v-model="listQuery.params.title" placeholder="搜索考试名称" style="width: 200px;" class="filter-item" />-->
 
     </template>
 
@@ -26,30 +26,29 @@
         label="考试名称"
         prop="title"
         align="center"
-        show-overflow-tooltip
       />
 
       <el-table-column
-        label="考试类型"
-        align="center"
-      >
-        <template slot-scope="scope">
-          {{ scope.row.openType | examOpenType }}
-        </template>
-
-      </el-table-column>
-
-      <el-table-column
         label="考试时间"
-        width="265px"
         align="center"
       >
 
         <template slot-scope="scope">
           <span v-if="scope.row.timeLimit">
-            {{ scope.row.startTime }} ~ {{ scope.row.endTime }}
+            {{ scope.row.startTime }} ~ {{ scope.row.endTime }}(总时长{{ scope.row.totalTime }}分钟)
           </span>
-          <span v-else>不限时</span>
+          <span v-else>不限开始时间(总时长{{ scope.row.totalTime }}分钟)</span>
+        </template>
+
+      </el-table-column>
+
+      <el-table-column
+        label="考试类型"
+        align="center"
+        width="100"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.examType | examType }}
         </template>
 
       </el-table-column>
@@ -57,24 +56,14 @@
       <el-table-column
         label="次数限制"
         align="center"
+        width="100"
       >
 
         <template slot-scope="scope">
           <span v-if="scope.row.tryLimit">
-            {{ scope.row.limitTimes }}次
+            限{{ scope.row.limitTimes }}次
           </span>
           <span v-else>不限次</span>
-        </template>
-
-      </el-table-column>
-
-      <el-table-column
-        label="考试时长"
-        align="center"
-      >
-
-        <template slot-scope="scope">
-          {{ scope.row.totalTime }}分钟
         </template>
 
       </el-table-column>
@@ -83,17 +72,20 @@
         label="考试总分"
         prop="totalScore"
         align="center"
+        width="100"
       />
 
       <el-table-column
         label="及格线"
         prop="qualifyScore"
         align="center"
+        width="100"
       />
 
       <el-table-column
         label="操作"
         align="center"
+        width="120"
       >
         <template slot-scope="scope">
           <el-button v-if="scope.row.state===0" icon="el-icon-caret-right" type="primary" size="mini" @click="handlePre(scope.row.id)">去考试</el-button>
