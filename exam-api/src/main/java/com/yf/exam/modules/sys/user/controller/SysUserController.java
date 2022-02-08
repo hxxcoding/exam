@@ -10,6 +10,7 @@ import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.BaseStateReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
+import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.excel.ExportExcel;
 import com.yf.exam.core.utils.excel.ImportExcel;
 import com.yf.exam.modules.sys.user.dto.SysUserDTO;
@@ -228,13 +229,12 @@ public class SysUserController extends BaseController {
      */
     @RequestMapping(value = "import/template")
     @RequiresPermissions("sys:user:import:template")
-    public ApiRest importFileTemplate(HttpServletResponse response) {
+    public void importFileTemplate(HttpServletResponse response) {
         try {
             String fileName = "用户导入模板.xlsx";
             new ExportExcel("用户数据", SysUserExportDTO.class, 1).write(response, fileName).dispose();
-            return super.success();
         } catch (Exception e) {
-            return super.failure("导入模板下载失败！失败信息："+e.getMessage());
+            throw new ServiceException("导入模板下载失败！失败信息："+e.getMessage());
         }
     }
 

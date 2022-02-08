@@ -358,19 +358,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             wrapper.lambda().eq(SysUser::getUserName, item.getUserName());
             SysUser user = this.getOne(wrapper);
             if (user != null) {
-                sb.append("第").append(line).append("行用户名已存在/");
+                sb.append("第").append(line).append("行用户名已存在");
             }
             if (org.apache.commons.lang3.StringUtils.isBlank(item.getRealName())) {
-                sb.append("第").append(line).append("行姓名不能为空/");
+                sb.append("第").append(line).append("行姓名不能为空");
             }
             if (org.apache.commons.lang3.StringUtils.isBlank(item.getDeptName())) {
-                sb.append("第").append(line).append("行班级不能为空/");
+                sb.append("第").append(line).append("行选课号不能为空");
             } else {
                 // 根据 deptName 获取 departId
                 SysDepart depart = sysDepartService.getOne(new QueryWrapper<SysDepart>()
                         .lambda().eq(SysDepart::getDeptName, item.getDeptName().trim()));
                 if (depart == null) {
-                    sb.append("第").append(line).append("行\"班级\"不存在,请先添加该班级/");
+                    sb.append("第").append(line).append("行\"选课号\"不存在,请先添加该课程(班级)");
                 } else {
                     item.setDepartId(depart.getId());
                 }
