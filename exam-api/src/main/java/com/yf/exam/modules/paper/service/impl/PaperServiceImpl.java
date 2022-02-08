@@ -351,8 +351,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         respDTO.setImage(qu.getImage());
 
         // 答案列表
-        List<PaperQuAnswerExtDTO> list = paperQuAnswerService.listForExam(paperId, quId);
-        respDTO.setAnswerList(list);
+        if (qu.getQuType().equals(QuType.RADIO) || qu.getQuType().equals(QuType.MULTI) || qu.getQuType().equals(QuType.JUDGE)) {
+            List<PaperQuAnswerExtDTO> list = paperQuAnswerService.listForExam(paperId, quId);
+            respDTO.setAnswerList(list);
+        }
 
         return respDTO;
     }
