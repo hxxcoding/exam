@@ -45,9 +45,6 @@ import java.util.List;
 * <p>
 * 考试业务实现类
 * </p>
-*
-* @author 聪明笨狗
-* @since 2020-07-25 16:18
 */
 @Service
 @CacheConfig(cacheNames = "exam", keyGenerator = "keyGenerator")
@@ -115,8 +112,11 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
 
     }
 
+    /**
+     * 修改考试页面 查询detail
+     * @param id examId
+     */
     @Override
-    @Cacheable(sync = true)
     public ExamSaveReqDTO findDetail(String id) {
         ExamSaveReqDTO respDTO = new ExamSaveReqDTO();
         Exam exam = this.getById(id);
@@ -133,6 +133,10 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
         return respDTO;
     }
 
+    /**
+     * 根据 examId 查找考试
+     * @param id examId
+     */
     @Override
     @Cacheable(sync = true)
     public ExamDTO findById(String id) {
@@ -142,8 +146,10 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
         return respDTO;
     }
 
+    /**
+     * `考试管理`页面分页查询
+     */
     @Override
-    @Cacheable(sync = true)
     public IPage<ExamDTO> paging(PagingReqDTO<ExamDTO> reqDTO) {
 
         //创建分页对象
@@ -154,7 +160,12 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
         return pageData;
      }
 
+    /**
+     * 点击`去考试`后的考试预览页面
+     * @param examId 考试ID
+     */
     @Override
+    @Cacheable(sync = true)
     public ExamPreviewRespDTO onlinePreview(String examId) {
         ExamPreviewRespDTO respDTO = new ExamPreviewRespDTO();
         Exam exam = this.getById(examId);
@@ -172,6 +183,9 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
         return respDTO;
     }
 
+    /**
+     * `在线考试`页面的分页数据
+     */
     @Override
     @Cacheable
     public IPage<ExamOnlineRespDTO> onlinePaging(PagingReqDTO<ExamDTO> reqDTO) {
