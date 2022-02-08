@@ -195,6 +195,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             //查找规则选定的题库
             quList = this.generateByRepo(examId, exam.getLevel());
         }
+        quList.sort(Comparator.comparingInt(PaperQu::getQuType));
 
         if(CollectionUtils.isEmpty(quList)){
             throw new ServiceException(1, "规则不正确，无对应的考题！");
