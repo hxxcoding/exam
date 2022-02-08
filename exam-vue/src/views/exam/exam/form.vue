@@ -344,8 +344,8 @@ export default {
           { required: true, message: '考试时间不能为空！' }
         ],
 
-        tryLimit: [
-          { required: true, message: '次数限制不能为空！' }
+        limitTimes: [
+          { required: true, message: '限制次数不能为空！' }
         ],
 
         ruleId: [
