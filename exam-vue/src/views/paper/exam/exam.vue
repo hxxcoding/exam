@@ -34,7 +34,7 @@
               </span>
             </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.radioList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)"> {{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.radioList" :key="item.id" style="width: 35px; text-align: center" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
@@ -46,7 +46,7 @@
               </span>
             </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.multiList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.multiList" :key="item.id" style="width: 35px; text-align: center" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
@@ -58,7 +58,7 @@
               </span>
             </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.judgeList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.judgeList" :key="item.id" style="width: 35px; text-align: center" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
@@ -70,7 +70,7 @@
               </span>
             </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.blankList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.blankList" :key="item.id" style="width: 35px; text-align: center" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
@@ -82,9 +82,9 @@
               </span>
             </p>
             <el-row :gutter="24" class="card-line">
-              <el-tag v-for="item in paperData.wordList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
-              <el-tag v-for="item in paperData.excelList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
-              <el-tag v-for="item in paperData.pptList" :key="item.id" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.wordList" :key="item.id" style="width: 35px; text-align: center" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.excelList" :key="item.id" style="width: 35px; text-align: center" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
+              <el-tag v-for="item in paperData.pptList" :key="item.id" style="width: 35px; text-align: center" :type="cardItemType(item.answered, item.quId)" :effect="cardItemEffect(item.answered, item.quId)" @click="handSave(item)">{{ item.sort+1 }}</el-tag>
             </el-row>
           </div>
 
