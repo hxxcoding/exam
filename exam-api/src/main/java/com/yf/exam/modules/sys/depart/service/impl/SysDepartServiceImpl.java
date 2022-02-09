@@ -46,7 +46,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
     @CacheEvict(allEntries = true)
     public void save(SysDepartDTO reqDTO) {
 
-        if(StringUtils.isBlank(reqDTO.getId())) {
+        if(StringUtils.isBlank(reqDTO.getId()) || this.getById(reqDTO.getId()) == null) {
             this.fillCode(reqDTO);
         }else{
             reqDTO.setSort(null);

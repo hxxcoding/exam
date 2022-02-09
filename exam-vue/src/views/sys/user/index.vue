@@ -120,12 +120,12 @@
           <el-input v-model="formData.password" placeholder="不修改请留空" type="password" />
         </el-form-item>
 
-        <el-form-item label="选课号">
-          <depart-tree-select v-model="formData.departId" :options="treeData" :props="defaultProps" />
-        </el-form-item>
-
         <el-form-item label="角色">
           <meet-role v-model="formData.roles" />
+        </el-form-item>
+
+        <el-form-item v-if="formData.roles !== undefined && !contains(formData.roles, 'teacher')" label="选课号">
+          <depart-tree-select v-model="formData.departId" :options="treeData" :props="defaultProps" />
         </el-form-item>
 
         <!--        <el-form-item label="头像" prop="avatar">-->
@@ -303,6 +303,15 @@ export default {
 
     chooseFile: function() {
       this.$refs.upFile.dispatchEvent(new MouseEvent('click'))
+    },
+
+    contains(array, obj) {
+      for (let i = 0; i < array.length; i++) {
+        if (array[i] === obj) {
+          return true
+        }
+      }
+      return false
     },
 
     doImport(e) {

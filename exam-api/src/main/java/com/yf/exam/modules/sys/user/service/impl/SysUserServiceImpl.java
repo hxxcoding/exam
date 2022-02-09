@@ -6,6 +6,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -22,6 +23,7 @@ import com.yf.exam.core.utils.passwd.PassHandler;
 import com.yf.exam.core.utils.passwd.PassInfo;
 import com.yf.exam.modules.Constant;
 import com.yf.exam.modules.shiro.jwt.JwtUtils;
+import com.yf.exam.modules.sys.depart.dto.SysDepartDTO;
 import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import com.yf.exam.modules.sys.user.dto.SysUserDTO;
@@ -29,6 +31,7 @@ import com.yf.exam.modules.sys.user.dto.export.SysUserExportDTO;
 import com.yf.exam.modules.sys.user.dto.request.SysUserSaveReqDTO;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
 import com.yf.exam.modules.sys.user.entity.SysUser;
+import com.yf.exam.modules.sys.user.enums.RoleType;
 import com.yf.exam.modules.sys.user.mapper.SysUserMapper;
 import com.yf.exam.modules.sys.user.service.SysRoleMenuService;
 import com.yf.exam.modules.sys.user.service.SysUserRoleService;
@@ -183,7 +186,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     public void update(SysUserDTO reqDTO) {
 
 
@@ -199,7 +201,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    @CacheEvict(allEntries = true)
     public void save(SysUserSaveReqDTO reqDTO) {
 
         List<String> roles = reqDTO.getRoles();
@@ -208,9 +209,26 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ServiceException(ApiError.ERROR_90010003);
         }
 
+        if (this.count(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUserName, reqDTO.getUserName())) != 0) {
+            throw new ServiceException("用户名已存在!");
+        }
+
+        String departId = null;
+        if (reqDTO.getId() == null && roles.contains(RoleType.TEACHER)) {
+            departId = IdWorker.getIdStr();
+            SysDepartDTO depart = new SysDepartDTO();
+            depart.setParentId("0");
+            depart.setDeptName(reqDTO.getUserName() + "-" + reqDTO.getRealName());
+            depart.setId(departId);
+            sysDepartService.save(depart);
+        }
+
         // 保存基本信息
         SysUser user = new SysUser();
         BeanMapper.copy(reqDTO, user);
+        if (departId != null) {
+            user.setDepartId(departId);
+        }
 
         // 添加模式
         if(StringUtils.isBlank(user.getId())){
@@ -228,12 +246,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         String roleIds = sysUserRoleService.saveRoles(user.getId(), roles);
         user.setRoleIds(roleIds);
         this.saveOrUpdate(user);
-    }
-
-    @Override
-    @CacheEvict(allEntries = true)
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
-        return super.removeByIds(idList);
     }
 
     @Transactional(rollbackFor = Exception.class)
