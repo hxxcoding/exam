@@ -240,7 +240,6 @@ export default {
       this.dialogVisible = true
       this.formData = row
       this.formData.roles = row.roleIds.split(',')
-      this.formData.password = null
     },
 
     departSelected(data) {

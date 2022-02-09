@@ -210,7 +210,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ServiceException(ApiError.ERROR_90010003);
         }
 
-        if (this.count(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUserName, reqDTO.getUserName())) != 0) {
+        if (reqDTO.getId() == null && this.count(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUserName, reqDTO.getUserName())) != 0) {
             throw new ServiceException("用户名已存在!");
         }
 
