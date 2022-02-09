@@ -66,9 +66,7 @@ public class SysDepartController extends BaseController {
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
     public ApiRest deleteBatch(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除 级联删除子项目
-        List<String> ids = new ArrayList<>();
-        reqDTO.getIds().forEach(id -> ids.addAll(baseService.listAllSubIds(id)));
-        baseService.removeByIds(ids);
+        baseService.deleteBatch(reqDTO.getIds());
         return super.success();
     }
 

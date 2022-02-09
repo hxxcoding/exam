@@ -69,6 +69,12 @@ public interface SysUserService extends IService<SysUser> {
     void save(SysUserSaveReqDTO reqDTO);
 
     /**
+     * 批量删除用户
+     * @param reqDTO
+     */
+    void deleteBatch(List<String> ids);
+
+    /**
      * 用户注册
      * @param reqDTO
      */

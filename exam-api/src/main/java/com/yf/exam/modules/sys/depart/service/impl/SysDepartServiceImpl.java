@@ -14,10 +14,12 @@ import com.yf.exam.modules.sys.depart.mapper.SysDepartMapper;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
@@ -35,6 +37,8 @@ import java.util.*;
 @CacheConfig(cacheNames = "sysDepart", keyGenerator = "keyGenerator")
 public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart> implements SysDepartService {
 
+    @Autowired
+    private SysDepartService sysDepartService;
 
     /**
      * 0标识为顶级分类
@@ -56,6 +60,14 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         SysDepart entity = new SysDepart();
         BeanMapper.copy(reqDTO, entity);
         this.saveOrUpdate(entity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteBatch(List<String> ids) {
+        List<String> departIds = new ArrayList<>();
+        ids.forEach(id -> departIds.addAll(sysDepartService.listAllSubIds(id)));
+        sysDepartService.removeByIds(departIds);
     }
 
     @Override

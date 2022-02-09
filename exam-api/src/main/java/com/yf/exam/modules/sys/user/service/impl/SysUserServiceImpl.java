@@ -31,6 +31,7 @@ import com.yf.exam.modules.sys.user.dto.export.SysUserExportDTO;
 import com.yf.exam.modules.sys.user.dto.request.SysUserSaveReqDTO;
 import com.yf.exam.modules.sys.user.dto.response.SysUserLoginDTO;
 import com.yf.exam.modules.sys.user.entity.SysUser;
+import com.yf.exam.modules.sys.user.entity.SysUserRole;
 import com.yf.exam.modules.sys.user.enums.RoleType;
 import com.yf.exam.modules.sys.user.mapper.SysUserMapper;
 import com.yf.exam.modules.sys.user.service.SysRoleMenuService;
@@ -246,6 +247,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         String roleIds = sysUserRoleService.saveRoles(user.getId(), roles);
         user.setRoleIds(roleIds);
         this.saveOrUpdate(user);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteBatch(List<String> ids) {
+        List<String> departIds = new ArrayList<>();
+        ids.forEach(id -> {
+            SysUser user = this.getById(id);
+            if (user.getRoleIds().contains(RoleType.TEACHER)) { // 如果是教师用户 需要保存departId以供删除
+                departIds.add(user.getDepartId());
+            }
+        });
+        sysDepartService.deleteBatch(departIds);
+        sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>().in(SysUserRole::getUserId, ids));
+        this.removeByIds(ids);
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -26,6 +26,12 @@ public interface SysDepartService extends IService<SysDepart> {
     void save(SysDepartDTO reqDTO);
 
     /**
+     * 批量删除
+     * @param ids
+     */
+    void deleteBatch(List<String> ids);
+
+    /**
     * 分页查询数据
     * @param reqDTO
     * @return
