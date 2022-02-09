@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,9 +64,11 @@ public class SysDepartController extends BaseController {
     @ApiOperation(value = "批量删除")
     @RequiresPermissions("sys:depart:delete")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
-    public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
-        //根据ID删除
-        baseService.removeByIds(reqDTO.getIds());
+    public ApiRest deleteBatch(@RequestBody BaseIdsReqDTO reqDTO) {
+        //根据ID删除 级联删除子项目
+        List<String> ids = new ArrayList<>();
+        reqDTO.getIds().forEach(id -> ids.addAll(baseService.listAllSubIds(id)));
+        baseService.removeByIds(ids);
         return super.success();
     }
 
