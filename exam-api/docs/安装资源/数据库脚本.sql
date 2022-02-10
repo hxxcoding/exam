@@ -158,7 +158,6 @@ CREATE TABLE `el_paper_qu` (
   `actual_score` int(11) NOT NULL DEFAULT '0' COMMENT '实际得分(主观题)',
   `is_right` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否答对',
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `paper_id` (`paper_id`) USING BTREE,
   KEY `qu_id` (`qu_id`) USING BTREE,
   KEY `paper_qu_id` (`paper_id`,`qu_id`) USING BTREE,
   KEY `sort` (`sort`) USING BTREE
@@ -254,7 +253,6 @@ CREATE TABLE `el_paper_qu_answer` (
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `abc` varchar(64) NOT NULL DEFAULT '' COMMENT '选项标签',
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `paper_id` (`paper_id`) USING BTREE,
   KEY `qu_id` (`qu_id`) USING BTREE,
   KEY `paper_qu_id` (`paper_id`,`qu_id`) USING BTREE,
   KEY `sort` (`sort`) USING BTREE
