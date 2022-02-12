@@ -122,6 +122,7 @@ import DataTable from '@/components/DataTable'
 import RepoSelect from '@/components/RepoSelect'
 import { batchAction } from '@/api/qu/repo'
 import { exportExcel, importExcel, importTemplate } from '@/api/qu/qu'
+import { checkPerms } from '@/utils/permission'
 
 export default {
   name: 'QuList',
@@ -192,15 +193,18 @@ export default {
         multiActions: [
           {
             value: 'delete',
-            label: '删除'
+            label: '删除',
+            hasPerm: checkPerms(['qu:delete'])
           },
           {
             value: 'update-repo',
-            label: '修改所属题库..'
+            label: '修改所属题库..',
+            hasPerm: checkPerms(['repo:batch-action'])
           },
           {
             value: 'remove-repo',
-            label: '从..题库移除'
+            label: '从..题库移除',
+            hasPerm: checkPerms(['repo:batch-action'])
           }
         ],
         // 列表请求URL
