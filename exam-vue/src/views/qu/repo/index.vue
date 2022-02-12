@@ -89,6 +89,7 @@
 
 <script>
 import DataTable from '@/components/DataTable'
+import { checkPerms } from '@/utils/permission'
 
 export default {
   name: 'QuList',
@@ -113,7 +114,8 @@ export default {
         multiActions: [
           {
             value: 'delete',
-            label: '删除'
+            label: '删除',
+            hasPerm: checkPerms(['repo:delete'])
           }
         ],
         // 列表请求URL
