@@ -228,7 +228,7 @@ public class SysUserController extends BaseController {
      * 用户导入数据模板
      */
     @RequestMapping(value = "import/template")
-    @RequiresPermissions("sys:user:import:template")
+    @RequiresPermissions("sys:user:import")
     public void importFileTemplate(HttpServletResponse response) {
         try {
             String fileName = "用户导入模板.xlsx";

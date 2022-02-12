@@ -22,7 +22,7 @@
           placeholder="请选择学期/教师/选课号"
         />
 
-        <el-button class="filter-item" type="primary" size="small" icon="el-icon-plus" @click="handleAdd">
+        <el-button v-perm="['sys:user:save']" class="filter-item" type="primary" size="small" icon="el-icon-plus" @click="handleAdd">
           添加
         </el-button>
 
@@ -31,8 +31,8 @@
         </el-button>
 
         <el-button-group class="filter-item" style="float:  right">
-          <el-button size="mini" icon="el-icon-download" @click="downloadTemplate">下载导入模版</el-button>
-          <el-button size="mini" icon="el-icon-upload2" @click="chooseFile">导入</el-button>
+          <el-button v-perm="['sys:user:import']" size="mini" icon="el-icon-download" @click="downloadTemplate">下载导入模版</el-button>
+          <el-button v-perm="['sys:user:import']" size="mini" icon="el-icon-upload2" @click="chooseFile">导入</el-button>
           <input ref="upFile" class="file" name="file" type="file" style="display: none" @change="doImport">
         </el-button-group>
 
@@ -202,14 +202,17 @@ export default {
         multiActions: [
           {
             value: 'enable',
-            label: '启用'
+            label: '启用',
+            hasPerm: ['sys:user:state']
           }, {
             value: 'disable',
-            label: '禁用'
+            label: '禁用',
+            hasPerm: ['sys:user:state']
           },
           {
             value: 'delete',
-            label: '删除'
+            label: '删除',
+            hasPerm: ['sys:user:delete']
           }
         ]
       },

@@ -10,6 +10,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-perm="['sys:menu:save']"
           type="primary"
           plain
           icon="el-icon-plus"
@@ -44,8 +45,8 @@
       </el-table-column>
       <el-table-column align="center" label="排序" width="90">
         <template slot-scope="scope">
-          <el-button title="向下排序" size="mini" icon="el-icon-sort-down" circle @click="handleSort(scope.row.id, 1)" />
-          <el-button title="向上排序" size="mini" icon="el-icon-sort-up" circle @click="handleSort(scope.row.id, 0)" />
+          <el-button v-perm="['sys:menu:sort']" title="向下排序" size="mini" icon="el-icon-sort-down" circle @click="handleSort(scope.row.id, 1)" />
+          <el-button v-perm="['sys:menu:sort']" title="向上排序" size="mini" icon="el-icon-sort-up" circle @click="handleSort(scope.row.id, 0)" />
         </template>
       </el-table-column>
       <el-table-column align="center" prop="perms" label="权限标识" :show-overflow-tooltip="true" />
@@ -62,18 +63,21 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="220">
         <template slot-scope="scope">
           <el-button
+            v-perm="['sys:menu:save']"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
           >修改</el-button>
           <el-button
+            v-perm="['sys:menu:save']"
             size="mini"
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
           >新增</el-button>
           <el-button
+            v-perm="['sys:menu:delete']"
             size="mini"
             type="text"
             icon="el-icon-delete"

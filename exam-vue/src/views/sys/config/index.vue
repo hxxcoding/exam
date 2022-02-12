@@ -24,7 +24,7 @@
         <!--        </el-form-item>-->
 
         <el-row>
-          <el-button type="primary" @click="submitForm">保存</el-button>
+          <el-button v-perm="['sys:config:save']" type="primary" @click="submitForm">保存</el-button>
         </el-row>
 
       </el-card>

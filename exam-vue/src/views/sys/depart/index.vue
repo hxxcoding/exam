@@ -4,7 +4,7 @@
 
       <el-input v-model="listQuery.params.deptName" style="width: 200px" placeholder="搜索学期/教师/选课号" class="filter-item" clearable />
 
-      <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="formDialog(0)">
+      <el-button v-perm="['sys:depart:save']" class="filter-item" type="primary" icon="el-icon-plus" @click="formDialog(0)">
         添加
       </el-button>
 
@@ -24,16 +24,16 @@
 
       <el-table-column align="center" label="排序">
         <template slot-scope="scope">
-          <el-button title="向下排序" size="small" icon="el-icon-sort-down" circle @click="handleSort(scope.row.id, 1)" />
-          <el-button title="向上排序" size="small" icon="el-icon-sort-up" circle @click="handleSort(scope.row.id, 0)" />
+          <el-button v-perm="['sys:depart:sort']" title="向下排序" size="small" icon="el-icon-sort-down" circle @click="handleSort(scope.row.id, 1)" />
+          <el-button v-perm="['sys:depart:sort']" title="向上排序" size="small" icon="el-icon-sort-up" circle @click="handleSort(scope.row.id, 0)" />
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作项">
         <template slot-scope="scope">
-          <el-button size="small" icon="el-icon-plus" circle @click="formDialog(scope.row.id)" />
-          <el-button size="small" icon="el-icon-edit" circle @click="formDialog(scope.row.parentId, scope.row.id)" />
-          <el-button size="small" icon="el-icon-delete" circle @click="handleDelete(scope.row.id)" />
+          <el-button v-perm="['sys:depart:save']" size="small" icon="el-icon-plus" circle @click="formDialog(scope.row.id)" />
+          <el-button v-perm="['sys:depart:save']" size="small" icon="el-icon-edit" circle @click="formDialog(scope.row.parentId, scope.row.id)" />
+          <el-button v-perm="['sys:depart:delete']" size="small" icon="el-icon-delete" circle @click="handleDelete(scope.row.id)" />
         </template>
       </el-table-column>
 

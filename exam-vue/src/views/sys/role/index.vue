@@ -23,7 +23,7 @@
 
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.id !== 'sa'" type="text" icon="el-icon-unlock" @click="handleUpdate(scope.row)">菜单授权</el-button>
+            <el-button v-if="scope.row.id !== 'sa'" v-perm="['sys:menu:list-tree-by-role']" type="text" icon="el-icon-unlock" @click="handleUpdate(scope.row)">菜单授权</el-button>
           </template>
         </el-table-column>
 
@@ -60,7 +60,7 @@
       />
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button v-perm="['sys:role:menu:update']" type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
