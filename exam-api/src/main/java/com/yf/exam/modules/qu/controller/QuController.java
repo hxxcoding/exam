@@ -249,7 +249,7 @@ public class QuController extends BaseController {
     /**
      * 下载导入试题数据模板
      */
-    @RequiresPermissions("qu:import:template")
+    @RequiresPermissions("qu:import")
     @RequestMapping(value = "import/template")
     public void importFileTemplate(HttpServletResponse response) {
         try {

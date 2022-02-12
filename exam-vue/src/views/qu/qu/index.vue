@@ -27,8 +27,8 @@
             <el-input v-model="listQuery.params.content" placeholder="题目内容" style="width: 200px;" class="filter-item" />
 
             <el-button-group class="filter-item" style="float:  right">
-              <el-button size="mini" icon="el-icon-upload2" @click="showImport">导入</el-button>
-              <el-button size="mini" icon="el-icon-download" @click="exportExcel">导出</el-button>
+              <el-button v-perm="['qu:import']" size="mini" icon="el-icon-upload2" @click="showImport">导入</el-button>
+              <el-button v-perm="['qu:export']" size="mini" icon="el-icon-download" @click="exportExcel">导出</el-button>
             </el-button-group>
 
           </el-col>
@@ -209,7 +209,8 @@ export default {
         deleteUrl: '/exam/api/qu/qu/delete',
         deleteMsg: '删除题目可能导致已作答试卷无法查看,确认删除吗？',
         // 添加数据路由
-        addRoute: 'SaveQu'
+        addRoute: 'SaveQu',
+        addPerm: ['qu:save']
       }
     }
   },
