@@ -123,7 +123,8 @@ export default {
         // 启用禁用
         stateUrl: '/qu/repo/state',
         // 添加数据路由
-        addRoute: 'SaveRepo'
+        addRoute: 'SaveRepo',
+        addPerm: ['repo:save']
       }
     }
   },

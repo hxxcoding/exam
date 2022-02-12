@@ -16,7 +16,7 @@
       </el-card>
 
       <div style="margin-top: 20px">
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button v-perm="['repo:save']" type="primary" @click="submitForm">保存</el-button>
         <el-button type="info" @click="onCancel">返回</el-button>
       </div>
 
