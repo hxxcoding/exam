@@ -32,7 +32,7 @@
         <el-input v-model="listQuery.params.userName" placeholder="搜索学号" style="width: 200px;" class="filter-item" clearable />
 
         <el-button-group class="filter-item" style="float:  right">
-          <el-button size="mini" icon="el-icon-download" @click="exportExcel">导出成绩</el-button>
+          <el-button v-perm="['paper:export']" size="mini" icon="el-icon-download" @click="exportExcel">导出成绩</el-button>
         </el-button-group>
 
       </template>
