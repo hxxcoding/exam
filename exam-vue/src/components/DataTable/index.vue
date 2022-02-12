@@ -7,7 +7,7 @@
 
       <el-row>
         <el-col>
-          <el-button v-if="options.addRoute" type="primary" icon="el-icon-plus" @click="handleAdd">添加</el-button>
+          <el-button v-if="options.addRoute" v-perm="options.addPerm" type="primary" icon="el-icon-plus" @click="handleAdd">添加</el-button>
         </el-col>
       </el-row>
 
