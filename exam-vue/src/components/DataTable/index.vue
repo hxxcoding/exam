@@ -17,7 +17,7 @@
 
       <el-select v-model="multiNow" :placeholder="selectedLabel" class="filter-item" style="width: 130px" @change="handleOption">
         <el-option
-          v-for="item in options.multiActions"
+          v-for="item in options.multiActions !== undefined ? options.multiActions.filter(action => action.hasPerm !== false) : options.multiActions"
           :key="item.value"
           :label="item.label"
           :value="item.value"

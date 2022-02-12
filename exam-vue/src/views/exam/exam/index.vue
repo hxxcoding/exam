@@ -137,6 +137,7 @@
 
 <script>
 import DataTable from '@/components/DataTable'
+import { checkPerms } from '@/utils/permission'
 
 export default {
   name: 'ExamList',
@@ -170,14 +171,18 @@ export default {
         multiActions: [
           {
             value: 'delete',
-            label: '删除'
+            label: '删除',
+            hasPerm: checkPerms(['exam:delete'])
+            // hasPerm: this.hasPerm('exam:delete')
           }, {
             value: 'enable',
-            label: '启用'
+            label: '启用',
+            hasPerm: checkPerms(['exam:state'])
           },
           {
             value: 'disable',
-            label: '禁用'
+            label: '禁用',
+            hasPerm: checkPerms(['exam:state'])
           }
         ],
         // 列表请求URL
