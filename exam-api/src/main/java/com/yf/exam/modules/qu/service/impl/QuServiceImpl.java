@@ -299,14 +299,20 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
             });
         }
 
-        List<QuAnswerDTO> answers = qu.getAnswerList();
-
-
-        if (CollectionUtils.isEmpty(answers)
-                && !qu.getQuType().equals(QuType.BLANK) && qu.getQuType() < QuType.WORD) {
-            throw new ServiceException(1, no + "客观题至少要包含一个备选答案！");
+        List<QuAnswerDTO> answers = null;
+        if (qu.getQuType().equals(QuType.RADIO) || qu.getQuType().equals(QuType.MULTI) || qu.getQuType().equals(QuType.JUDGE)) {
+            answers = qu.getAnswerList();
+            if (CollectionUtils.isEmpty(answers)) {
+                throw new ServiceException(1, no + "客观题至少要包含一个备选答案！");
+            }
         }
-
+        List<QuAnswerOfficeDTO> officeAnswers = null;
+        if (qu.getQuType().equals(QuType.WORD) || qu.getQuType().equals(QuType.EXCEL) || qu.getQuType().equals(QuType.PPT)) {
+            officeAnswers = qu.getOfficeAnswerList();
+            if (CollectionUtils.isEmpty(officeAnswers)) {
+                throw new ServiceException(1, no + "操作题至少要包含一个判分点！");
+            }
+        }
 
         int trueCount = 0;
         if (answers != null) {
@@ -322,6 +328,20 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
 
                 if (a.getIsRight()) {
                     trueCount += 1;
+                }
+            }
+        }
+        if (officeAnswers != null) {
+            for (QuAnswerOfficeDTO a : officeAnswers) {
+
+                if (StringUtils.isEmpty(a.getMethod())) {
+                    throw new ServiceException(1, no + "判分方法不能为空!");
+                }
+                if (StringUtils.isEmpty(a.getAnswer())) {
+                    throw new ServiceException(1, no + "判分点答案不能为空!");
+                }
+                if (StringUtils.isEmpty(a.getScore())) {
+                    throw new ServiceException(1, no + "判分点分数不能为空!");
                 }
             }
         }
