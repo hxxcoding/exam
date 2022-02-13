@@ -502,9 +502,6 @@ export default {
 
     handleTypeChange(v) {
       this.postForm.answerList = []
-      if (v === 5) { // 填空题
-        this.postForm.answerList.push({ isRight: true, content: '', analysis: '填空题答案内容请使用英文半角符号\';\'分割。例如 1;2;3;' })
-      }
 
       if (v === 3) {
         this.postForm.answerList.push({ isRight: true, content: '正确', analysis: '' })
@@ -592,7 +589,7 @@ export default {
       if (this.postForm.quType === 5) {
         if (this.blankAnswerTags.length === 0) {
           this.$message({
-            message: '填空题不能没有正确项！',
+            message: '填空题不能没有答案！',
             type: 'warning'
           })
 
