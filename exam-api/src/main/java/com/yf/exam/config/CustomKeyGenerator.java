@@ -36,8 +36,12 @@ public class CustomKeyGenerator implements KeyGenerator {
             } else if (ClassUtils.isPrimitiveOrWrapper(param.getClass()) || param instanceof String) {
                 key.append(param);
             } else {
-                log.warn("Using an object as a cache key may lead to unexpected results. " +
-                        "Either use @Cacheable(key=..) or implement CacheKey. Method is " + target.getClass() + "#" + method.getName());
+                try {
+                    param.getClass().getDeclaredMethod("hashCode"); // if override hashCode method
+                } catch (NoSuchMethodException e) {
+                    log.warn("Using an object as a cache key without overwriting the hashCode method may lead to unexpected results. " +
+                            "Either use @Cacheable(key=..) or implement CacheKey. Method is " + target.getClass() + "#" + method.getName());
+                }
                 key.append(param.hashCode());
             }
             key.append('-');
@@ -46,7 +50,7 @@ public class CustomKeyGenerator implements KeyGenerator {
         String finalKey = key.toString();
         long cacheKeyHash = Hashing.murmur3_128().hashString(finalKey, Charset.defaultCharset()).asLong();
         log.debug("using cache key={} hashCode={}", finalKey, cacheKeyHash);
-        return key.toString();
+        return finalKey;
     }
 
 }

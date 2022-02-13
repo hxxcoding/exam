@@ -11,11 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-/**
- * 云帆在线考试系统
- * @author bool 
- * @date 2020-03-04 19:41
- */
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync
