@@ -25,7 +25,7 @@
           placeholder="请选择学期/教师/选课号"
         />
 
-        <el-button class="filter-item" type="primary" style="float: right" icon="el-icon-s-promotion" @click="handleOpenDialog('*')">
+        <el-button v-perm="['paper:send-msg']" class="filter-item" type="primary" style="float: right" icon="el-icon-s-promotion" @click="handleOpenDialog('*')">
           发送全员消息
         </el-button>
 
@@ -70,7 +70,7 @@
         >
 
           <template slot-scope="scope">
-            <el-button class="filter-item" type="primary" icon="el-icon-s-promotion" @click="handleOpenDialog(scope.row.id)">
+            <el-button v-perm="['paper:send-msg']" class="filter-item" type="primary" icon="el-icon-s-promotion" @click="handleOpenDialog(scope.row.id)">
               发送消息
             </el-button>
           </template>
