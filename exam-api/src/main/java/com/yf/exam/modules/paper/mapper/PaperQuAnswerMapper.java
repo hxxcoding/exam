@@ -19,9 +19,10 @@ public interface PaperQuAnswerMapper extends BaseMapper<PaperQuAnswer> {
 
     /**
      * 查找试卷试题答案列表
-     * @param paperId
-     * @param quId
-     * @return
+     * @deprecated 已经使用应用层单表查询组合替代
+     * @param paperId 试卷id
+     * @param quId 试题id
+     * @return 试题选项
      */
     List<PaperQuAnswerExtDTO> list(@Param("paperId") String paperId, @Param("quId") String quId);
 }
