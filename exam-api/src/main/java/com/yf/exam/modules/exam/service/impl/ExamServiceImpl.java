@@ -187,7 +187,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements Ex
      * `在线考试`页面的分页数据
      */
     @Override
-    @Cacheable
+    @Cacheable(sync = true)
     public IPage<ExamOnlineRespDTO> onlinePaging(PagingReqDTO<ExamDTO> reqDTO) {
 
         // 创建分页对象

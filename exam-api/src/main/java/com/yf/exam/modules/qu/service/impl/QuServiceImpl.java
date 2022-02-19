@@ -416,7 +416,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
     }
 
     @Override
-    @Cacheable // id instanceof String == true
+    @Cacheable(sync = true) // id instanceof String == true
     public Qu getById(Serializable id) {
         return super.getById(id);
     }
