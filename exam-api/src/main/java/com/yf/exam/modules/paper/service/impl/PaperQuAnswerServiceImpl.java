@@ -54,6 +54,9 @@ public class PaperQuAnswerServiceImpl extends ServiceImpl<PaperQuAnswerMapper, P
     @Override
     public List<PaperQuAnswerExtDTO> listForExam(String paperId, String quId) {
         List<PaperQuAnswer> list = this.list(new LambdaQueryWrapper<PaperQuAnswer>()
+                .select(PaperQuAnswer::getId, PaperQuAnswer::getPaperId,
+                        PaperQuAnswer::getQuId, PaperQuAnswer::getAnswerId,
+                        PaperQuAnswer::getChecked, PaperQuAnswer::getSort, PaperQuAnswer::getAbc)
                 .eq(PaperQuAnswer::getPaperId, paperId)
                 .eq(PaperQuAnswer::getQuId, quId)
                 .orderByAsc(PaperQuAnswer::getSort));
