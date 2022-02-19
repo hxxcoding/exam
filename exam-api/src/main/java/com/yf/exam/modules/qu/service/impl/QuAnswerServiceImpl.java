@@ -12,9 +12,12 @@ import com.yf.exam.modules.qu.dto.QuAnswerDTO;
 import com.yf.exam.modules.qu.entity.QuAnswer;
 import com.yf.exam.modules.qu.mapper.QuAnswerMapper;
 import com.yf.exam.modules.qu.service.QuAnswerService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +30,7 @@ import java.util.List;
 * @since 2020-05-25 13:23
 */
 @Service
+@CacheConfig(cacheNames = "quAnswerService", keyGenerator = "keyGenerator")
 public class QuAnswerServiceImpl extends ServiceImpl<QuAnswerMapper, QuAnswer> implements QuAnswerService {
 
     @Override
@@ -130,5 +134,9 @@ public class QuAnswerServiceImpl extends ServiceImpl<QuAnswerMapper, QuAnswer> i
         }
     }
 
-
+    @Override
+    @Cacheable(sync = true)
+    public QuAnswer getById(Serializable id) {
+        return super.getById(id);
+    }
 }
