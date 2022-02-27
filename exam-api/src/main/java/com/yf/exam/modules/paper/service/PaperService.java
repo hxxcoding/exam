@@ -109,4 +109,10 @@ public interface PaperService extends IService<Paper> {
      */
     List<PaperExportDTO> listForExport(PaperQueryReqDTO reqDTO);
 
+    /**
+     * 批量导出试卷
+     * @param ids ids
+     */
+    void listPaperForExport(List<String> ids);
+
 }

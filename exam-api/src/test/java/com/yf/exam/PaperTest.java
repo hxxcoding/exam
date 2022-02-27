@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 public class PaperTest {
 
     @Autowired
-    private PaperService examService;
+    private PaperService paperService;
     @Autowired
     private QuAnswerOfficeService quAnswerOfficeService;
     @Autowired
@@ -51,13 +52,13 @@ public class PaperTest {
 
     @Test
     public void testPaperDetail(){
-        ExamDetailRespDTO respDTO = examService.paperDetail("1264852438679150594");
+        ExamDetailRespDTO respDTO = paperService.paperDetail("1264852438679150594");
         System.out.println(JSON.toJSONString(respDTO));
     }
 
     @Test
     public void testQuDetail(){
-        PaperQuDetailDTO respDTO = examService.findQuDetail("1264872568393834497", "5859c292a6ad486da6d9ea41084affe2");
+        PaperQuDetailDTO respDTO = paperService.findQuDetail("1264872568393834497", "5859c292a6ad486da6d9ea41084affe2");
         System.out.println(JSON.toJSONString(respDTO));
     }
 
@@ -136,5 +137,12 @@ public class PaperTest {
             item.setContent(item.getContent().trim());
         });
         quAnswerService.updateBatchById(list);
+    }
+
+    @Test
+    public void paperTest() {
+        List<String> ids = new ArrayList<>();
+        ids.add("1497815335831515138");
+        paperService.listPaperForExport(ids);
     }
 }

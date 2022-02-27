@@ -36,4 +36,8 @@ public class StringUtils {
         sb.append("</xml>");
         return sb.toString();
     }
+
+    public static String filterHtml(String source) {
+        return source.replaceAll("\\<.*?>", "");
+    }
 }

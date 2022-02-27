@@ -50,6 +50,7 @@ import com.yf.exam.modules.qu.enums.QuType;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuAnswerService;
 import com.yf.exam.modules.qu.service.QuService;
+import com.yf.exam.modules.sys.depart.entity.SysDepart;
 import com.yf.exam.modules.sys.depart.service.SysDepartService;
 import com.yf.exam.modules.sys.system.service.SysDictService;
 import com.yf.exam.modules.sys.user.entity.SysUser;
@@ -57,6 +58,9 @@ import com.yf.exam.modules.sys.user.service.SysUserService;
 import com.yf.exam.modules.user.exam.entity.UserExam;
 import com.yf.exam.modules.user.exam.service.UserExamService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -66,6 +70,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.FileOutputStream;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -963,5 +969,100 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             no++;
         }
         return res;
+    }
+
+    @Override
+    public void listPaperForExport(List<String> ids) {
+        for (String id : ids) {
+            ExamResultRespDTO resp = paperService.paperResult(id);
+            SysUser user = sysUserService.getById(resp.getUserId());
+            SysDepart depart = sysDepartService.getById(resp.getDepartId());
+            XWPFDocument xwpfDocument = new XWPFDocument();
+            String fileName = "/Users/hxx/Desktop/download/" + resp.getTitle() +
+                    "_" + depart.getDeptName() +
+                    "_" + user.getUserName() +
+                    "_" + user.getRealName() +
+                    "_" + resp.getSeat() +
+                    "_" + resp.getUserScore() +
+                    "_" + resp.getId() + ".docx";
+            try (
+                    FileOutputStream out = new FileOutputStream(fileName)
+                    ) {
+                this.getPaperDocument(xwpfDocument, resp, user, depart).write(out);
+            } catch (Exception e) {
+                throw new ServiceException("导出失败!");
+            }
+        }
+    }
+
+    private XWPFDocument getPaperDocument(XWPFDocument xwpfDocument, ExamResultRespDTO resp, SysUser user, SysDepart depart) {
+        // 标题
+        XWPFParagraph title = xwpfDocument.createParagraph();
+        title.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun titleParagraphRun = title.createRun();
+        titleParagraphRun.setText(resp.getTitle());
+        titleParagraphRun.setFontSize(20);
+
+        // 考试信息
+        XWPFTable infoTable = xwpfDocument.createTable(4, 4);
+        CTTblWidth infoTableWidth = infoTable.getCTTbl().addNewTblPr().addNewTblW();
+        infoTableWidth.setType(STTblWidth.DXA);
+        infoTableWidth.setW(BigInteger.valueOf(8500));
+
+        XWPFTableRow infoTableRowOne = infoTable.getRow(0);
+        infoTableRowOne.getCell(0).setText("考生姓名");
+        infoTableRowOne.getCell(1).setText(user.getRealName());
+        infoTableRowOne.getCell(2).setText("考生学号");
+        infoTableRowOne.getCell(3).setText(resp.getUserId());
+        XWPFTableRow infoTableRowTwo = infoTable.getRow(1);
+        infoTableRowTwo.getCell(0).setText("考生班级");
+        infoTableRowTwo.getCell(1).setText(depart.getDeptName());
+        infoTableRowTwo.getCell(2).setText("考场座位号");
+        infoTableRowTwo.getCell(3).setText(resp.getSeat());
+
+        XWPFTableRow infoTableRowThree = infoTable.getRow(2);
+        infoTableRowThree.getCell(0).setText("考试时间");
+        infoTableRowThree.getCell(1).setText(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(resp.getCreateTime())
+                + "~" + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(resp.getUpdateTime()));
+        infoTableRowThree.getCell(2).setText("考试用时");
+        infoTableRowThree.getCell(3).setText(resp.getUserTime() + "分钟");
+        XWPFTableRow infoTableRowFour = infoTable.getRow(3);
+        infoTableRowFour.getCell(0).setText("总得分");
+        infoTableRowFour.getCell(1).setText(resp.getUserScore().toString());
+
+        // 题目信息
+        int quNum = 1;
+        for (PaperQuDetailDTO qu : resp.getQuList()) {
+            XWPFParagraph quPara = xwpfDocument.createParagraph();
+            XWPFRun quRun = quPara.createRun();
+            quRun.setText(quNum + "." + StringUtils.filterHtml(qu.getContent()));
+            quRun.setFontSize(12);
+            quRun.addCarriageReturn();
+            if (qu.getQuType().equals(QuType.RADIO) || qu.getQuType().equals(QuType.MULTI) || qu.getQuType().equals(QuType.JUDGE)) {
+                StringBuilder userAnswer = new StringBuilder();
+                for (PaperQuAnswerExtDTO quAnswer : qu.getAnswerList()) {
+                    XWPFRun quAnswerRun = quPara.createRun();
+                    quAnswerRun.setText(quAnswer.getAbc() + "." +quAnswer.getContent());
+                    quAnswerRun.addCarriageReturn();
+                    if (quAnswer.getChecked()) {
+                        userAnswer.append(quAnswer.getAbc());
+                    }
+                }
+                XWPFRun userAnswerRun = quPara.createRun();
+                if (userAnswer.length() == 0) userAnswer.append("未作答");
+                userAnswerRun.setText("用户回答：" + userAnswer + "    " + "用户得分：" + qu.getActualScore());
+                userAnswerRun.setColor("EE0000");
+                userAnswerRun.addCarriageReturn();
+            }
+            if (qu.getQuType().equals(QuType.BLANK) || qu.getQuType().equals(QuType.WORD) || qu.getQuType().equals(QuType.EXCEL) || qu.getQuType().equals(QuType.PPT)) {
+                XWPFRun userAnswerRun = quPara.createRun();
+                String answer = StringUtils.isBlank(qu.getAnswer()) ? "未作答" : qu.getAnswer();
+                userAnswerRun.setText("用户回答：" + answer + "    " + "用户得分：" + qu.getActualScore());
+                userAnswerRun.setColor("EE0000");
+                userAnswerRun.addCarriageReturn();
+            }
+            quNum++;
+        }
+        return xwpfDocument;
     }
 }
