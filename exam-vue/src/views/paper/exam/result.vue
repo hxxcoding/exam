@@ -200,9 +200,7 @@ export default {
       myRadio: {},
       myMulti: {},
 
-      quOfficePoints: {},
-
-      isPrint: false
+      quOfficePoints: {}
     }
   },
   computed: {
@@ -214,19 +212,11 @@ export default {
       'realName'
     ])
   },
-  watch: {
-    isPrint: function() {
-      this.$nextTick(function() {
-        this.saveToPdf()
-      })
-    }
-  },
   created() {
     const id = this.$route.query.id
-    const isPrint = this.$route.query.isPrint
     if (typeof id !== 'undefined') {
       this.paperId = id
-      this.fetchData(id, isPrint)
+      this.fetchData(id)
     }
   },
   mounted() {
@@ -237,7 +227,7 @@ export default {
   },
   methods: {
 
-    async fetchData(id, isPrint) {
+    async fetchData(id) {
       const params = { id: id }
       await paperResult(params).then(response => {
         // 试卷内容
@@ -300,11 +290,6 @@ export default {
           this.myMulti[item.id] = myMulti
         })
       })
-      if (isPrint) {
-        setTimeout(() => {
-          this.isPrint = isPrint
-        }, 1000)
-      }
     },
 
     fetchQuOfficePoints(paperId, quId) {

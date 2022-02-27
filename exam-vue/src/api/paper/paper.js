@@ -16,3 +16,7 @@ export function listPaper(userId, examId) {
 export function exportExcel(data) {
   return download('/exam/api/paper/paper/export', data, '导出成绩-' + new Date().getTime() + '.xlsx')
 }
+
+export function exportPaper(ids) {
+  return post('/exam/api/paper/paper/export/paper', { ids: ids })
+}

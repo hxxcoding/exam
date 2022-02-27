@@ -148,8 +148,9 @@
 import DataTable from '@/components/DataTable'
 import DepartTreeSelect from '@/components/DepartTreeSelect'
 import { fetchTree } from '@/api/sys/depart/depart'
-import { exportExcel } from '@/api/paper/paper'
+import { exportExcel, exportPaper } from '@/api/paper/paper'
 import ExamSelect from '@/components/ExamSelect'
+import { Loading } from 'element-ui'
 
 export default {
   components: { ExamSelect, DepartTreeSelect, DataTable },
@@ -188,8 +189,8 @@ export default {
         multi: true,
         multiActions: [
           {
-            value: 'saveToPdf',
-            label: '保存为PDF'
+            value: 'exportPaper',
+            label: '批量导出试卷'
           }
         ],
         // 列表请求URL
@@ -211,16 +212,15 @@ export default {
   },
   methods: {
     handleMultiAction(params) {
-      if (params.opt === 'saveToPdf') {
-        params.ids.forEach(id => {
-          const routeData = this.$router.resolve({
-            name: 'ExamResult',
-            query: {
-              id: id,
-              isPrint: true
-            }
-          })
-          window.open(routeData.href, '_blank')
+      const loading = Loading.service({
+        text: '正在生成试卷并压缩,请耐心等待……',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      if (params.opt === 'exportPaper') {
+        exportPaper(params.ids).then(response => {
+          const url = response.data
+          window.open(url)
+          loading.close()
         })
       }
     },
