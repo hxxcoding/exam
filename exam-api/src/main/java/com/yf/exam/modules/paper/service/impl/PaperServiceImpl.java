@@ -984,7 +984,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     public String listPaperForExport(List<String> ids) {
         String fileDir = this.uploadDir + "paper" + File.separator;
         File dir = new File(fileDir);
-        if (dir.exists()) { // 存在paper文件夹就删除
+        if (dir.exists()) { // 存在paper文件夹就删除 如果文件夹不为空要先删除文件夹中的文件
+            for (File f : dir.listFiles()) {
+                f.delete();
+            }
             dir.delete();
         }
         dir.mkdir(); // 新建paper文件夹
@@ -1014,7 +1017,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         String zipName = "export_paper" + ".zip";
         ZipUtils.compress(fileDir, this.uploadDir + zipName);
         return uploadUrl + zipName;
-        // 删除文件
     }
 
     private XWPFDocument getPaperDocument(XWPFDocument xwpfDocument, ExamResultRespDTO resp, SysUser user, SysDepart depart) {
