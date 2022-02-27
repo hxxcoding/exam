@@ -995,7 +995,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         for (String id : ids) {
             ExamResultRespDTO resp = paperService.paperResult(id); // 试卷内容
             SysUser user = sysUserService.getById(resp.getUserId()); // 用户数据
-            SysDepart depart = sysDepartService.getById(resp.getDepartId()); // 部门数据
+            SysDepart depart = sysDepartService.getById(user.getDepartId()); // 部门数据
             XWPFDocument xwpfDocument = new XWPFDocument();
             String fileName = fileDir + resp.getTitle() +
                     "_" + depart.getDeptName() +
@@ -1074,14 +1074,21 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 }
                 XWPFRun userAnswerRun = quPara.createRun();
                 if (userAnswer.length() == 0) userAnswer.append("未作答");
-                userAnswerRun.setText("用户回答：" + userAnswer + "    " + "用户得分：" + qu.getActualScore());
+                int score = qu.getIsRight() ? qu.getScore() : 0;
+                userAnswerRun.setText("用户回答：" + userAnswer + "    " + "用户得分：" + score);
                 userAnswerRun.setColor("EE0000");
                 userAnswerRun.addCarriageReturn();
             }
             if (qu.getQuType().equals(QuType.BLANK) || qu.getQuType().equals(QuType.WORD) || qu.getQuType().equals(QuType.EXCEL) || qu.getQuType().equals(QuType.PPT)) {
                 XWPFRun userAnswerRun = quPara.createRun();
                 String answer = StringUtils.isBlank(qu.getAnswer()) ? "未作答" : qu.getAnswer();
-                userAnswerRun.setText("用户回答：" + answer + "    " + "用户得分：" + qu.getActualScore());
+                int score;
+                if (qu.getQuType().equals(QuType.BLANK)) {
+                    score = qu.getIsRight() ? qu.getScore() : 0;
+                } else {
+                    score = qu.getActualScore();
+                }
+                userAnswerRun.setText("用户回答：" + answer + "    " + "用户得分：" + score);
                 userAnswerRun.setColor("EE0000");
                 userAnswerRun.addCarriageReturn();
             }
