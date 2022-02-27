@@ -11,6 +11,7 @@ import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.StringUtils;
+import com.yf.exam.core.utils.file.ZipUtils;
 import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.PPTUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
@@ -63,6 +64,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
@@ -70,6 +72,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -128,6 +131,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Autowired
     private SysDictService sysDictService;
+
+    @Value("${conf.upload.dir}")
+    private String uploadDir;
+
+    @Value("${conf.upload.url}")
+    private String uploadUrl;
 
     private static final Timer timer = new Timer();
     private static final int DELAY_MINUTES = 3; // 默认考试结束后3分钟提交未交卷的试卷
@@ -972,13 +981,20 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
-    public void listPaperForExport(List<String> ids) {
+    public String listPaperForExport(List<String> ids) {
+        String fileDir = this.uploadDir + "paper" + File.separator;
+        File dir = new File(fileDir);
+        if (dir.exists()) { // 存在paper文件夹就删除
+            dir.delete();
+        }
+        dir.mkdir(); // 新建paper文件夹
+
         for (String id : ids) {
-            ExamResultRespDTO resp = paperService.paperResult(id);
-            SysUser user = sysUserService.getById(resp.getUserId());
-            SysDepart depart = sysDepartService.getById(resp.getDepartId());
+            ExamResultRespDTO resp = paperService.paperResult(id); // 试卷内容
+            SysUser user = sysUserService.getById(resp.getUserId()); // 用户数据
+            SysDepart depart = sysDepartService.getById(resp.getDepartId()); // 部门数据
             XWPFDocument xwpfDocument = new XWPFDocument();
-            String fileName = "/Users/hxx/Desktop/download/" + resp.getTitle() +
+            String fileName = fileDir + resp.getTitle() +
                     "_" + depart.getDeptName() +
                     "_" + user.getUserName() +
                     "_" + user.getRealName() +
@@ -993,6 +1009,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 throw new ServiceException("导出失败!");
             }
         }
+
+        // 打包文件
+        String zipName = "export_paper" + ".zip";
+        ZipUtils.compress(fileDir, this.uploadDir + zipName);
+        return uploadUrl + zipName;
+        // 删除文件
     }
 
     private XWPFDocument getPaperDocument(XWPFDocument xwpfDocument, ExamResultRespDTO resp, SysUser user, SysDepart depart) {

@@ -143,6 +143,6 @@ public class PaperTest {
     public void paperTest() {
         List<String> ids = new ArrayList<>();
         ids.add("1497815335831515138");
-        paperService.listPaperForExport(ids);
+        System.out.println(paperService.listPaperForExport(ids));
     }
 }

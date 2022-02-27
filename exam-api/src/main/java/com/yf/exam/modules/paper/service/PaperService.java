@@ -113,6 +113,6 @@ public interface PaperService extends IService<Paper> {
      * 批量导出试卷
      * @param ids ids
      */
-    void listPaperForExport(List<String> ids);
+    String listPaperForExport(List<String> ids);
 
 }

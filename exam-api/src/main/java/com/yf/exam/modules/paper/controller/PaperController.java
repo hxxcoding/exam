@@ -5,6 +5,7 @@ import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
 import com.yf.exam.core.api.dto.BaseIdRespDTO;
+import com.yf.exam.core.api.dto.BaseIdsReqDTO;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.excel.ExportExcel;
@@ -209,6 +210,16 @@ public class PaperController extends BaseController {
         } catch (Exception e) {
             throw new ServiceException("导出失败:" + e.getMessage());
         }
+    }
+
+    /**
+     * 批量导出试卷
+     */
+    @RequiresPermissions("paper:export")
+    @RequestMapping(value = "/export/paper", method = { RequestMethod.POST })
+    public ApiRest<String> batchExportPaper(@RequestBody BaseIdsReqDTO reqDTO) {
+        String url = baseService.listPaperForExport(reqDTO.getIds());
+        return super.success(url);
     }
 
 }
