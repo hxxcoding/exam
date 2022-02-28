@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yf.exam.ability.upload.service.UploadService;
+import com.yf.exam.ability.upload.utils.FileUtils;
 import com.yf.exam.core.api.dto.PagingReqDTO;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
@@ -74,6 +75,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -982,16 +984,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Override
     public String listPaperForExport(List<String> ids) {
-        String fileDir = this.uploadDir + "paper" + File.separator;
+        String time = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(new Date());
+        String folderName = "export_paper_" + time;
+        String fileDir = this.uploadDir + dirName + File.separator;
         File dir = new File(fileDir);
-        if (dir.exists()) { // 存在paper文件夹就删除 如果文件夹不为空要先删除文件夹中的文件
-            for (File f : dir.listFiles()) {
-                f.delete();
-            }
-            dir.delete();
+        if (!dir.mkdir()) {
+            throw new ServiceException("文件夹创建失败!");
         }
-        dir.mkdir(); // 新建paper文件夹
-
         for (String id : ids) {
             ExamResultRespDTO resp = paperService.paperResult(id); // 试卷内容
             SysUser user = sysUserService.getById(resp.getUserId()); // 用户数据
@@ -1014,8 +1013,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         }
 
         // 打包文件
-        String zipName = "export_paper" + ".zip";
+        String zipName = folderName + ".zip";
         ZipUtils.compress(fileDir, this.uploadDir + zipName);
+        FileUtils.deleteDir(dir);
         return uploadUrl + zipName;
     }
 

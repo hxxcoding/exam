@@ -201,4 +201,18 @@ public class FileUtils {
 		}
 	}
 
+	/**
+	 * 删除文件夹
+	 */
+	public static void deleteDir(File file) {
+		if (file.exists()) {
+			if (!file.isFile()) {
+				for (File listFile : file.listFiles()) {
+					deleteDir(listFile);
+				}
+			}
+			file.delete();
+		}
+	}
+
 }
