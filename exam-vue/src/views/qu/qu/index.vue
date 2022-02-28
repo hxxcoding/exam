@@ -53,9 +53,7 @@
           show-overflow-tooltip
         >
           <template slot-scope="scope">
-            <router-link slot="reference" :to="{ name: 'SaveQu', query:{ id: scope.row.id}}">
-              {{ scope.row.content }}
-            </router-link>
+            <router-link slot="reference" :to="{ name: 'SaveQu', query:{ id: scope.row.id}}" v-text="scope.row.content.replace(/<[^>]+>|&[^>]+;/g, '')" />
           </template>
         </el-table-column>
 
