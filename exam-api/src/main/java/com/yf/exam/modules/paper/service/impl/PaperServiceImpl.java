@@ -1025,7 +1025,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         title.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun titleParagraphRun = title.createRun();
         titleParagraphRun.setText(resp.getTitle());
-        titleParagraphRun.setFontSize(20);
+        titleParagraphRun.setFontSize(16);
 
         // 考试信息
         XWPFTable infoTable = xwpfDocument.createTable(4, 4);
@@ -1059,9 +1059,14 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         for (PaperQuDetailDTO qu : resp.getQuList()) {
             XWPFParagraph quPara = xwpfDocument.createParagraph();
             XWPFRun quRun = quPara.createRun();
-            quRun.setText(quNum + "." + StringUtils.filterHtml(qu.getContent()));
-            quRun.setFontSize(12);
-            quRun.addCarriageReturn();
+            String filter = StringUtils.filterHtml(qu.getContent());
+            String[] contents = filter.split("\n");
+            quRun.setText(quNum + ".");
+            for (String content : contents) {
+                quRun.setText(content);
+                quRun.addCarriageReturn();
+            }
+            quRun.setFontSize(10);
             if (qu.getQuType().equals(QuType.RADIO) || qu.getQuType().equals(QuType.MULTI) || qu.getQuType().equals(QuType.JUDGE)) {
                 StringBuilder userAnswer = new StringBuilder();
                 for (PaperQuAnswerExtDTO quAnswer : qu.getAnswerList()) {

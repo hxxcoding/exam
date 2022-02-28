@@ -38,6 +38,6 @@ public class StringUtils {
     }
 
     public static String filterHtml(String source) {
-        return source.replaceAll("\\<.*?>", "");
+        return source.replaceAll("<[^>]+>|&[^>]+;", "");
     }
 }
