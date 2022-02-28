@@ -7,6 +7,8 @@ import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
+import com.yf.exam.modules.paper.entity.PaperQu;
+import com.yf.exam.modules.paper.service.PaperQuService;
 import com.yf.exam.modules.paper.service.PaperService;
 import com.yf.exam.modules.qu.entity.Qu;
 import com.yf.exam.modules.qu.entity.QuAnswer;
@@ -37,6 +39,8 @@ public class PaperTest {
 
     @Autowired
     private PaperService paperService;
+    @Autowired
+    private PaperQuService paperQuService;
     @Autowired
     private QuAnswerOfficeService quAnswerOfficeService;
     @Autowired
@@ -144,5 +148,30 @@ public class PaperTest {
         List<String> ids = new ArrayList<>();
         ids.add("1497815335831515138");
         System.out.println(paperService.listPaperForExport(ids));
+    }
+
+    @Test
+    public void migrateDB() {
+        String oldIpAdd = "1.14.65.11";
+        String newIpAdd = "101.43.213.207";
+
+        List<Qu> quList = quService.list();
+        quList.forEach(item -> {
+            if (item.getImage().contains(oldIpAdd)) { // 更改附件ip
+                item.setImage(item.getImage().replace(oldIpAdd, newIpAdd));
+            }
+            if (item.getAnswer().contains(oldIpAdd)) { // 更改答案ip
+                item.setAnswer(item.getAnswer().replace(oldIpAdd, newIpAdd));
+            }
+        });
+        quService.updateBatchById(quList);
+
+        List<PaperQu> paperQuList = paperQuService.list();
+        paperQuList.forEach(item -> {
+            if (item.getAnswer().contains(oldIpAdd)) { // 更改用户上传答案的ip
+                item.setAnswer(item.getAnswer().replace(oldIpAdd, newIpAdd));
+            }
+        });
+        paperQuService.updateBatchById(paperQuList);
     }
 }
