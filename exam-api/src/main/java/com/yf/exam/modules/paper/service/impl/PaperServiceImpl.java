@@ -986,7 +986,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     public String listPaperForExport(List<String> ids) {
         String time = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(new Date());
         String folderName = "export_paper_" + time;
-        String fileDir = this.uploadDir + dirName + File.separator;
+        String fileDir = this.uploadDir + folderName + File.separator;
         File dir = new File(fileDir);
         if (!dir.mkdir()) {
             throw new ServiceException("文件夹创建失败!");
