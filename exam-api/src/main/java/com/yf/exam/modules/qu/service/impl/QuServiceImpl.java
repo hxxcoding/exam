@@ -94,12 +94,16 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
         Qu qu = this.getById(id);
         BeanMapper.copy(qu, respDTO);
 
-        if (qu.getQuType() < 10) {
+        if (qu.getQuType().equals(QuType.RADIO) ||
+                qu.getQuType().equals(QuType.MULTI) ||
+                qu.getQuType().equals(QuType.JUDGE)) {
             List<QuAnswerDTO> answerList = quAnswerService.listByQu(id);
             respDTO.setAnswerList(answerList);
         }
 
-        if (qu.getQuType() >= 10) {
+        if (qu.getQuType().equals(QuType.WORD) ||
+                qu.getQuType().equals(QuType.EXCEL) ||
+                qu.getQuType().equals(QuType.PPT)) {
             List<QuAnswerOfficeDTO> officeAnswerList = quAnswerOfficeService.listByQu(id);
             respDTO.setOfficeAnswerList(officeAnswerList);
         }
