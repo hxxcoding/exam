@@ -663,9 +663,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Override
     public void fillAnswer(PaperAnswerDTO reqDTO) {
 
-        //查找答案列表
-        List<PaperQuAnswer> list = paperQuAnswerService.listForFill(reqDTO.getPaperId(), reqDTO.getQuId());
-
         //是否正确
         boolean right = false;
 
@@ -690,6 +687,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         if (reqDTO.getQuType().equals(QuType.RADIO)
                 || reqDTO.getQuType().equals(QuType.MULTI)
                 || reqDTO.getQuType().equals(QuType.JUDGE)){
+            //查找选择题答案列表
+            List<PaperQuAnswer> list = paperQuAnswerService.listForFill(reqDTO.getPaperId(), reqDTO.getQuId());
             right = true;
             for (PaperQuAnswer item : list) {
 

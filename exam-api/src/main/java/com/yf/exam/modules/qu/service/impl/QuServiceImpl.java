@@ -420,7 +420,7 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
     }
 
     @Override
-    @Cacheable(sync = true) // id instanceof String == true
+    @Cacheable(sync = true) // id instanceof String == true 考试时使用缓存 通过this调用该方法不使用缓存
     public Qu getById(Serializable id) {
         return super.getById(id);
     }
