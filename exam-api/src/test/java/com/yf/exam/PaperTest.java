@@ -3,10 +3,12 @@ package com.yf.exam;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yf.exam.core.utils.file.PdfUtils;
 import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
 import com.yf.exam.modules.paper.dto.ext.PaperQuDetailDTO;
 import com.yf.exam.modules.paper.dto.response.ExamDetailRespDTO;
+import com.yf.exam.modules.paper.dto.response.ExamResultRespDTO;
 import com.yf.exam.modules.paper.entity.PaperQu;
 import com.yf.exam.modules.paper.service.PaperQuService;
 import com.yf.exam.modules.paper.service.PaperService;
@@ -17,21 +19,19 @@ import com.yf.exam.modules.qu.enums.QuType;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
 import com.yf.exam.modules.qu.service.QuAnswerService;
 import com.yf.exam.modules.qu.service.QuService;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.yf.exam.modules.sys.depart.entity.SysDepart;
+import com.yf.exam.modules.sys.depart.service.SysDepartService;
+import com.yf.exam.modules.sys.user.entity.SysUser;
+import com.yf.exam.modules.sys.user.service.SysUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import wiki.xsx.core.pdf.doc.XEasyPdfDocument;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,6 +47,10 @@ public class PaperTest {
     private QuAnswerService quAnswerService;
     @Autowired
     private QuService quService;
+    @Autowired
+    private SysUserService sysUserService;
+    @Autowired
+    private SysDepartService sysDepartService;
 
     @Test
     public void testCreate(){
@@ -173,5 +177,14 @@ public class PaperTest {
             }
         });
         paperQuService.updateBatchById(paperQuList);
+    }
+
+    @Test
+    public void testXEasyPdf() {
+        String outPath = "/Users/hxx/Desktop/example.pdf";
+        ExamResultRespDTO paperResult = paperService.paperResult("1497815335831515138");
+        SysUser user = sysUserService.getById(paperResult.getUserId()); // 用户数据
+        SysDepart depart = sysDepartService.getById(user.getDepartId()); // 部门数据
+        PdfUtils.getPaperPdfDocument(new XEasyPdfDocument(), paperResult, user, depart).save(outPath).close();
     }
 }
