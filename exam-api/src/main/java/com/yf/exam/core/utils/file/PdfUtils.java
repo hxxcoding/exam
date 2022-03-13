@@ -49,7 +49,7 @@ public class PdfUtils {
                                 XEasyPdfHandler.Text.build("考生学号")
                         ),
                         XEasyPdfHandler.Table.Row.Cell.build(135F, 30F).addContent(
-                                XEasyPdfHandler.Text.build(user.getId())
+                                XEasyPdfHandler.Text.build(user.getUserName())
                         )
                 ),
                 XEasyPdfHandler.Table.Row.build(
