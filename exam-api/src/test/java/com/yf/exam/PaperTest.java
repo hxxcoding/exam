@@ -72,10 +72,12 @@ public class PaperTest {
 
     @Test
     public void wordUtilsTest() {
-        WordUtils docx = new WordUtils("/Users/hxx/Desktop/test.docx");
+        WordUtils docx = new WordUtils("/Users/hxx/Desktop/office/test.docx");
         System.out.println("纸张大小" + docx.getPgSzW() + " x " + docx.getPgSzH());
         System.out.println("上下左右页边距" + docx.getPgMarTop() + ", " + docx.getPgMarBottom() +
-                ", " + docx.getPgMarLeft() + ", " + docx.getPgMarRight());
+                ", " + docx.getPgMarLeft() + ", " + docx.getPgMarRight() +
+                ", 装订线" + docx.getPgMarGutter() +
+                ", 页眉距边缘" + docx.getPgMarHeader() + ", 页脚距边缘" + docx.getPgMarFooter());
         System.out.println("首行缩进" + docx.getIndentationFirstLine(2) + " 悬挂缩进：" + docx.getIndentationHanging(2));
         System.out.println("字号：" + docx.getFontSize(2) + "，字体：" + docx.getFontFamily(2) + "\n" + " 下划线类型" +
                 docx.getUnderlineType(2) + " 是否斜体：" + docx.isItalic(2) + " 是否加粗：" + docx.isBold(2) + "\n" +

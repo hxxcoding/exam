@@ -102,6 +102,30 @@ public class WordUtils {
     }
 
     /**
+     * 获取装订线
+     * @return
+     */
+    public Integer getPgMarGutter() {
+        return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getGutter().intValue();
+    }
+
+    /**
+     * 获取页眉距边缘
+     * @return 页眉距边缘
+     */
+    public Integer getPgMarHeader() {
+        return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getHeader().intValue();
+    }
+
+    /**
+     * 获取页脚距边缘
+     * @return 页脚距边缘
+     */
+    public Integer getPgMarFooter() {
+        return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getFooter().intValue();
+    }
+
+    /**
      * 纸张高度 A4:  16839 x 11907
      * @return
      */
