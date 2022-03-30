@@ -7,6 +7,7 @@ import com.yf.exam.modules.qu.dto.WordParagraphDTO;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.xmlbeans.XmlException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -258,6 +259,40 @@ public class WordUtils {
             }
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
+    }
+
+    /**
+     * 获取默认中文字体
+     * @return 字体
+     */
+    public String getChineseFontFamily() {
+        try {
+            String fontFamily = xwpfDocument.getStyle().getDocDefaults().getRPrDefault().getRPr().getRFonts().getEastAsia();
+            if (fontFamily != null) {
+                return fontFamily;
+            } else {
+                throw new ServiceException("不存在`字体`数据");
+            }
+        } catch (XmlException | IOException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取默认英文字体
+     * @return 字体
+     */
+    public String getAsciiFontFamily() {
+        try {
+            String fontFamily = xwpfDocument.getStyle().getDocDefaults().getRPrDefault().getRPr().getRFonts().getAscii();
+            if (fontFamily != null) {
+                return fontFamily;
+            } else {
+                throw new ServiceException("不存在`字体`数据");
+            }
+        } catch (XmlException | IOException e) {
+            throw new ServiceException(e.getMessage());
         }
     }
 

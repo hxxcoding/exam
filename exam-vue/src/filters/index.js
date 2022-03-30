@@ -93,6 +93,8 @@ export function wordMethodFilter(value) {
     'getNumFmt': '项目符号',
     'getFontSize': '字号',
     'getFontFamily': '字体',
+    'getChineseFontFamily': '默认中文字体',
+    'getAsciiFontFamily': '默认英文字体',
     'getUnderlineType': '下划线类型',
     'getPicTextAround': '图片环绕方式'
   }
