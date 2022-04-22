@@ -266,7 +266,7 @@ public class WordUtils {
      * 获取默认中文字体
      * @return 字体
      */
-    public String getChineseFontFamily() {
+    public String getDefaultChineseFontFamily() {
         try {
             String fontFamily = xwpfDocument.getStyle().getDocDefaults().getRPrDefault().getRPr().getRFonts().getEastAsia();
             if (fontFamily != null) {
@@ -283,7 +283,7 @@ public class WordUtils {
      * 获取默认英文字体
      * @return 字体
      */
-    public String getAsciiFontFamily() {
+    public String getDefaultAsciiFontFamily() {
         try {
             String fontFamily = xwpfDocument.getStyle().getDocDefaults().getRPrDefault().getRPr().getRFonts().getAscii();
             if (fontFamily != null) {
