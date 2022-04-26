@@ -7,6 +7,7 @@ import com.yf.exam.modules.qu.dto.WordParagraphDTO;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.XmlException;
 
 import java.io.FileInputStream;
@@ -251,7 +252,28 @@ public class WordUtils {
      */
     public String getFontFamily(Integer pos) {
         try {
-            String fontFamily = xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getFontFamily();
+            List<XWPFRun> runs = xwpfDocument.getParagraphs().get(pos).getRuns();
+            String fontFamily = runs.get(0).getFontFamily();
+            if (fontFamily != null) {
+                return fontFamily;
+            } else {
+                throw new ServiceException("不存在`字体`数据");
+            }
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
+    }
+
+    /**
+     * 获取某个段落中的某一句话的字体
+     * @param paraPos 段落
+     * @param runPos 句子
+     * @return 字体
+     */
+    public String getFontFamily(Integer paraPos, Integer runPos) {
+        try {
+            List<XWPFRun> runs = xwpfDocument.getParagraphs().get(paraPos).getRuns();
+            String fontFamily = runs.get(runPos).getFontFamily();
             if (fontFamily != null) {
                 return fontFamily;
             } else {
