@@ -115,6 +115,7 @@ export function excelMethodFilter(value) {
     'getRichTextString': '获取单元格的文字',
     'getFontName': '获取字体名称',
     'getFontSize': '获取字体大小',
+    'isBold': '是否加粗',
     'getAlignment': '获取对齐方式',
     'getFillBackgroundColor': '获取背景填充颜色',
     'getFillForegroundColor': '获取图案填充颜色',
