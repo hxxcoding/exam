@@ -236,12 +236,16 @@
               label="操作"
               prop="image"
             >
+              <el-button class="filter-item" size="small" type="primary" @click="fetchQuOfficeMethods">
+                获取判分方法
+              </el-button>
               <el-button class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
                 添加判分点
               </el-button>
             </el-form-item>
 
             <el-table
+              v-if="methods.length !== 0"
               :data="postForm.officeAnswerList"
               :border="false"
               empty-text="请点击上方`添加判分点`进行答案"
@@ -270,7 +274,7 @@
 
               <el-table-column label="提取格式" align="center" width="100">
                 <template slot-scope="scope">
-                  <el-button size="small" :disabled="scope.row.pos.length < 2" @click="readFormat(scope.row)">
+                  <el-button size="small" @click="readFormat(scope.row)">
                     提取格式
                   </el-button>
                 </template>
@@ -664,6 +668,9 @@ export default {
     },
 
     readFormat(row) {
+      if (row.pos === '') {
+        row.pos = null
+      }
       readFormat(this.postForm.answer, row.pos, row.method)
         .then(response => {
           row.answer = response.data

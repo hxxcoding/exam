@@ -110,7 +110,32 @@ export function excelMethodFilter(value) {
     'getBorderStyleBottom': '获取底部边框样式',
     'getBorderStyleLeft': '获取左边框样式',
     'getBorderStyleRight': '获取右边框样式',
-    'getFuncRefRange': '获取函数的影响范围'
+    'getFuncRefRange': '获取函数的影响范围',
+    'getMergedRegion': '获取合并的单元格',
+    'getRichTextString': '获取单元格的文字',
+    'getFontName': '获取字体名称',
+    'getFontSize': '获取字体大小',
+    'getAlignment': '获取对齐方式',
+    'getFillBackgroundColor': '获取背景填充颜色',
+    'getFillForegroundColor': '获取图案填充颜色',
+    'getForegroundPatternType': '获取图案类型',
+    'getRowHeight': '获取行高',
+    'getColWidth': '获取列宽',
+    'getPrintPaperSize': '获取打印纸张类型',
+    'getPrintOrientation': '获取打印方向',
+    'getPrintHeaderMargin': '获取打印页眉边距',
+    'getPrintFooterMargin': '获取打印页脚边距',
+    'getPrintTopMargin': '获取打印上页边距',
+    'getPrintBottomMargin': '获取打印下页边距',
+    'getPrintLeftMargin': '获取打印左页边距',
+    'getPrintRightMargin': '获取打印右页边距',
+    'isPrintHorizontallyCenter': '打印页面是否水平居中',
+    'isPrintVerticallyCenter': '打印页面是否垂直居中',
+    'isPrintGridLines': '是否打印网格线',
+    'isPrintHeadings': '是否打印行列号',
+    'getHeaderContent': '获取页眉内容和格式',
+    'getFooterContent': '获取页脚内容和格式',
+    'getConditionalFormatting': '获取条件格式'
   }
   return map[value]
 }

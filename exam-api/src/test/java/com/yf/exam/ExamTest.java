@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.extensions.XSSFCellFill;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.junit.Test;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTDxf;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTXf;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
@@ -67,22 +68,55 @@ public class ExamTest {
         StringBuilder backColor = new StringBuilder();
         byte[] foreRGB = fill.getFillForegroundColor().getRGB();
         for (byte color : foreRGB) {
-            foreColor.append(String.format("%02x", color));
+            foreColor.append(String.format("%02X", color));
         }
         System.out.println(foreColor); // 图案颜色
 
-        byte[] backRGB = fill.getFillBackgroundColor().getRGB();
-        for (byte color : backRGB) {
-            backColor.append(String.format("%02x", color));
-        }
-        System.out.println(backColor); // 背景颜色
+//        byte[] backRGB = fill.getFillBackgroundColor().getRGB();
+//        for (byte color : backRGB) {
+//            backColor.append(String.format("%02X", color));
+//        }
+//        System.out.println(backColor); // 背景颜色
 
         System.out.println(fill.getPatternType()); // 获取图案类型
+
+        System.out.println(xssfWorkbook.getSheetAt(0).getRow(1).getHeightInPoints()); // 获取行高
+        System.out.println(xssfWorkbook.getSheetAt(0).getColumnWidth(1)); // 获取列宽
+
+        System.out.println(xssfWorkbook.getSheetAt(0).getPrintSetup().getPaperSizeEnum()); // 获取页面纸张类型
+        System.out.println(xssfWorkbook.getSheetAt(0).getPrintSetup().getOrientation().name()); // LANDSCAPE - 横向 / PORTRAIT - 纵向
+        System.out.println(xssfWorkbook.getSheetAt(0).getPrintSetup().getHeaderMargin()); // 页眉边距
+        System.out.println(xssfWorkbook.getSheetAt(0).getPrintSetup().getFooterMargin()); // 页脚边距
+        System.out.println(xssfWorkbook.getSheetAt(0).getPrintSetup().getTopMargin()); // 上边距
+        System.out.println(xssfWorkbook.getSheetAt(0).getPrintSetup().getBottomMargin()); // 下边距
+        System.out.println(xssfWorkbook.getSheetAt(0).getPrintSetup().getLeftMargin()); // 左页边距
+        System.out.println(xssfWorkbook.getSheetAt(0).getPrintSetup().getRightMargin()); // 右页边距
+        System.out.println(xssfWorkbook.getSheetAt(0).getHorizontallyCenter()); // 是否水平居中
+        System.out.println(xssfWorkbook.getSheetAt(0).getVerticallyCenter()); // 是否垂直居中
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet().getPrintOptions().getGridLines()); // 是否有网格线
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet().getPrintOptions().getHeadings()); // 是否有行列号
+
+        System.out.println(xssfWorkbook.getSheetAt(0).getHeaderFooterProperties().getHeaderFooter().getOddHeader()); // 获取页眉
+        System.out.println(xssfWorkbook.getSheetAt(0).getHeaderFooterProperties().getHeaderFooter().getOddFooter()); // 获取页脚
+
+        System.out.println(xssfWorkbook.getSheetAt(0).getSheetConditionalFormatting().getConditionalFormattingAt(0)
+                .getRule(0).getConditionType().type);
+        System.out.println(xssfWorkbook.getSheetAt(0).getSheetConditionalFormatting().getConditionalFormattingAt(1)
+                .getRule(0).getPriority()); // 获取优先级
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet().getConditionalFormattingArray(0)
+                .getCfRuleArray(0).getOperator()); // 比较条件 例如 lessThan
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet().getConditionalFormattingArray(0)
+                .getCfRuleArray(0).getFormulaArray(0)); // 获取比较的公式
+        final long dxfId = xssfWorkbook.getSheetAt(0).getCTWorksheet().getConditionalFormattingArray(0)
+                .getCfRuleArray(0).getDxfId();
+        final CTDxf dxf = xssfWorkbook.getStylesSource().getDxfAt((int) dxfId);
+        final byte[] rgb = dxf.getFill().getPatternFill().getBgColor().getRgb();
     }
 
     @Test
     public void testExcelUtilsCompare() throws IOException {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream("/Users/hxx/Desktop/answer1.xlsx"));
-        System.out.println(xssfWorkbook.getStylesSource().getCTStylesheet());
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet());
+//        System.out.println(xssfWorkbook.getStylesSource().getCTStylesheet());
     }
 }

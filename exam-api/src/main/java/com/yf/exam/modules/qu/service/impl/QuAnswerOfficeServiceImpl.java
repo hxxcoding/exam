@@ -59,7 +59,7 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
     @Override
     public List<String> listQuOfficeMethods(Integer quType) {
         Method[] methods = null;
-        if (quType.equals(QuType.WORD)) {
+        if (quType.equals(QuType.WORD)) { // TODO getDeclaredMethods Or getMethods ？
             methods = WordUtils.class.getDeclaredMethods();
         } else if (quType.equals(QuType.EXCEL)) {
             methods = ExcelUtils.class.getDeclaredMethods();
