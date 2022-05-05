@@ -4,14 +4,13 @@ package com.yf.exam;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellFill;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.junit.Test;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTBar3DChart;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTDxf;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTXf;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -20,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class ExamTest {
@@ -118,5 +118,38 @@ public class ExamTest {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream("/Users/hxx/Desktop/answer1.xlsx"));
         System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet());
 //        System.out.println(xssfWorkbook.getStylesSource().getCTStylesheet());
+    }
+
+    @Test
+    public void testExcel2() throws IOException {
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream("/Users/hxx/Desktop/answer2.xlsx"));
+        final XSSFChart xssfChart = xssfWorkbook.getSheetAt(0).getDrawingPatriarch().getCharts().get(0);
+        final CTBar3DChart bar3DChart = xssfChart.getCTChart().getPlotArea().getBar3DChartArray(0);
+        System.out.println(xssfChart.getTitleText());
+        final List<CTBarSer> serList = bar3DChart.getSerList();
+        System.out.println(serList.get(0).getTx().getStrRef().getStrCache().getPtArray(0).getV()); // 列名称
+        System.out.println(serList.get(0).getTx().getStrRef().getF()); // 列单元格
+        System.out.println(serList.get(0).getVal().getNumRef().getF()); // 数据范围
+        System.out.println(serList.get(0).getCat().getStrRef().getF()); // 列范围
+        System.out.println(serList.get(1).getTx().getStrRef().getStrCache().getPtArray(0).getV());
+        System.out.println(serList.get(1).getTx().getStrRef().getF());
+        System.out.println(serList.get(1).getVal().getNumRef().getF());
+        System.out.println(serList.get(1).getCat().getStrRef().getF());
+        System.out.println(serList.get(2).getTx().getStrRef().getStrCache().getPtArray(0).getV());
+        System.out.println(serList.get(2).getTx().getStrRef().getF());
+        System.out.println(serList.get(2).getVal().getNumRef().getF());
+        System.out.println(serList.get(2).getCat().getStrRef().getF());
+        System.out.println(serList.get(0).getDLbls().getShowVal().getVal());
+        System.out.println(xssfChart.getCTChart());
+        System.out.println(xssfChart.getCTChart().getPlotArea().getCatAxArray(0)
+                .getTitle().getTx().getRich().getPArray(0).getRArray(0).getT()); // 行标题
+        System.out.println(xssfChart.getCTChart().getPlotArea().getCatAxArray(0)
+                .getTitle().getTx().getRich().getPArray(0).getRArray(0).getRPr().getSz()); // 行标题大小
+        System.out.println(xssfChart.getCTChart().getPlotArea().getCatAxArray(0)
+                .getTitle().getTx().getRich().getPArray(0).getRArray(0).getRPr().getEa()); // 中文字体名称
+        System.out.println(xssfChart.getCTChart().getPlotArea().getValAxArray(0)
+                .getTitle().getTx().getRich().getPArray(0).getRArray(0).getT()); // 值标题
+        System.out.println(xssfChart.getCTChart().getPlotArea().getValAxArray(0)
+                .getMajorUnit().getVal()); // 纵坐标轴间隔
     }
 }
