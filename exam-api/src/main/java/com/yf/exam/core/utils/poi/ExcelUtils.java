@@ -8,6 +8,11 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellFill;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTBar3DChart;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTFilter;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTFilterColumn;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTSortCondition;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTXf;
 
 import java.io.FileInputStream;
@@ -16,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -528,15 +534,145 @@ public class ExcelUtils {
                 if (range.isInRange(address)) {
                     StringBuilder res = new StringBuilder();
                     for (int k = 0; k < formattingItem.getNumberOfRules(); k++) {
-                        res.append(formattingItem.getRule(k).getConditionType().type).append(".");
-                        res.append(formattingItem.getRule(k).getComparisonOperation()).append(".");
-                        res.append(formattingItem.getRule(k).getFormula1()).append(".");
+                        final XSSFConditionalFormattingRule rule = formattingItem.getRule(k);
+                        res.append(rule.getConditionType().type).append(",");
+                        res.append(rule.getComparisonOperation()).append(",");
+                        res.append(rule.getFormula1()).append(",");
                     }
                     return res.substring(0, res.length() - 1);
                 }
             }
         }
         return null;
+    }
+
+    private XSSFChart pgetXSSFChart() {
+        return xssfWorkbook.getSheetAt(0).getDrawingPatriarch().getCharts().get(0);
+    }
+    private CTBar3DChart pgetBar3DChart() {
+        final XSSFChart xssfChart = pgetXSSFChart();
+        return xssfChart.getCTChart().getPlotArea().getBar3DChartArray(0);
+    }
+
+    /**
+     * 获取图表名称
+     * @return
+     */
+    public String getChartTitle() {
+        return pgetXSSFChart().getTitleText().getString();
+    }
+
+    /**
+     * 获取cat坐标(横坐标)标题
+     * xssfChart.getCTChart().getPlotArea().getCatAxArray(0).getTitle().getTx()
+     *          .getRich().getPArray(0).getRArray(0).getRPr().getSz(); // 行标题大小
+     * xssfChart.getCTChart().getPlotArea().getCatAxArray(0).getTitle().getTx()
+     *          .getRich().getPArray(0).getRArray(0).getRPr().getEa(); // 中文字体名称
+     * @return
+     */
+    public String getChartCatTitle() {
+        return pgetXSSFChart().getCTChart().getPlotArea().getCatAxArray(0)
+                .getTitle().getTx().getRich().getPArray(0).getRArray(0).getT();
+    }
+
+    /**
+     * 获取val坐标(纵坐标)标题
+     * @return
+     */
+    public String getChartValTitle() {
+        return pgetXSSFChart().getCTChart().getPlotArea().getValAxArray(0)
+                .getTitle().getTx().getRich().getPArray(0).getRArray(0).getT();
+    }
+
+    /**
+     * 获取图表的数据范围
+     * @return
+     */
+    public String getChartData() {
+        final List<CTBarSer> serList = pgetBar3DChart().getSerList();
+        StringBuilder sb = new StringBuilder();
+        for (CTBarSer ser : serList) {
+            final String f0 = ser.getTx().getStrRef().getF(); // 数据标题
+            final String f1 = ser.getCat().getStrRef().getF(); // cat横坐标范围
+            final String f2 = ser.getVal().getNumRef().getF(); // 数据范围
+            sb.append(f0).append(",");
+            sb.append(f1).append(",");
+            sb.append(f2).append(",");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 获取图表数据是否显示值
+     * @return
+     */
+    public Boolean isChartShowVal() {
+        return pgetBar3DChart().getSerList().get(0).getDLbls().getShowVal().getVal();
+    }
+
+    /**
+     * 获取图表坐标数据间隔大小
+     * @return
+     */
+    public Double getChartMajorUnit() {
+        return pgetXSSFChart().getCTChart().getPlotArea().getValAxArray(0)
+                .getMajorUnit().getVal();
+    }
+
+    /**
+     * 获取排序影响的范围
+     * @return
+     */
+    public String getSortStateRef() {
+        return xssfWorkbook.getSheetAt(0).getCTWorksheet()
+                .getSortState().getRef();
+    }
+
+    /**
+     * 获取排序条件
+     * @return
+     */
+    public String getSortConditionRef() {
+        final List<CTSortCondition> sortConditionList = xssfWorkbook.getSheetAt(0).getCTWorksheet()
+                .getSortState().getSortConditionList();
+        StringBuilder res = new StringBuilder();
+        for (CTSortCondition condition : sortConditionList) {
+            if (condition.getDescending()) {
+                res.append("r");
+            }
+            res.append(condition.getRef()).append(",");
+        }
+        return res.toString();
+    }
+
+    /**
+     * 获取自动筛选的范围
+     * @return
+     */
+    public String getAutoFilterRef() {
+        return xssfWorkbook.getSheetAt(0).getCTWorksheet().getAutoFilter().getRef();
+    }
+
+    /**
+     * 获取筛选条件
+     * @return
+     */
+    public String getFilterVal() {
+        final List<CTFilterColumn> filterColumnList = xssfWorkbook.getSheetAt(0)
+                .getCTWorksheet().getAutoFilter().getFilterColumnList();
+        StringBuilder res = new StringBuilder();
+        for (CTFilterColumn column : filterColumnList) {
+            if (column.getFilters() != null) {
+                res.append(column.getFilters().getFilterList()
+                        .stream().map(CTFilter::getVal).collect(Collectors.joining(",")));
+            }
+            if (column.getCustomFilters() != null) {
+                res.append(column.getCustomFilters().getCustomFilterList()
+                        .stream().map(item -> item.getOperator().toString() + item.getVal())
+                        .collect(Collectors.joining(",")));
+            }
+        }
+        return res.toString();
     }
 
 //    public static void main(String[] args) {

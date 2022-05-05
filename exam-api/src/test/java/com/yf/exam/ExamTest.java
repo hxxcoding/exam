@@ -11,10 +11,7 @@ import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.junit.Test;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBar3DChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCustomFilter;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTDxf;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTFilterColumn;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTXf;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import java.io.FileInputStream;
@@ -23,6 +20,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExamTest {
 
@@ -142,13 +140,8 @@ public class ExamTest {
         System.out.println(serList.get(2).getVal().getNumRef().getF());
         System.out.println(serList.get(2).getCat().getStrRef().getF());
         System.out.println(serList.get(0).getDLbls().getShowVal().getVal());
-        System.out.println(xssfChart.getCTChart());
         System.out.println(xssfChart.getCTChart().getPlotArea().getCatAxArray(0)
                 .getTitle().getTx().getRich().getPArray(0).getRArray(0).getT()); // 行标题
-        System.out.println(xssfChart.getCTChart().getPlotArea().getCatAxArray(0)
-                .getTitle().getTx().getRich().getPArray(0).getRArray(0).getRPr().getSz()); // 行标题大小
-        System.out.println(xssfChart.getCTChart().getPlotArea().getCatAxArray(0)
-                .getTitle().getTx().getRich().getPArray(0).getRArray(0).getRPr().getEa()); // 中文字体名称
         System.out.println(xssfChart.getCTChart().getPlotArea().getValAxArray(0)
                 .getTitle().getTx().getRich().getPArray(0).getRArray(0).getT()); // 值标题
         System.out.println(xssfChart.getCTChart().getPlotArea().getValAxArray(0)
@@ -158,22 +151,17 @@ public class ExamTest {
     @Test
     public void testExcel3() throws IOException {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream("/Users/hxx/Desktop/answer2.xlsx"));
-        System.out.println(xssfWorkbook.getSheetAt(1).getCTWorksheet());
-        System.out.println(xssfWorkbook.getSheetAt(1).getCTWorksheet()
+//        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet());
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet()
                 .getSortState().getRef()); // 排序影响范围
-        System.out.println(xssfWorkbook.getSheetAt(1).getCTWorksheet()
-                .getSortState().getSortConditionArray(0).getRef()); // 排序条件
-        System.out.println(xssfWorkbook.getSheetAt(1).getCTWorksheet()
-                .getSortState().getRef()); // 排序影响范围
-        System.out.println(xssfWorkbook.getSheetAt(1).getCTWorksheet()
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet()
                 .getSortState().getSortConditionArray(0).getRef()); // 排序条件1
-        System.out.println(xssfWorkbook.getSheetAt(1).getCTWorksheet()
-                .getSortState().getSortConditionArray(1).getRef()); // 排序条件2
-        System.out.println(xssfWorkbook.getSheetAt(1).getCTWorksheet()
-                .getSortState().getSortConditionArray(1).getDescending()); // 排序条件2降序
-        System.out.println(xssfWorkbook.getSheetAt(1).getCTWorksheet().getAutoFilter().getRef()); // 筛选范围
-        final List<CTFilterColumn> filterColumnList = xssfWorkbook.getSheetAt(1).getCTWorksheet().getAutoFilter().getFilterColumnList();
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet()
+                .getSortState().getSortConditionArray(0).getDescending()); // 排序条件1降序
+        System.out.println(xssfWorkbook.getSheetAt(0).getCTWorksheet().getAutoFilter().getRef()); // 筛选范围
+        final List<CTFilterColumn> filterColumnList = xssfWorkbook.getSheetAt(0).getCTWorksheet().getAutoFilter().getFilterColumnList();
         System.out.println(filterColumnList.get(0).getFilters().getFilterArray(0).getVal()); // 过滤选定值
+        System.out.println(filterColumnList.get(0).getFilters().getFilterList().stream().map(CTFilter::getVal).collect(Collectors.joining(","))); // 过滤选定值
         final List<CTCustomFilter> customFilterList = filterColumnList.get(1).getCustomFilters().getCustomFilterList();
         StringBuilder sb = new StringBuilder();
         for (CTCustomFilter item : customFilterList) {
