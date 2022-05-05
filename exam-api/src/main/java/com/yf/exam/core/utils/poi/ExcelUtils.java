@@ -588,7 +588,7 @@ public class ExcelUtils {
      * 获取图表的数据范围
      * @return
      */
-    public String getChartData() {
+    public String getChartDataRef() {
         final List<CTBarSer> serList = pgetBar3DChart().getSerList();
         StringBuilder sb = new StringBuilder();
         for (CTBarSer ser : serList) {
@@ -603,7 +603,7 @@ public class ExcelUtils {
     }
 
     /**
-     * 获取图表数据是否显示值
+     * 是否图表旁显示值
      * @return
      */
     public Boolean isChartShowVal() {
@@ -611,7 +611,7 @@ public class ExcelUtils {
     }
 
     /**
-     * 获取图表坐标数据间隔大小
+     * 获取图表坐标的数据间隔大小
      * @return
      */
     public Double getChartMajorUnit() {

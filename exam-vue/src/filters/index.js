@@ -136,7 +136,17 @@ export function excelMethodFilter(value) {
     'isPrintHeadings': '是否打印行列号',
     'getHeaderContent': '获取页眉内容和格式',
     'getFooterContent': '获取页脚内容和格式',
-    'getConditionalFormatting': '获取条件格式'
+    'getConditionalFormatting': '获取条件格式',
+    'getChartTitle': '获取图表标题',
+    'getChartCatTitle': '获取cat坐标标题',
+    'getChartValTitle': '获取val坐标标题',
+    'getChartDataRef': '获取图表的数据范围',
+    'isChartShowVal': '是否图表旁显示值',
+    'getChartMajorUnit': '获取图表坐标的数据间隔大小',
+    'getSortStateRef': '获取排序影响的范围',
+    'getSortConditionRef': '获取排序条件',
+    'getAutoFilterRef': '获取自动筛选的范围',
+    'getFilterVal': '获取筛选条件'
   }
   return map[value]
 }
