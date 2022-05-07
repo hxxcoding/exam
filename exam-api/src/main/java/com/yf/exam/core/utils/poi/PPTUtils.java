@@ -93,8 +93,7 @@ public class PPTUtils {
      */
     public String getJumpHyperlink(Integer pos){
         try {
-            List<XSLFSlide> slides = xmlSlideShow.getSlides();
-            List<CTShape> spList = slides.get(pos).getXmlObject().getCSld().getSpTree().getSpList();
+            List<CTShape> spList = pgetSpList(pos);
             for (CTShape sp : spList) {
                 CTHyperlink hyperlink = sp.getNvSpPr().getCNvPr().getHlinkClick();
                 if (hyperlink != null) {
@@ -162,6 +161,59 @@ public class PPTUtils {
         } catch (NullPointerException e){
             return null;
         }
+    }
+
+    /**
+     * 获取版式名称
+     * @param pos
+     * @return
+     */
+    public String getLayoutName(Integer pos) {
+        final List<XSLFSlide> slides = xmlSlideShow.getSlides();
+        return slides.get(pos).getSlideLayout().getName();
+    }
+
+    /**
+     * 获取标题(第一个文本框)文字
+     * @param pos
+     * @return
+     */
+    public String getTitleText(Integer pos) {
+        return pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getT(); // 获取标题文字
+    }
+
+    /**
+     * 获取标题(第一个文本框)中文字体
+     * pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getRPr().getLatin().getTypeface(); // 获取
+     * @param pos
+     * @return
+     */
+    public String getTitleEaFontName(Integer pos) {
+        return pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getRPr().getEa().getTypeface();
+    }
+
+    /**
+     * 获取标题(第一个文本框)字体大小
+     * pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getRPr().getLatin().getTypeface(); // 获取
+     * @param pos
+     * @return
+     */
+    public Integer getTitleEaFontSize(Integer pos) {
+        return pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getRPr().getSz();
+    }
+
+    /**
+     * 获取内容(第二个文本框)文字
+     * @param pos
+     * @return
+     */
+    public String getContentText(Integer pos) {
+        return pgetSpList(pos).get(1).getTxBody().getPArray(0).getRArray(0).getT(); // 获取标题文字
+    }
+
+    private List<CTShape> pgetSpList(Integer pos) {
+        final List<XSLFSlide> slides = xmlSlideShow.getSlides();
+        return slides.get(pos).getXmlObject().getCSld().getSpTree().getSpList();
     }
 
 }

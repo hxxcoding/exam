@@ -1,9 +1,13 @@
 package com.yf.exam;
 
 
+import org.apache.poi.sl.usermodel.PaintStyle;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFGradientPaint;
+import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellFill;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -11,6 +15,8 @@ import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.junit.Test;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBar3DChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
+import org.openxmlformats.schemas.presentationml.x2006.main.CTGraphicalObjectFrame;
+import org.openxmlformats.schemas.presentationml.x2006.main.CTShape;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
@@ -168,5 +174,24 @@ public class ExamTest {
             sb.append(item.getOperator()).append(item.getVal()).append(".");
         }
         System.out.println(sb);
+    }
+
+    @Test
+    public void testPPT () throws IOException {
+        XMLSlideShow xmlSlideShow = new XMLSlideShow(new FileInputStream("/Users/hxx/Desktop/answer.pptx"));
+        final List<XSLFSlide> slides = xmlSlideShow.getSlides();
+        final XSLFSlide slide = slides.get(4);
+        System.out.println(slide.getSlideLayout().getName()); // 获取版式
+
+        final List<CTShape> spList = slide.getXmlObject().getCSld().getSpTree().getSpList();
+        final CTShape shape = spList.get(0);
+        System.out.println(shape.getTxBody().getPArray(0).getRArray(0).getRPr().getSz()); // 获取标题文字
+
+//        final CTGraphicalObjectFrame graphic = slides.get(1).getXmlObject().getCSld().getSpTree().getGraphicFrameArray(0);
+//        System.out.println(graphic.getGraphic().getGraphicData()); // 无法深入获取
+//        System.out.println(slides.get(3).getXmlObject().getCSld().getSpTree().getSpList().get(2).getSpPr().getPrstGeom().getPrst());
+
+        final PaintStyle paint = slides.get(0).getBackground().getFillStyle().getPaint();
+        System.out.println(paint.getClass().getSimpleName()); // 背景填充类型
     }
 }
