@@ -154,7 +154,7 @@
                 解析答案附件
               </el-button>
               <el-button v-if="wordParagraphs.length !== 0" class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
-                添加判分点
+                添加判分点 (共{{ postForm.officeAnswerList.length }}个得分点,总{{ postForm.officeAnswerList.reduce((sum, e) => sum += Number(e.score || 0), 0) }}分)
               </el-button>
             </el-form-item>
 
@@ -240,7 +240,7 @@
                 获取判分方法
               </el-button>
               <el-button class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
-                添加判分点
+                添加判分点 (共{{ postForm.officeAnswerList.length }}个得分点,总{{ postForm.officeAnswerList.reduce((sum, e) => sum += Number(e.score || 0), 0) }}分)
               </el-button>
             </el-form-item>
 
@@ -323,7 +323,7 @@
                 解析答案附件
               </el-button>
               <el-button v-if="pptSlides.length !== 0" class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleOfficeAnswerAdd">
-                添加判分点
+                添加判分点 (共{{ postForm.officeAnswerList.length }}个得分点,总{{ postForm.officeAnswerList.reduce((sum, e) => sum += Number(e.score || 0), 0) }}分)
               </el-button>
             </el-form-item>
 
