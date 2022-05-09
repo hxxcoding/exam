@@ -113,6 +113,7 @@ public class PPTUtils {
     /**
      * 获取动画主序列动作信息
      * 动画样式 只能获取进入/退出动画 需要传一个动画次序的参数 并且每个动画的样式不同内容也不同 看看怎么实现复用
+     * `飞入`效果无法获取
      * @param slidePos 幻灯片的位置
      * @param actionPos 动作在幻灯片中的顺序
      * @return 动画样式_动画出现时间
@@ -126,7 +127,7 @@ public class PPTUtils {
             CTTimeNodeList childTnLst = timeNodeParallel.getCTn().getChildTnLst().getParArray(0)
                     .getCTn().getChildTnLst().getParArray(0).getCTn().getChildTnLst();
             CTTLAnimateEffectBehavior actionBehavior = childTnLst.getAnimEffectArray(0);
-            return actionBehavior.getFilter() + "_" + actionBehavior.getTransition();
+            return actionBehavior.getFilter() + "," + actionBehavior.getTransition();
         } catch (NullPointerException e){
             return null;
         }

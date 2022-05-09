@@ -156,7 +156,12 @@ export function pptMethodFilter(value) {
     'getThemeName': '获取主题',
     'getJumpHyperlink': '获取跳转超链接',
     'getAnimMainSeqAction': '获取主序列动画',
-    'getTransitionMode': '获取过渡方式'
+    'getTransitionMode': '获取过渡方式',
+    'getLayoutName': '获取版式名称',
+    'getTitleText': '获取标题文本内容',
+    'getTitleEaFontName': '获取标题文本框字体名称',
+    'getTitleEaFontSize': '获取标题文本框字体大小',
+    'getContentText': '获取内容文本框文字'
   }
   return map[value]
 }

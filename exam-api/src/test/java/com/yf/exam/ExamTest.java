@@ -15,8 +15,7 @@ import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.junit.Test;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBar3DChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
-import org.openxmlformats.schemas.presentationml.x2006.main.CTGraphicalObjectFrame;
-import org.openxmlformats.schemas.presentationml.x2006.main.CTShape;
+import org.openxmlformats.schemas.presentationml.x2006.main.*;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
@@ -193,5 +192,15 @@ public class ExamTest {
 
         final PaintStyle paint = slides.get(0).getBackground().getFillStyle().getPaint();
         System.out.println(paint.getClass().getSimpleName()); // 背景填充类型
+        System.out.println(xmlSlideShow.getSlideMasters().size());
+
+        XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(3);
+        System.out.println(xslfSlide.getXmlObject());
+//        CTTLCommonTimeNodeData mainSeq = xslfSlide.getXmlObject().getTiming().getTnLst().getParArray(0).getCTn()
+//                .getChildTnLst().getSeqArray(0).getCTn();
+//        CTTLTimeNodeParallel timeNodeParallel = mainSeq.getChildTnLst().getParArray(0);// 第actionPos个动画
+//        CTTimeNodeList childTnLst = timeNodeParallel.getCTn().getChildTnLst().getParArray(0)
+//                .getCTn().getChildTnLst().getParArray(0).getCTn().getChildTnLst();
+//        System.out.println(childTnLst);
     }
 }
