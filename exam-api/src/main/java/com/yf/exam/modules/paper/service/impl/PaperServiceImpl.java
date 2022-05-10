@@ -657,11 +657,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paperQuAnswerService.saveBatch(batchAnswerList);
     }
 
+    @Async
+    @Override
+    public void fillAnswerByAsync(PaperAnswerDTO reqDTO) {
+        paperService.fillAnswer(reqDTO);
+    }
+
     /**
      * 填充答案并判分
      * @param reqDTO
      */
-    @Async
     @Override
     public void fillAnswer(PaperAnswerDTO reqDTO) {
 
@@ -713,8 +718,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 right = true; // 设置为true 实际的分看actualScore 与is_right无关
                 String realPath = uploadService.getRealPath(answerFileUrl.substring(answerFileUrl.indexOf(Constant.FILE_PREFIX)));
                 List<PaperQuPointsRespDTO> points = this.quOfficePoints(reqDTO.getQuType(), reqDTO.getQuId(), realPath);
-                int totalScore = points.stream().mapToInt(PaperQuPointsRespDTO::getUserScore).sum();
-                paperQu.setActualScore(totalScore);
+                int totalUserScore = points.stream().mapToInt(PaperQuPointsRespDTO::getUserScore).sum();
+                int totalPointScore = points.stream().mapToInt(PaperQuPointsRespDTO::getPointScore).sum();
+                int actualScore = Math.round(1.0F * totalUserScore / totalPointScore * paperQu.getScore());
+                paperQu.setActualScore(actualScore);
             }
         }
 

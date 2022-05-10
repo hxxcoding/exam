@@ -64,7 +64,13 @@ public interface PaperService extends IService<Paper> {
     OnlinePaperQuDetailDTO findQuDetail(String paperId, String quId);
 
     /**
-     * 填充答案
+     * 异步填充答案
+     * @param reqDTO
+     */
+    void fillAnswerByAsync(PaperAnswerDTO reqDTO);
+
+    /**
+     * 同步填充答案
      * @param reqDTO
      */
     void fillAnswer(PaperAnswerDTO reqDTO);

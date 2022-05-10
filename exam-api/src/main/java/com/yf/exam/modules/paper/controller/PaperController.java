@@ -142,7 +142,7 @@ public class PaperController extends BaseController {
     }
 
     /**
-     * 填充答案
+     * 同步填充答案
      * @param reqDTO
      * @return
      */
@@ -152,6 +152,20 @@ public class PaperController extends BaseController {
     public ApiRest<?> fillAnswer(@RequestBody PaperAnswerDTO reqDTO) {
         //根据ID填充
         baseService.fillAnswer(reqDTO);
+        return super.success();
+    }
+
+    /**
+     * 异步填充答案
+     * @param reqDTO
+     * @return
+     */
+    @ApiOperation(value = "填充答案")
+    @RequiresPermissions("paper:fill-answer")
+    @RequestMapping(value = "/fill-answer-by-async", method = { RequestMethod.POST})
+    public ApiRest<?> fillAnswerByAsync(@RequestBody PaperAnswerDTO reqDTO) {
+        //根据ID填充
+        baseService.fillAnswerByAsync(reqDTO);
         return super.success();
     }
 

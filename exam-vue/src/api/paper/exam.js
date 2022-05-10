@@ -46,6 +46,14 @@ export function fillAnswer(data) {
 }
 
 /**
+ * 异步填充答案
+ * @param data
+ */
+export function fillAnswerByAsync(data) {
+  return post('/exam/api/paper/paper/fill-answer-by-async', data)
+}
+
+/**
  * 交卷
  * @param data
  */

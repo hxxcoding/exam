@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import { paperDetail, quDetail, handExam, fillAnswer } from '@/api/paper/exam'
+import { paperDetail, quDetail, handExam, fillAnswer, fillAnswerByAsync } from '@/api/paper/exam'
 import { Loading } from 'element-ui'
 import FileUpload from '@/components/FileUpload'
 import ExamTimer from '@/components/ExamTimer'
@@ -403,7 +403,7 @@ export default {
       const that = this
 
       // 交卷保存答案
-      this.handSave(this.cardItem, function() {
+      this.handSave(this.cardItem, false, function() {
         const notAnswered = that.countNotAnswered()
 
         let msg = '确认要交卷吗？'
@@ -428,7 +428,7 @@ export default {
     },
 
     // 保存答案
-    handSave(item, callback) {
+    handSave(item, isAsync = true, callback) {
       if (item.id === this.allItem[0].id) {
         this.showPrevious = false
       } else {
@@ -456,23 +456,43 @@ export default {
         answers: answers,
         answer: (this.cardItem.quType >= 10 || this.cardItem.quType === 5) ? this.answer : ''
       }
-      fillAnswer(params).then(() => {
-        // 必须选择一个值
-        if (answers.length > 0 || params.answer !== '') {
-          // 加入已答列表
-          this.cardItem.answered = true
-        } else {
-          this.cardItem.answered = false
-        }
+      if (isAsync) {
+        fillAnswerByAsync(params).then(() => {
+          // 必须选择一个值
+          if (answers.length > 0 || params.answer !== '') {
+            // 加入已答列表
+            this.cardItem.answered = true
+          } else {
+            this.cardItem.answered = false
+          }
 
-        // 最后一个动作，交卷
-        if (callback) {
-          callback()
-        }
+          // 最后一个动作，交卷
+          if (callback) {
+            callback()
+          }
 
-        // 查找详情
-        this.fetchQuData(item)
-      })
+          // 查找详情
+          this.fetchQuData(item)
+        })
+      } else {
+        fillAnswer(params).then(() => {
+          // 必须选择一个值
+          if (answers.length > 0 || params.answer !== '') {
+            // 加入已答列表
+            this.cardItem.answered = true
+          } else {
+            this.cardItem.answered = false
+          }
+
+          // 最后一个动作，交卷
+          if (callback) {
+            callback()
+          }
+
+          // 查找详情
+          this.fetchQuData(item)
+        })
+      }
     },
 
     // 试卷详情
@@ -520,19 +540,19 @@ export default {
         this.paperData = response.data
 
         // 获得第一题内容
-        if (this.paperData.radioList) {
+        if (this.paperData.radioList && this.paperData.radioList.length !== 0) {
           this.cardItem = this.paperData.radioList[0]
-        } else if (this.paperData.multiList) {
+        } else if (this.paperData.multiList && this.paperData.multiList.length !== 0) {
           this.cardItem = this.paperData.multiList[0]
-        } else if (this.paperData.judgeList) {
+        } else if (this.paperData.judgeList && this.paperData.judgeList.length !== 0) {
           this.cardItem = this.paperData.judgeList[0]
-        } else if (this.paperData.blankList) {
+        } else if (this.paperData.blankList && this.paperData.blankList.length !== 0) {
           this.cardItem = this.paperData.blankList[0]
-        } else if (this.paperData.wordList) {
+        } else if (this.paperData.wordList && this.paperData.wordList.length !== 0) {
           this.cardItem = this.paperData.wordList[0]
-        } else if (this.paperData.excelList) {
+        } else if (this.paperData.excelList && this.paperData.excelList.length !== 0) {
           this.cardItem = this.paperData.excelList[0]
-        } else if (this.paperData.pptList) {
+        } else if (this.paperData.pptList && this.paperData.pptList.length !== 0) {
           this.cardItem = this.paperData.pptList[0]
         }
         // else if (this.paperData.saqList) {

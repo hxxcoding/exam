@@ -108,7 +108,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
 
   {
-    path: '/start/exam',
+    path: '/exam/start/:id',
     component: () => import('@/views/paper/exam/exam'),
     name: 'StartExam',
     meta: { title: '开始考试' },
