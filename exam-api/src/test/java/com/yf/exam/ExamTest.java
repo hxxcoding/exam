@@ -31,9 +31,10 @@ public class ExamTest {
 
     @Test
     public void testOnline() throws Exception {
-        XWPFDocument docx = new XWPFDocument(new FileInputStream("/Users/hxx/Desktop/office/test.docx"));
+        XWPFDocument docx = new XWPFDocument(new FileInputStream("/Users/hxx/Desktop/lianxi1answer.docx"));
         CTDocument1 document = docx.getDocument();
-        System.out.println(document);
+        System.out.println(docx.getParagraphArray(0).getAlignment());
+        System.out.println(docx.getParagraphArray(0).getText());
     }
 
     @Test

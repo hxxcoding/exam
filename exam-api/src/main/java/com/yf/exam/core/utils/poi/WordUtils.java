@@ -376,4 +376,17 @@ public class WordUtils {
         }
     }
 
+    /**
+     * 获取对齐方式
+     * @param pos
+     * @return
+     */
+    public String getAlignment(Integer pos) {
+        try {
+            return xwpfDocument.getParagraphArray(pos).getAlignment().toString();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("无法获取到该`段落`的对齐方式");
+        }
+    }
+
 }
