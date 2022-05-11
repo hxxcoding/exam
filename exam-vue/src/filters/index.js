@@ -91,6 +91,8 @@ export function wordMethodFilter(value) {
     'getIndentationFirstLine': '获取首行缩进',
     'getIndentationHanging': '获取悬挂缩进',
     'getSpacingBetween': '获取行间距',
+    'getSpacingBeforeLines': '获取段前间距',
+    'getSpacingAfterLines': '获取段后间距',
     'getNumFmt': '获取项目符号',
     'getFontSize': '获取字号',
     'getFontFamily': '获取字体',

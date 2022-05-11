@@ -215,6 +215,32 @@ public class WordUtils {
     }
 
     /**
+     * 获取某个段落的段前间距
+     * @param pos
+     * @return
+     */
+    public Integer getSpacingBeforeLines(Integer pos) {
+        try {
+            return xwpfDocument.getParagraphs().get(pos).getSpacingBeforeLines();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
+    }
+
+    /**
+     * 获取某个段落的段后间距
+     * @param pos
+     * @return
+     */
+    public Integer getSpacingAfterLines(Integer pos) {
+        try {
+            return xwpfDocument.getParagraphs().get(pos).getSpacingAfterLines();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
+    }
+
+    /**
      * 获取某个段落的项目符号
      * @param pos
      * @return
