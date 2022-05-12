@@ -266,7 +266,7 @@ public class WordUtils {
      */
     public Integer getFontSize(Integer pos) {
         try {
-            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getFontSize();
+            return pgetFirstRun(pos).getFontSize();
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
         }
@@ -365,7 +365,7 @@ public class WordUtils {
      */
     public String getUnderlineType(Integer pos) {
         try {
-            UnderlinePatterns underline = xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getUnderline();
+            UnderlinePatterns underline = pgetFirstRun(pos).getUnderline();
             if (underline != UnderlinePatterns.NONE) {
                 return underline.toString();
             } else {
@@ -383,7 +383,7 @@ public class WordUtils {
      */
     public Boolean isBold(Integer pos) {
         try {
-            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).isBold();
+            return pgetFirstRun(pos).isBold();
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
         }
@@ -396,7 +396,7 @@ public class WordUtils {
      */
     public Boolean isItalic(Integer pos) {
         try {
-            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).isItalic();
+            return pgetFirstRun(pos).isItalic();
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
         }
@@ -409,7 +409,7 @@ public class WordUtils {
      */
     public String getPicTextAround(Integer pos) {
         try {
-            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getCTR()
+            return pgetFirstRun(pos).getCTR()
                     .getDrawingArray(0).getAnchorArray(0).getWrapSquare().getWrapText().toString();
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("无法获取到该`段落`的图片文字环绕方式");
@@ -436,7 +436,7 @@ public class WordUtils {
      */
     public String getEmphasisMark(Integer pos) {
         try {
-            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getEmphasisMark().toString();
+            return pgetFirstRun(pos).getEmphasisMark().toString();
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
         }
@@ -463,11 +463,15 @@ public class WordUtils {
      */
     public String getShadingFill(Integer pos) {
         try {
-            byte[] colors = (byte[])xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getCTR().getRPr().getShd().getFill();
+            byte[] colors = (byte[]) pgetFirstRun(pos).getCTR().getRPr().getShd().getFill();
             return StringUtils.bytesToHexString(colors);
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
         }
+    }
+
+    private XWPFRun pgetFirstRun(Integer pos) {
+        return xwpfDocument.getParagraphs().get(pos).getRuns().get(0);
     }
 
 }
