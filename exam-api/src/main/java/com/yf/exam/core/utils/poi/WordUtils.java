@@ -474,4 +474,12 @@ public class WordUtils {
         return xwpfDocument.getParagraphs().get(pos).getRuns().get(0);
     }
 
+    /**
+     * 获取表格行数
+     * @return
+     */
+    public Integer getTableRowNum() {
+        return xwpfDocument.getTableArray(0).getNumberOfRows();
+    }
+
 }

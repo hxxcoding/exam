@@ -103,7 +103,8 @@ export function wordMethodFilter(value) {
     'getDefaultChineseFontFamily': '获取默认中文字体',
     'getDefaultAsciiFontFamily': '获取默认英文字体',
     'getUnderlineType': '获取下划线类型',
-    'getPicTextAround': '获取图片环绕方式'
+    'getPicTextAround': '获取图片环绕方式',
+    'getTableRowNum': '获取表格行数'
   }
   return map[value]
 }

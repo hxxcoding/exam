@@ -51,6 +51,13 @@ public class ExamTest {
     }
 
     @Test
+    public void testWordTable() throws IOException{
+        XWPFDocument xwpfDocument = new XWPFDocument(new FileInputStream("/Users/hxx/Desktop/lianxi1answer.docx"));
+        System.out.println(xwpfDocument.getTableArray(0).getNumberOfRows());
+        System.out.println(xwpfDocument.getTableArray(0).getText());
+    }
+
+    @Test
     public void testExcelUtils() throws IOException {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream("/Users/hxx/Desktop/answer1.xlsx"));
         System.out.println(xssfWorkbook.getSheetAt(1).getSheetName()); // 获取第0个表的表名称
