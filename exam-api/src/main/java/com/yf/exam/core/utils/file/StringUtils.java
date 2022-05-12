@@ -111,9 +111,5 @@ public class StringUtils {
         }
         return sb.toString();
     }
-    
-    public static void main(String[] args) {
-    	System.out.println(extractChinese("你好，我是聪明笨狗，It's me!"));
-	}
 
 }

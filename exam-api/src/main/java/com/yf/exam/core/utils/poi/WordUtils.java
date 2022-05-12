@@ -9,6 +9,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFramePr;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -311,6 +312,19 @@ public class WordUtils {
     }
 
     /**
+     * 获取颜色
+     * @param pos
+     * @return
+     */
+    public String getColor(Integer pos) {
+        try {
+            return xwpfDocument.getParagraphArray(pos).getRuns().get(0).getColor();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
+    }
+
+    /**
      * 获取默认中文字体
      * @return 字体
      */
@@ -395,7 +409,7 @@ public class WordUtils {
      */
     public String getPicTextAround(Integer pos) {
         try {
-            return xwpfDocument.getParagraphArray(pos).getRuns().get(0).getCTR()
+            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getCTR()
                     .getDrawingArray(0).getAnchorArray(0).getWrapSquare().getWrapText().toString();
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("无法获取到该`段落`的图片文字环绕方式");
@@ -409,9 +423,50 @@ public class WordUtils {
      */
     public String getAlignment(Integer pos) {
         try {
-            return xwpfDocument.getParagraphArray(pos).getAlignment().toString();
+            return xwpfDocument.getParagraphs().get(pos).getAlignment().toString();
         } catch (IndexOutOfBoundsException e) {
             throw new ServiceException("无法获取到该`段落`的对齐方式");
+        }
+    }
+
+    /**
+     * 获取着重号样式
+     * @param pos
+     * @return
+     */
+    public String getEmphasisMark(Integer pos) {
+        try {
+            return xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getEmphasisMark().toString();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
+    }
+
+    /**
+     * 获取首字下沉格式和行数
+     * @param pos
+     * @return
+     */
+    public String getDropCapAndLines(Integer pos) {
+        try {
+            final CTFramePr framePr = xwpfDocument.getParagraphs().get(pos).getCTP().getPPr().getFramePr();
+            return String.valueOf(framePr.getDropCap()) + framePr.getLines();
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
+        }
+    }
+
+    /**
+     * 获取底纹填充色
+     * @param pos
+     * @return
+     */
+    public String getShadingFill(Integer pos) {
+        try {
+            byte[] colors = (byte[])xwpfDocument.getParagraphs().get(pos).getRuns().get(0).getCTR().getRPr().getShd().getFill();
+            return StringUtils.bytesToHexString(colors);
+        } catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("`段落`不存在,请`解析文件`并选择`段落`");
         }
     }
 

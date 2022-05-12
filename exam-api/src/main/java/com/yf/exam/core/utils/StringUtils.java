@@ -37,7 +37,25 @@ public class StringUtils {
         return sb.toString();
     }
 
+    /**
+     * 过来字符串中的html标签
+     * @param source
+     * @return
+     */
     public static String filterHtml(String source) {
         return source.replaceAll("<[^>]+>|&[^>]+;", "");
+    }
+
+    /**
+     * byte数组转16进制字符串
+     * @param bytes
+     * @return
+     */
+    public static String bytesToHexString(byte[] bytes) {
+        StringBuilder res = new StringBuilder();
+        for (byte b : bytes) {
+            res.append(String.format("%02X", b));
+        }
+        return res.toString();
     }
 }

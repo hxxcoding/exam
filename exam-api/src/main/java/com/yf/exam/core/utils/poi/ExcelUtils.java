@@ -2,6 +2,7 @@ package com.yf.exam.core.utils.poi;
 
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.Reflections;
+import com.yf.exam.core.utils.StringUtils;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -340,14 +341,6 @@ public class ExcelUtils {
         }
     }
 
-    private static String bytesToHexString(byte[] bytes) {
-        StringBuilder res = new StringBuilder();
-        for (byte b : bytes) {
-            res.append(String.format("%02X", b));
-        }
-        return res.toString();
-    }
-
     /**
      * 获取背景填充颜色
      * @param cellAddress
@@ -356,7 +349,7 @@ public class ExcelUtils {
     public String getFillBackgroundColor(String cellAddress) {
         XSSFCellFill fill = pgetCellFill(cellAddress);
         byte[] backRGB = fill.getFillBackgroundColor().getRGB();
-        return bytesToHexString(backRGB);
+        return StringUtils.bytesToHexString(backRGB);
     }
 
     /**
@@ -367,7 +360,7 @@ public class ExcelUtils {
     public String getFillForegroundColor(String cellAddress) {
         XSSFCellFill fill = pgetCellFill(cellAddress);
         byte[] foreRGB = fill.getFillForegroundColor().getRGB();
-        return bytesToHexString(foreRGB);
+        return StringUtils.bytesToHexString(foreRGB);
     }
 
     /**

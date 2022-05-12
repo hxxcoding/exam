@@ -42,6 +42,12 @@ public class ExamTest {
         XWPFDocument xwpfDocument = new XWPFDocument(new FileInputStream("/Users/hxx/Desktop/lianxi1answer.docx"));
         System.out.println(xwpfDocument.getParagraphArray(1).getSpacingBeforeLines());
         System.out.println(xwpfDocument.getParagraphArray(1).getSpacingAfterLines());
+        System.out.println(xwpfDocument.getParagraphArray(1).getRuns().get(0).getColor()); // 获取颜色
+        final byte[] fill = (byte[])xwpfDocument.getParagraphArray(3).getRuns().get(0).getCTR().getRPr().getShd().getFill();
+        System.out.println(Arrays.toString(fill)); // 获取背景色和底纹有什么区别
+        System.out.println(xwpfDocument.getParagraphArray(1).getRuns().get(0).getEmphasisMark()); // 着重号
+        System.out.println(xwpfDocument.getParagraphArray(5).getCTP().getPPr().getFramePr().getDropCap()); // 首字下沉样式
+        System.out.println(xwpfDocument.getParagraphArray(5).getCTP().getPPr().getFramePr().getLines()); // 首字下沉行数
     }
 
     @Test
