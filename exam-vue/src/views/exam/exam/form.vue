@@ -250,6 +250,7 @@
 
     <div style="margin-top: 20px">
       <el-button type="primary" @click="handleSave">保存</el-button>
+      <el-button type="info" @click="onCancel">返回</el-button>
     </div>
 
   </div>
@@ -635,6 +636,10 @@ export default {
         row.totalExcel = 0
         row.totalPPT = 0
       }
+    },
+
+    onCancel() {
+      this.$router.push({ name: 'ListExam' })
     }
 
   }
