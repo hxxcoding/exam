@@ -249,7 +249,7 @@
     </el-card>
 
     <div style="margin-top: 20px">
-      <el-button type="primary" @click="handleSave">保存</el-button>
+      <el-button v-perm="['exam:save']" type="primary" @click="handleSave">保存</el-button>
       <el-button type="info" @click="onCancel">返回</el-button>
     </div>
 
