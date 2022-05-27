@@ -105,10 +105,13 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop="userScore"
                 align="center"
                 label="得分"
-              />
+              >
+                <template slot-scope="scope">
+                  <div>{{ scope.row.userScore }} / {{ scope.row.pointScore }}</div>
+                </template>
+              </el-table-column>
             </el-table>
           </el-row>
         </div>
