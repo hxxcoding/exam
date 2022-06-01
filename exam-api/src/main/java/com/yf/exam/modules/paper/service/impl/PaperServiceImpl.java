@@ -651,6 +651,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paperQuAnswerService.saveBatch(batchAnswerList);
     }
 
+    /**
+     * 异步填充答案并判分
+     * @param reqDTO
+     */
     @Async
     @Override
     public void fillAnswerByAsync(PaperAnswerDTO reqDTO) {
@@ -698,7 +702,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 //有一个对不上就是错的
                 if (item.getIsRight() != null && !item.getIsRight().equals(item.getChecked())) {
                     right = false;
-                } // TODO 少选得一半 错选不得分
+                }
                 paperQuAnswerService.updateById(item);
             }
         }
@@ -738,7 +742,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     /**
-     * 获取题目的得分详情 上面判分其实也可以用这个函数，但是 参数问题,判分效率问题 可能会受到影响
+     * 获取题目的得分详情
      * @param paperId
      * @param quId
      * @return
@@ -752,7 +756,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     /**
-     * 同时做判分用
+     * 获取题目的得分详情 同时做判分用
      * @param quType
      * @param quId
      * @param filePath
