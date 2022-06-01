@@ -31,11 +31,11 @@
           <div><strong>开放类型：</strong> {{ detailData.openType | examOpenType }}</div>
           <div>
             <strong>考场座位：</strong>
-            <el-input v-model="postForm.seat" placeholder="请输入考场座位号(例:3-021)" style="width: 250px" clearable @blur="handleSeatInputChange" />
+            <el-input v-model="postForm.seat" placeholder="请输入考场座位号(例:3-021)" style="width: 250px; vertical-align: bottom" clearable @blur="handleSeatInputChange" />
           </div>
           <div v-if="detailData.isStart && detailData.examType === 1">
             <strong>考试密码：</strong>
-            <el-input v-model="postForm.password" placeholder="请联系监考老师输入考试密码！" style="width: 250px" show-password clearable />
+            <el-input v-model="postForm.password" placeholder="请联系监考老师输入考试密码！" style="width: 250px; vertical-align: bottom" show-password clearable />
           </div>
 
         </el-card>
