@@ -19,7 +19,9 @@ public interface QuAnswerOfficeService extends IService<QuAnswerOffice> {
 
     String readFormat(String url, String method, String pos);
 
-    List<QuAnswerOfficeDTO> listByQu(String quId);
+    List<QuAnswerOfficeDTO> listDtoByQuId(String quId);
+
+    List<QuAnswerOffice> listByQuId(String quId);
 
     void saveAll(String quId, List<QuAnswerOfficeDTO> list);
 }

@@ -1,26 +1,26 @@
 package com.yf.exam.modules.qu.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yf.exam.modules.Constant;
 import com.yf.exam.ability.upload.service.UploadService;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
 import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.PPTUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
+import com.yf.exam.modules.Constant;
 import com.yf.exam.modules.qu.dto.PPTSlideDTO;
-import com.yf.exam.modules.qu.dto.QuAnswerDTO;
 import com.yf.exam.modules.qu.dto.QuAnswerOfficeDTO;
 import com.yf.exam.modules.qu.dto.WordParagraphDTO;
-import com.yf.exam.modules.qu.dto.response.WordAnalyzeRespDTO;
-import com.yf.exam.modules.qu.entity.QuAnswer;
 import com.yf.exam.modules.qu.entity.QuAnswerOffice;
 import com.yf.exam.modules.qu.enums.QuType;
 import com.yf.exam.modules.qu.mapper.QuAnswerOfficeMapper;
 import com.yf.exam.modules.qu.service.QuAnswerOfficeService;
-import org.apache.poi.ss.util.CellAddress;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -31,10 +31,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@CacheConfig(cacheNames = "quAnswerOfficeService", keyGenerator = "keyGenerator")
 public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper, QuAnswerOffice> implements QuAnswerOfficeService {
 
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private QuAnswerOfficeService quAnswerOfficeService;
 
     @Override
     public List<WordParagraphDTO> wordParagraphAnalyze(String url) {
@@ -105,9 +108,8 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
     }
 
     @Override
-    public List<QuAnswerOfficeDTO> listByQu(String quId) {
-        List<QuAnswerOffice> list = this.list(new QueryWrapper<QuAnswerOffice>().lambda()
-                .eq(QuAnswerOffice::getQuId, quId));
+    public List<QuAnswerOfficeDTO> listDtoByQuId(String quId) {
+        List<QuAnswerOffice> list = quAnswerOfficeService.listByQuId(quId);
         if (!CollectionUtils.isEmpty(list)) {
             return BeanMapper.mapList(list, QuAnswerOfficeDTO.class);
         }
@@ -115,6 +117,19 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
     }
 
     @Override
+    @Cacheable(sync = true)
+    public List<QuAnswerOffice> listByQuId(String quId) {
+        return this.list(new LambdaQueryWrapper<QuAnswerOffice>()
+                .eq(QuAnswerOffice::getQuId, quId));
+    }
+
+    /**
+     * 保存Office题目内容
+     * @param quId
+     * @param list
+     */
+    @Override
+    @CacheEvict(allEntries = true)
     public void saveAll(String quId, List<QuAnswerOfficeDTO> list) {
         //最终要保存的列表
         List<QuAnswerOffice> saveList = new ArrayList<>();

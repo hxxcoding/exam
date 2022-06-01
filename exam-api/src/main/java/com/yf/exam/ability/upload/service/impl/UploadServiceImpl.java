@@ -72,8 +72,6 @@ public class UploadServiceImpl implements UploadService {
         // 获取真实的文件路径
         String filePath = this.getRealPath(request.getRequestURI());
 
-        System.out.println("++++完整路径为："+filePath);
-
         try {
             FileUtils.writeRange(request, response, filePath);
         } catch (IOException e) {

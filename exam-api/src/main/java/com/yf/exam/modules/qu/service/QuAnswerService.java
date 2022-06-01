@@ -33,11 +33,11 @@ public interface QuAnswerService extends IService<QuAnswer> {
     List<QuAnswer> listAnswerByRandom(String quId);
 
     /**
-     * 根据问题查找答案
+     * 根据问题查找选项
      * @param quId
      * @return
      */
-    List<QuAnswerDTO> listByQu(String quId);
+    List<QuAnswerDTO> listDtoByQuId(String quId);
 
     /**
      * 保存试题

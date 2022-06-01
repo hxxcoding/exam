@@ -59,7 +59,7 @@ public class QuAnswerServiceImpl extends ServiceImpl<QuAnswerMapper, QuAnswer> i
     }
 
     @Override
-    public List<QuAnswerDTO> listByQu(String quId) {
+    public List<QuAnswerDTO> listDtoByQuId(String quId) {
         QueryWrapper<QuAnswer> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(QuAnswer::getQuId, quId);
 

@@ -764,8 +764,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
      */
     private List<PaperQuPointsRespDTO> quOfficePoints(Integer quType, String quId, String filePath) {
         List<PaperQuPointsRespDTO> res = new ArrayList<>();
-        List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.list(new LambdaQueryWrapper<QuAnswerOffice>()
-                .eq(QuAnswerOffice::getQuId, quId));
+        List<QuAnswerOffice> officeAnswers = quAnswerOfficeService.listByQuId(quId);
         if (quType.equals(QuType.WORD) && filePath.endsWith(".docx")) {
             WordUtils docx = new WordUtils(filePath);
             for (QuAnswerOffice an : officeAnswers) {

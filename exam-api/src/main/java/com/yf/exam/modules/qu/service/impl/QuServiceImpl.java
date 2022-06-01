@@ -97,14 +97,14 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
         if (qu.getQuType().equals(QuType.RADIO) ||
                 qu.getQuType().equals(QuType.MULTI) ||
                 qu.getQuType().equals(QuType.JUDGE)) {
-            List<QuAnswerDTO> answerList = quAnswerService.listByQu(id);
+            List<QuAnswerDTO> answerList = quAnswerService.listDtoByQuId(id);
             respDTO.setAnswerList(answerList);
         }
 
         if (qu.getQuType().equals(QuType.WORD) ||
                 qu.getQuType().equals(QuType.EXCEL) ||
                 qu.getQuType().equals(QuType.PPT)) {
-            List<QuAnswerOfficeDTO> officeAnswerList = quAnswerOfficeService.listByQu(id);
+            List<QuAnswerOfficeDTO> officeAnswerList = quAnswerOfficeService.listDtoByQuId(id);
             respDTO.setOfficeAnswerList(officeAnswerList);
         }
 
@@ -138,11 +138,17 @@ public class QuServiceImpl extends ServiceImpl<QuMapper, Qu> implements QuServic
         this.saveOrUpdate(qu);
 
         // 保存全部answerList
-        if (qu.getQuType() < 10) {
+        if (qu.getQuType().equals(QuType.RADIO)
+                || qu.getQuType().equals(QuType.MULTI)
+                || qu.getQuType().equals(QuType.JUDGE)
+                || qu.getQuType().equals(QuType.BLANK)
+                || qu.getQuType().equals(QuType.SAQ)) {
             quAnswerService.saveAll(qu.getId(), reqDTO.getAnswerList());
         }
 
-        if (qu.getQuType() >= 10) {
+        if (qu.getQuType().equals(QuType.WORD)
+                || qu.getQuType().equals(QuType.EXCEL)
+                || qu.getQuType().equals(QuType.PPT)) {
             quAnswerOfficeService.saveAll(qu.getId(), reqDTO.getOfficeAnswerList());
         }
 

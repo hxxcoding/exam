@@ -23,7 +23,7 @@ public class BeanMapper {
     /**
      * 持有Dozer单例, 避免重复创建DozerMapper消耗资源.
      */
-    private static DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
+    private static final DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
 
     /**
      * 基于Dozer转换对象的类型.
@@ -36,7 +36,7 @@ public class BeanMapper {
      * 基于Dozer转换Collection中对象的类型.
      */
     public static <T> List<T> mapList(Iterable<?> sourceList, Class<T> destinationClass) {
-        List<T> destinationList = new ArrayList();
+        List<T> destinationList = new ArrayList<>();
         for (Object sourceObject : sourceList) {
             T destinationObject = dozerBeanMapper.map(sourceObject, destinationClass);
             destinationList.add(destinationObject);
