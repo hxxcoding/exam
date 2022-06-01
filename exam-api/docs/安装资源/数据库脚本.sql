@@ -643,7 +643,7 @@ CREATE TABLE `el_qu` (
   `qu_type` int(11) NOT NULL COMMENT '题目类型',
   `level` int(11) NOT NULL DEFAULT '1' COMMENT '1普通,2较难',
   `image` varchar(500) NOT NULL DEFAULT '' COMMENT '题目图片',
-  `content` varchar(2000) NOT NULL COMMENT '题目内容',
+  `content` varchar(4000) NOT NULL COMMENT '题目内容',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '题目备注',
