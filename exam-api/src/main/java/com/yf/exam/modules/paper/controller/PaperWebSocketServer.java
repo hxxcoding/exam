@@ -1,4 +1,4 @@
-package com.yf.exam.modules.paper.service;
+package com.yf.exam.modules.paper.controller;
 
 import com.yf.exam.core.exception.ServiceException;
 import lombok.EqualsAndHashCode;
@@ -10,6 +10,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -29,9 +30,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class PaperWebSocketServer {
 
     /**
-     * concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
+     * concurrent包的线程安全Set，用来存放每个客户端对应的PaperWebSocketServer对象。
      */
-    private static final CopyOnWriteArraySet<PaperWebSocketServer> WEB_SOCKET_SET = new CopyOnWriteArraySet<>();
+    private static final Set<PaperWebSocketServer> WEB_SOCKET_SET = new CopyOnWriteArraySet<>();
     private static final Map<String, Session> SESSION_POOL = new ConcurrentHashMap<>();
 
     /**
@@ -42,7 +43,7 @@ public class PaperWebSocketServer {
     private String paperId;
 
     /**
-     * 连接建立成功调用的方法
+     * 连接建立调用的方法
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("paperId") String paperId) throws IOException {
@@ -51,7 +52,7 @@ public class PaperWebSocketServer {
         // 加入set中
         WEB_SOCKET_SET.add(this);
         SESSION_POOL.put(paperId, session);
-        log.info("有一个客户端连接！当前在线人数为" + SESSION_POOL.size());
+        log.info("试卷 paperId={} 连接！当前在线人数为" + SESSION_POOL.size(), paperId);
     }
 
     /**
@@ -62,7 +63,7 @@ public class PaperWebSocketServer {
         //从set中删除
         WEB_SOCKET_SET.remove(this);
         SESSION_POOL.remove(this.paperId);
-        log.info("有一个客户端连接关闭！当前在线人数为" + SESSION_POOL.size());
+        log.info("试卷 paperId={} 连接关闭！当前在线人数为" + SESSION_POOL.size(), this.paperId);
     }
 
     /**
@@ -71,7 +72,11 @@ public class PaperWebSocketServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        session.getAsyncRemote().sendText("pong");
+        if (message.equals("ping")) { // 心跳信号
+            session.getAsyncRemote().sendText("pong");
+        } else {
+            log.info("收到客户端消息 => {}", message);
+        }
     }
 
     /**
@@ -80,7 +85,7 @@ public class PaperWebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable e) {
-        log.error("发生错误");
+        log.error("WebSocket发生错误");
         System.out.println(session);
         e.printStackTrace();
     }
@@ -102,7 +107,7 @@ public class PaperWebSocketServer {
             } catch (Exception e) {
                 throw new ServiceException("发送失败");
             }
-            log.info("发送消息 => {}", message);
+            log.info("发送全体消息 => {}", message);
         }
     }
 
@@ -117,7 +122,7 @@ public class PaperWebSocketServer {
         } else {
             throw new ServiceException("用户已离线");
         }
-        log.info("发送消息 => {}", message);
+        log.info("向 paperId={} 发送消息 => {}", paperId, message);
     }
 
     public static Map<String, Session> getSessionPool() {
