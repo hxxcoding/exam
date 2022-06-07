@@ -87,7 +87,7 @@ export function wordMethodFilter(value) {
     'getPgMarFooter': '获取页脚距边缘',
     'getAlignment': '获取对齐方式',
     'getColsNum': '获取分栏数量',
-    'isColsLine': '是否分栏',
+    'isColsLine': '是否存在分栏分割线',
     'getIndentationFirstLine': '获取首行缩进',
     'getIndentationHanging': '获取悬挂缩进',
     'getSpacingBetween': '获取行间距',

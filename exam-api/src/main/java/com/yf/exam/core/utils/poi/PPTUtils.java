@@ -92,22 +92,18 @@ public class PPTUtils {
      * @return
      */
     public String getJumpHyperlink(Integer pos){
-        try {
-            List<CTShape> spList = pgetSpList(pos);
-            for (CTShape sp : spList) {
-                CTHyperlink hyperlink = sp.getNvSpPr().getCNvPr().getHlinkClick();
-                if (hyperlink != null) {
-                    String action = hyperlink.getAction();
-                    int index = action.indexOf("jump=");
-                    if (index != -1) {
-                        return action.substring(index);
-                    }
+        List<CTShape> spList = pgetSpList(pos);
+        for (CTShape sp : spList) {
+            CTHyperlink hyperlink = sp.getNvSpPr().getCNvPr().getHlinkClick();
+            if (hyperlink != null) {
+                String action = hyperlink.getAction();
+                int index = action.indexOf("jump=");
+                if (index != -1) {
+                    return action.substring(index);
                 }
             }
-            return null;
-        } catch (IndexOutOfBoundsException e) {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -119,18 +115,14 @@ public class PPTUtils {
      * @return 动画样式_动画出现时间
      */
     public String getAnimMainSeqAction(Integer slidePos, Integer actionPos){
-        try {
-            XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(slidePos);
-            CTTLCommonTimeNodeData mainSeq = xslfSlide.getXmlObject().getTiming().getTnLst().getParArray(0).getCTn()
-                    .getChildTnLst().getSeqArray(0).getCTn();
-            CTTLTimeNodeParallel timeNodeParallel = mainSeq.getChildTnLst().getParArray(actionPos);// 第actionPos个动画
-            CTTimeNodeList childTnLst = timeNodeParallel.getCTn().getChildTnLst().getParArray(0)
-                    .getCTn().getChildTnLst().getParArray(0).getCTn().getChildTnLst();
-            CTTLAnimateEffectBehavior actionBehavior = childTnLst.getAnimEffectArray(0);
-            return actionBehavior.getFilter() + "," + actionBehavior.getTransition();
-        } catch (NullPointerException e){
-            return null;
-        }
+        XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(slidePos);
+        CTTLCommonTimeNodeData mainSeq = xslfSlide.getXmlObject().getTiming().getTnLst().getParArray(0).getCTn()
+                .getChildTnLst().getSeqArray(0).getCTn();
+        CTTLTimeNodeParallel timeNodeParallel = mainSeq.getChildTnLst().getParArray(actionPos);// 第actionPos个动画
+        CTTimeNodeList childTnLst = timeNodeParallel.getCTn().getChildTnLst().getParArray(0)
+                .getCTn().getChildTnLst().getParArray(0).getCTn().getChildTnLst();
+        CTTLAnimateEffectBehavior actionBehavior = childTnLst.getAnimEffectArray(0);
+        return actionBehavior.getFilter() + "," + actionBehavior.getTransition();
     }
 
     public String getAnimMainSeqAction(Integer slidePos) {
@@ -153,15 +145,11 @@ public class PPTUtils {
      * @return
      */
     public String getTransitionMode(Integer pos){
-        try{
-            XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(pos);
-            CTSlideTransition transition = xslfSlide.getXmlObject().getTransition();
-            if (transition == null) return null;
-            String s = transition.toString();
-            return s.substring(s.indexOf("<p:"), s.lastIndexOf("\n"));
-        } catch (NullPointerException e){
-            return null;
-        }
+        XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(pos);
+        CTSlideTransition transition = xslfSlide.getXmlObject().getTransition();
+        if (transition == null) return null;
+        String s = transition.toString();
+        return s.substring(s.indexOf("<p:"), s.lastIndexOf("\n"));
     }
 
     /**

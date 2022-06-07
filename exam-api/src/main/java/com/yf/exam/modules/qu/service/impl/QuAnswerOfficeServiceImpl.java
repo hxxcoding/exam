@@ -92,7 +92,7 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
                 ExcelUtils excel = new ExcelUtils(realPath);
                 return excel.executeMethod(method, pos).toString();
             } catch (RuntimeException e) {
-                throw new ServiceException("无法获取到格式,请检查`单元格`和`方法`是否对应");
+                throw new ServiceException("无法获取到格式,请检查`目标单元格`和`方法`是否对应");
             }
         } else if (url.endsWith(".pptx")) {
             try {
@@ -100,7 +100,7 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
                 PPTUtils ppt = new PPTUtils(realPath);
                 return ppt.executeMethod(method, position).toString();
             } catch (RuntimeException e) {
-                throw new ServiceException("无法获取到格式,请检查`段落`和`方法`是否对应");
+                throw new ServiceException("无法获取到格式,请检查`幻灯片`和`方法`是否对应");
             }
         } else {
             throw new ServiceException("文件不支持");

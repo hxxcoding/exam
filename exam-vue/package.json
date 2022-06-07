@@ -1,7 +1,7 @@
 {
   "name": "exam-vue",
   "version": "4.2.1",
-  "description": "在线考试系统",
+  "description": "计算机基础考试系统",
   "author": "",
   "license": "MIT",
   "scripts": {

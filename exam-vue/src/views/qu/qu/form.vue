@@ -334,7 +334,7 @@
               empty-text="请点击上面的`解析`进行设置"
               style="width: 100%; margin-top: 15px"
             >
-              <el-table-column label="选择段落" align="center">
+              <el-table-column label="选择幻灯片" align="center">
                 <template slot-scope="scope">
                   <el-select v-model="scope.row.pos" placeholder="请选择">
                     <el-option

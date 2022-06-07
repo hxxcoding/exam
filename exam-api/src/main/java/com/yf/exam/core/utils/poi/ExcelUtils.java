@@ -138,14 +138,10 @@ public class ExcelUtils {
      * @return
      */
     public String getBorderStyleTop(Integer row, Integer cell) {
-        try {
-            long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
-            long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
-            XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
-            return border.getBorderStyle(XSSFCellBorder.BorderSide.TOP).toString();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
+        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
+        XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
+        return border.getBorderStyle(XSSFCellBorder.BorderSide.TOP).toString();
     }
 
     public String getBorderStyleTop(String cellAddress) {
@@ -160,14 +156,10 @@ public class ExcelUtils {
      * @return
      */
     public String getBorderStyleBottom(Integer row, Integer cell) {
-        try {
-            long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
-            long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
-            XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
-            return border.getBorderStyle(XSSFCellBorder.BorderSide.BOTTOM).toString();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
+        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
+        XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
+        return border.getBorderStyle(XSSFCellBorder.BorderSide.BOTTOM).toString();
     }
 
     public String getBorderStyleBottom(String cellAddress) {
@@ -182,14 +174,10 @@ public class ExcelUtils {
      * @return
      */
     public String getBorderStyleLeft(Integer row, Integer cell) {
-        try {
-            long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
-            long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
-            XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
-            return border.getBorderStyle(XSSFCellBorder.BorderSide.LEFT).toString();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
+        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
+        XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
+        return border.getBorderStyle(XSSFCellBorder.BorderSide.LEFT).toString();
     }
 
     public String getBorderStyleLeft(String cellAddress) {
@@ -204,14 +192,10 @@ public class ExcelUtils {
      * @return
      */
     public String getBorderStyleRight(Integer row, Integer cell) {
-        try {
-            long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
-            long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
-            XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
-            return border.getBorderStyle(XSSFCellBorder.BorderSide.RIGHT).toString();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
+        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
+        XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
+        return border.getBorderStyle(XSSFCellBorder.BorderSide.RIGHT).toString();
     }
 
     public String getBorderStyleRight(String cellAddress) {
@@ -240,15 +224,11 @@ public class ExcelUtils {
      * @return
      */
     public String getRichTextString(String cellAddress) {
-        try {
-            CellAddress address = new CellAddress(cellAddress);
-            XSSFCell cell = xssfWorkbook.getSheetAt(0).getRow(address.getRow()).getCell(address.getColumn());
-            RichTextString richTextString = xssfWorkbook.getSharedStringSource().getSharedStringItems().get(Integer.parseInt(cell.getRawValue()));
-            // 获取单元格中的中文内容
-            return richTextString.getString();
-        } catch (NullPointerException e) {
-            throw new ServiceException("");
-        }
+        CellAddress address = new CellAddress(cellAddress);
+        XSSFCell cell = xssfWorkbook.getSheetAt(0).getRow(address.getRow()).getCell(address.getColumn());
+        RichTextString richTextString = xssfWorkbook.getSharedStringSource().getSharedStringItems().get(Integer.parseInt(cell.getRawValue()));
+        // 获取单元格中的中文内容
+        return richTextString.getString();
     }
 
     /**
@@ -268,12 +248,8 @@ public class ExcelUtils {
      * @return
      */
     private XSSFFont pgetFont(String cellAddress) {
-        try {
-            CTXf cellXf = xssfWorkbook.getStylesSource().getCellXfAt(pgetStyleIndex(cellAddress));
-            return xssfWorkbook.getStylesSource().getFontAt((int) cellXf.getFontId());
-        } catch (NullPointerException e) {
-            return null;
-        }
+        CTXf cellXf = xssfWorkbook.getStylesSource().getCellXfAt(pgetStyleIndex(cellAddress));
+        return xssfWorkbook.getStylesSource().getFontAt((int) cellXf.getFontId());
     }
 
     /**
@@ -282,11 +258,7 @@ public class ExcelUtils {
      * @return
      */
     public String getFontName(String cellAddress) {
-        try {
-            return Objects.requireNonNull(this.pgetFont(cellAddress)).getFontName();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        return Objects.requireNonNull(this.pgetFont(cellAddress)).getFontName();
     }
 
     /**
@@ -295,11 +267,7 @@ public class ExcelUtils {
      * @return
      */
     public Short getFontSize(String cellAddress) {
-        try {
-            return Objects.requireNonNull(this.pgetFont(cellAddress)).getFontHeightInPoints();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        return Objects.requireNonNull(this.pgetFont(cellAddress)).getFontHeightInPoints();
     }
 
     /**
@@ -308,11 +276,7 @@ public class ExcelUtils {
      * @return
      */
     public Boolean isBold(String cellAddress) {
-        try {
-            return Objects.requireNonNull(this.pgetFont(cellAddress)).getBold();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        return Objects.requireNonNull(this.pgetFont(cellAddress)).getBold();
     }
 
     /**
@@ -321,24 +285,20 @@ public class ExcelUtils {
      * @return
      */
     public String getAlignment(String cellAddress) {
-        try {
-            short styleIndex = pgetStyleIndex(cellAddress);
-            CTXf cellXf = xssfWorkbook.getStylesSource().getCellXfAt(styleIndex);
-            StringBuilder res = new StringBuilder();
-            if (cellXf.getAlignment().getHorizontal() != null) {
-                res.append(cellXf.getAlignment().getHorizontal()).append(",");
-            } else {
-                res.append("DEFAULT").append(",");
-            }
-            if (cellXf.getAlignment().getVertical() != null) {
-                res.append(cellXf.getAlignment().getHorizontal()).append(",");
-            } else {
-                res.append("DEFAULT").append(",");
-            }
-            return res.toString();
-        } catch (NullPointerException e) {
-            return null;
+        short styleIndex = pgetStyleIndex(cellAddress);
+        CTXf cellXf = xssfWorkbook.getStylesSource().getCellXfAt(styleIndex);
+        StringBuilder res = new StringBuilder();
+        if (cellXf.getAlignment().getHorizontal() != null) {
+            res.append(cellXf.getAlignment().getHorizontal()).append("&");
+        } else {
+            res.append("DEFAULT").append("&");
         }
+        if (cellXf.getAlignment().getVertical() != null) {
+            res.append(cellXf.getAlignment().getHorizontal());
+        } else {
+            res.append("DEFAULT");
+        }
+        return res.toString();
     }
 
     /**
@@ -524,13 +484,13 @@ public class ExcelUtils {
             final XSSFConditionalFormatting formattingItem = cf.getConditionalFormattingAt(i);
             final CellRangeAddress[] ranges = formattingItem.getFormattingRanges();
             for (CellRangeAddress range : ranges) {
-                if (range.isInRange(address)) {
+                if (range.isInRange(address)) { // cellAddress在range之中
                     StringBuilder res = new StringBuilder();
                     for (int k = 0; k < formattingItem.getNumberOfRules(); k++) {
                         final XSSFConditionalFormattingRule rule = formattingItem.getRule(k);
-                        res.append(rule.getConditionType().type).append(",");
-                        res.append(rule.getComparisonOperation()).append(",");
-                        res.append(rule.getFormula1()).append(",");
+                        res.append(rule.getConditionType().type).append("&");
+                        res.append(rule.getComparisonOperation()).append("&");
+                        res.append(rule.getFormula1()).append("&");
                     }
                     return res.substring(0, res.length() - 1);
                 }
@@ -588,11 +548,11 @@ public class ExcelUtils {
             final String f0 = ser.getTx().getStrRef().getF(); // 数据标题
             final String f1 = ser.getCat().getStrRef().getF(); // cat横坐标范围
             final String f2 = ser.getVal().getNumRef().getF(); // 数据范围
-            sb.append(f0).append(",");
-            sb.append(f1).append(",");
-            sb.append(f2).append(",");
+            sb.append(f0).append("&");
+            sb.append(f1).append("&");
+            sb.append(f2).append("&");
         }
-        return sb.toString();
+        return sb.substring(0, sb.length() - 1);
     }
 
     /**
@@ -631,11 +591,11 @@ public class ExcelUtils {
         StringBuilder res = new StringBuilder();
         for (CTSortCondition condition : sortConditionList) {
             if (condition.getDescending()) {
-                res.append("r");
+                res.append("r"); // 逆序
             }
-            res.append(condition.getRef()).append(",");
+            res.append(condition.getRef()).append("&");
         }
-        return res.toString();
+        return res.substring(0, res.length() - 1);
     }
 
     /**
@@ -657,15 +617,16 @@ public class ExcelUtils {
         for (CTFilterColumn column : filterColumnList) {
             if (column.getFilters() != null) {
                 res.append(column.getFilters().getFilterList()
-                        .stream().map(CTFilter::getVal).collect(Collectors.joining(",")));
+                        .stream().map(CTFilter::getVal).collect(Collectors.joining("&")));
             }
             if (column.getCustomFilters() != null) {
                 res.append(column.getCustomFilters().getCustomFilterList()
                         .stream().map(item -> item.getOperator().toString() + item.getVal())
-                        .collect(Collectors.joining(",")));
+                        .collect(Collectors.joining("&")));
             }
+            res.append("&");
         }
-        return res.toString();
+        return res.substring(0, res.length() - 1);
     }
 
 //    public static void main(String[] args) {
