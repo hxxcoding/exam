@@ -193,6 +193,24 @@ public class WordUtils {
     }
 
     /**
+     * 获取左侧缩进
+     * @param pos
+     * @return
+     */
+    public Integer getIndentationLeft(Integer pos) {
+        return xwpfDocument.getParagraphs().get(pos).getIndentationLeft();
+    }
+
+    /**
+     * 获取右侧缩进
+     * @param pos
+     * @return
+     */
+    public Integer getIndentationRight(Integer pos) {
+        return xwpfDocument.getParagraphs().get(pos).getIndentationRight();
+    }
+
+    /**
      * 获取某个段落的行间距 默认-1.0
      * @param pos
      * @return
@@ -379,12 +397,22 @@ public class WordUtils {
     }
 
     /**
-     * 获取底纹填充色
+     * 获取句子底纹填充色
      * @param pos
      * @return
      */
-    public String getShadingFill(Integer pos) {
+    public String getShadingFillWithRun(Integer pos) {
         byte[] colors = (byte[]) pgetFirstRun(pos).getCTR().getRPr().getShd().getFill();
+        return StringUtils.bytesToHexString(colors);
+    }
+
+    /**
+     * 获取段落底纹填充色
+     * @param pos
+     * @return
+     */
+    public String getShadingFillWithPara(Integer pos) {
+        byte[] colors = (byte[]) xwpfDocument.getParagraphArray(pos).getCTP().getPPr().getShd().getFill();
         return StringUtils.bytesToHexString(colors);
     }
 
