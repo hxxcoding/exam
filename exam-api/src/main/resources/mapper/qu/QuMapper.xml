@@ -25,15 +25,16 @@
     <select id="listByRandom" resultMap="BaseResultMap">
         SELECT a.*
         FROM el_qu a
-        LEFT JOIN el_qu_repo b ON a.id=b.qu_id
-        WHERE b.repo_id=#{repoId} AND a.qu_type=#{quType}
+        LEFT JOIN el_qu_repo b ON a.id=b.qu_id AND b.repo_id=#{repoId}
+        WHERE a.qu_type=#{quType}
         <if test="excludes!=null">
             AND a.id NOT IN
             <foreach item="item" collection="excludes" separator="," open="(" close=")" index="">'${item}'</foreach>
         </if>
-        <if test="level!=null and level>0">
-            AND a.`level`=#{level}
-        </if>
+<!--        <if test="level!=null and level>0">-->
+<!--            AND a.`level`=#{level}-->
+<!--        </if>-->
+<!--        此处是题目难度，暂时不需要-->
         ORDER BY RAND()
         LIMIT ${size}
     </select>

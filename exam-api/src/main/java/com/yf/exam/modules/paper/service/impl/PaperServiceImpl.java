@@ -157,12 +157,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             throw new ServiceException(1, "考试不存在！");
         }
 
-        // 查找该用户是否已经创建过该考试的试卷且未交卷 返回未完成的试卷
-        Paper paper = paperService.getOne(new QueryWrapper<Paper>()
-                .lambda().eq(Paper::getUserId, userId)
-                .eq(Paper::getExamId, examId)
-                .eq(Paper::getState, 0));
-
         // 判断考试次数是否达到上限
         if (exam.getTryLimit()) {
             UserExam userExam = userExamService.getOne(new QueryWrapper<UserExam>()
@@ -173,6 +167,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 throw new ServiceException(1, "考试次数达到上限！");
             }
         }
+
+        // 查找该用户是否已经创建过该考试的试卷且未交卷 返回未完成的试卷
+        Paper paper = paperService.getOne(new QueryWrapper<Paper>()
+                .lambda().eq(Paper::getUserId, userId)
+                .eq(Paper::getExamId, examId)
+                .eq(Paper::getState, 0));
+
         if (paper != null) { // 存在未交卷的试卷
             try {
                 if (exam.getExamType().equals(ExamType.PRACTICE)) { // 模拟练习直接返回数据
