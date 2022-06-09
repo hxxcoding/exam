@@ -428,4 +428,12 @@ public class WordUtils {
         return xwpfDocument.getTableArray(0).getNumberOfRows();
     }
 
+    /**
+     * 获取表格列数
+     * @return
+     */
+    public Integer getTableColNum() {
+        return xwpfDocument.getTableArray(0).getRow(0).getTableCells().size();
+    }
+
 }
