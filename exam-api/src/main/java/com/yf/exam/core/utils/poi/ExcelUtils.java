@@ -280,25 +280,30 @@ public class ExcelUtils {
     }
 
     /**
-     * 获取水平和垂直对齐方式
+     * 获取水平对齐方式
      * @param cellAddress
      * @return
      */
-    public String getAlignment(String cellAddress) {
+    public String getHorizontalAlignment(String cellAddress) {
         short styleIndex = pgetStyleIndex(cellAddress);
         CTXf cellXf = xssfWorkbook.getStylesSource().getCellXfAt(styleIndex);
-        StringBuilder res = new StringBuilder();
         if (cellXf.getAlignment().getHorizontal() != null) {
-            res.append(cellXf.getAlignment().getHorizontal()).append("&");
-        } else {
-            res.append("DEFAULT").append("&");
+            return cellXf.getAlignment().getHorizontal().toString();
         }
+        return "default";
+    }
+    /**
+     * 获取垂直对齐方式
+     * @param cellAddress
+     * @return
+     */
+    public String getVerticalAlignment(String cellAddress) {
+        short styleIndex = pgetStyleIndex(cellAddress);
+        CTXf cellXf = xssfWorkbook.getStylesSource().getCellXfAt(styleIndex);
         if (cellXf.getAlignment().getVertical() != null) {
-            res.append(cellXf.getAlignment().getHorizontal());
-        } else {
-            res.append("DEFAULT");
+            return cellXf.getAlignment().getVertical().toString();
         }
-        return res.toString();
+        return "default";
     }
 
     /**
