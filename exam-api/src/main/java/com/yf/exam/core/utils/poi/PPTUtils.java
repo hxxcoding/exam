@@ -110,6 +110,9 @@ public class PPTUtils {
      * 获取动画主序列动作信息
      * 动画样式 只能获取进入/退出动画 需要传一个动画次序的参数 并且每个动画的样式不同内容也不同 看看怎么实现复用
      * `飞入`效果无法获取
+     * 可用动画列表为：百叶窗/棋盘/向内溶解/切入/随机线条/形状/劈裂/阶梯状/楔入/轮子/擦除/展开/淡入/旋转/缩放
+     *          /中心旋转/浮入/翻转式由远及近/升起/回旋/飞旋/弹跳/曲线向上/浮动/玩具风车/挥鞭式
+     * 其中，展开/淡入/旋转/缩放/中心旋转/浮入/翻转式由远及近/升起/回旋/飞旋/曲线向上/浮动/玩具风车/挥鞭式 的格式相同均为均为 fade
      * @param slidePos 幻灯片的位置
      * @param actionPos 动作在幻灯片中的顺序
      * @return 动画样式_动画出现时间
@@ -122,7 +125,7 @@ public class PPTUtils {
         CTTimeNodeList childTnLst = timeNodeParallel.getCTn().getChildTnLst().getParArray(0)
                 .getCTn().getChildTnLst().getParArray(0).getCTn().getChildTnLst();
         CTTLAnimateEffectBehavior actionBehavior = childTnLst.getAnimEffectArray(0);
-        return actionBehavior.getFilter() + "," + actionBehavior.getTransition();
+        return actionBehavior.getFilter() + "&" + actionBehavior.getTransition();
     }
 
     public String getAnimMainSeqAction(Integer slidePos) {
@@ -140,9 +143,8 @@ public class PPTUtils {
 //    }
 
     /**
-     * 获取第pos页ppt进入时的过渡方式, 仅支持获取简单的过渡方式, 高级过渡方式待研究
-     * @param pos
-     * @return
+     * 获取第pos页ppt进入时的过渡方式, 仅支持获取简单的过渡方式, 高级渡方式待研究过
+     * 可用的页面切换方式为：推入/擦除/随即线条/揭开/覆盖/时钟/梳理
      */
     public String getTransitionMode(Integer pos){
         XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(pos);
