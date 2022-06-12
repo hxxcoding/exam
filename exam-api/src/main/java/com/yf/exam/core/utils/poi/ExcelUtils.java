@@ -329,7 +329,7 @@ public class ExcelUtils {
     }
 
     /**
-     * 获取图案类型
+     * 获取图案填充类型
      * @param cellAddress
      * @return
      */

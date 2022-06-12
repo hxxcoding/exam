@@ -132,7 +132,7 @@ export function excelMethodFilter(value) {
     'getVerticalAlignment': '获取垂直对齐方式',
     'getFillBackgroundColor': '获取背景填充颜色',
     'getFillForegroundColor': '获取图案填充颜色',
-    'getForegroundPatternType': '获取图案类型',
+    'getForegroundPatternType': '获取图案填充类型',
     'getRowHeight': '获取行高',
     'getColWidth': '获取列宽',
     'getPrintPaperSize': '获取打印纸张类型',
