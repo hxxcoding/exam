@@ -131,76 +131,81 @@ public class ExcelUtils {
                 .getCTCell().getV();
     }
 
-    /**
-     * 获取某个单元格顶部边框的类型
-     * @param row
-     * @param cell
-     * @return
-     */
-    public String getBorderStyleTop(Integer row, Integer cell) {
-        long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
-        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
-        XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
-        return border.getBorderStyle(XSSFCellBorder.BorderSide.TOP).toString();
+    private XSSFCellBorder pgetBorder(String cellAddress) {
+        CellAddress address = new CellAddress(cellAddress);
+        long s = xssfWorkbook.getSheetAt(0)
+                .getRow(address.getRow()).getCell(address.getColumn()).getCTCell().getS();
+        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int) s).getBorderId();
+        return xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
     }
 
+    /**
+     * 获取某个单元格顶部边框的类型
+     */
     public String getBorderStyleTop(String cellAddress) {
-        CellAddress address = new CellAddress(cellAddress);
-        return getBorderStyleTop(address.getRow(), address.getColumn());
+        XSSFCellBorder border = pgetBorder(cellAddress);
+        return border.getBorderStyle(XSSFCellBorder.BorderSide.TOP).toString();
     }
 
     /**
      * 获取某个单元格底部边框的类型
-     * @param row
-     * @param cell
-     * @return
      */
-    public String getBorderStyleBottom(Integer row, Integer cell) {
-        long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
-        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
-        XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
-        return border.getBorderStyle(XSSFCellBorder.BorderSide.BOTTOM).toString();
-    }
-
     public String getBorderStyleBottom(String cellAddress) {
-        CellAddress address = new CellAddress(cellAddress);
-        return getBorderStyleBottom(address.getRow(), address.getColumn());
+        XSSFCellBorder border = pgetBorder(cellAddress);
+        return border.getBorderStyle(XSSFCellBorder.BorderSide.BOTTOM).toString();
     }
 
     /**
      * 获取某个单元格左边边框的类型
-     * @param row
-     * @param cell
-     * @return
      */
-    public String getBorderStyleLeft(Integer row, Integer cell) {
-        long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
-        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
-        XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
-        return border.getBorderStyle(XSSFCellBorder.BorderSide.LEFT).toString();
-    }
-
     public String getBorderStyleLeft(String cellAddress) {
-        CellAddress address = new CellAddress(cellAddress);
-        return getBorderStyleLeft(address.getRow(), address.getColumn());
+        XSSFCellBorder border = pgetBorder(cellAddress);
+        return border.getBorderStyle(XSSFCellBorder.BorderSide.LEFT).toString();
     }
 
     /**
      * 获取某个单元格右边边框的类型
-     * @param row
-     * @param cell
-     * @return
      */
-    public String getBorderStyleRight(Integer row, Integer cell) {
-        long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
-        long borderId = xssfWorkbook.getStylesSource().getCellXfAt((int)s).getBorderId();
-        XSSFCellBorder border = xssfWorkbook.getStylesSource().getBorderAt((int) borderId);
+    public String getBorderStyleRight(String cellAddress) {
+        XSSFCellBorder border = pgetBorder(cellAddress);
         return border.getBorderStyle(XSSFCellBorder.BorderSide.RIGHT).toString();
     }
 
-    public String getBorderStyleRight(String cellAddress) {
-        CellAddress address = new CellAddress(cellAddress);
-        return getBorderStyleRight(address.getRow(), address.getColumn());
+    /**
+     * 获取某个单元格顶部边框的颜色
+     */
+    public String getBorderColorTop(String cellAddress) {
+        XSSFCellBorder border = pgetBorder(cellAddress);
+        final byte[] rgb = border.getBorderColor(XSSFCellBorder.BorderSide.TOP).getRGB();
+        return StringUtils.bytesToHexString(rgb);
+    }
+
+    /**
+     * 获取某个单元格底部边框的颜色
+     */
+    public String getBorderColorBottom(String cellAddress) {
+        XSSFCellBorder border = pgetBorder(cellAddress);
+        final byte[] rgb = border.getBorderColor(XSSFCellBorder.BorderSide.BOTTOM).getRGB();
+        return StringUtils.bytesToHexString(rgb);
+    }
+
+    /**
+     * 获取某个单元格左边边框的颜色
+     */
+    public String getBorderColorLeft(String cellAddress) {
+        XSSFCellBorder border = pgetBorder(cellAddress);
+        final byte[] rgb = border.getBorderColor(XSSFCellBorder.BorderSide.LEFT).getRGB();
+        return StringUtils.bytesToHexString(rgb);
+    }
+
+    /**
+     * 获取某个单元格右边边框的颜色
+     * @return
+     */
+    public String getBorderColorRight(String cellAddress) {
+        XSSFCellBorder border = pgetBorder(cellAddress);
+        final byte[] rgb = border.getBorderColor(XSSFCellBorder.BorderSide.RIGHT).getRGB();
+        return StringUtils.bytesToHexString(rgb);
     }
 
     /**
