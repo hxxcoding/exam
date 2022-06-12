@@ -62,6 +62,22 @@ export function handExam(data) {
 }
 
 /**
+ * 强制交卷
+ * @param data
+ */
+export function handExamByForce(data) {
+  return post('/exam/api/paper/paper/hand-exam-by-force', data)
+}
+
+/**
+ * 退回交卷
+ * @param data
+ */
+export function backExam(data) {
+  return post('/exam/api/paper/paper/back-exam', data)
+}
+
+/**
  * 试卷详情
  * @param data
  */

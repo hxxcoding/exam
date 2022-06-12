@@ -2,6 +2,7 @@ package com.yf.exam.modules.paper.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -823,7 +824,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void handExam(String paperId) {
-
         //获取试卷信息
         Paper paper = paperService.getById(paperId);
 
@@ -861,6 +861,16 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paper.setUserTime(userTime);
 
         //更新试卷
+        paperService.updateById(paper);
+    }
+
+    @Override
+    public void backExam(String paperId) {
+        Paper paper = paperService.getById(paperId);
+        if (paper.getLimitTime().before(new Date())) {
+            throw new ServiceException("该试卷不在允许的答题时间内，无法退回！");
+        }
+        paper.setState(PaperState.ING); // 更改试卷状态为进行中
         paperService.updateById(paper);
     }
 

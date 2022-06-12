@@ -1,6 +1,7 @@
 package com.yf.exam.modules.paper.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yf.exam.core.annon.LogInject;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
@@ -165,7 +166,6 @@ public class PaperController extends BaseController {
         return super.success();
     }
 
-
     /**
      * 交卷操作
      * @param reqDTO
@@ -175,8 +175,35 @@ public class PaperController extends BaseController {
     @RequiresPermissions("paper:hand-exam")
     @RequestMapping(value = "/hand-exam", method = { RequestMethod.POST})
     public ApiRest<?> handleExam(@RequestBody BaseIdReqDTO reqDTO) {
-        //根据ID删除
         baseService.handExam(reqDTO.getId());
+        return super.success();
+    }
+
+    /**
+     * 交卷操作
+     * @param reqDTO
+     * @return
+     */
+    @ApiOperation(value = "强制交卷操作")
+    @LogInject(title = "强制交卷")
+    @RequiresPermissions("paper:hand-exam-by-force")
+    @RequestMapping(value = "/hand-exam-by-force", method = { RequestMethod.POST})
+    public ApiRest<?> handleExamByForce(@RequestBody BaseIdReqDTO reqDTO) {
+        baseService.handExam(reqDTO.getId());
+        return super.success();
+    }
+
+    /**
+     * 退回交卷
+     * @param reqDTO
+     * @return
+     */
+    @ApiOperation(value = "退回交卷")
+    @RequiresPermissions("paper:back-exam")
+    @RequestMapping(value = "/back-exam", method = { RequestMethod.POST})
+    public ApiRest<?> backExam(@RequestBody BaseIdReqDTO reqDTO) {
+        //根据ID删除
+        baseService.backExam(reqDTO.getId());
         return super.success();
     }
 

@@ -136,6 +136,34 @@
 
         </el-table-column>
 
+        <el-table-column
+          label="操作"
+          align="center"
+          width="120px"
+        >
+          <template slot-scope="scope">
+            <el-button
+              v-if="scope.row.state === 0"
+              v-perm="['paper:hand-exam-by-force']"
+              type="primary"
+              size="mini"
+              @click="handHandExamByForce(scope.row.id)"
+            >
+              强制交卷
+            </el-button>
+            <el-button
+              v-if="scope.row.state === 2 && Date.now() < new Date(scope.row.limitTime)"
+              v-perm="['paper:back-exam']"
+              type="warning"
+              size="mini"
+              @click="handBackExam(scope.row.id)"
+            >
+              退回试卷
+            </el-button>
+          </template>
+
+        </el-table-column>
+
       </template>
 
     </data-table>
@@ -149,6 +177,7 @@ import DataTable from '@/components/DataTable'
 import DepartTreeSelect from '@/components/DepartTreeSelect'
 import { fetchTree } from '@/api/sys/depart/depart'
 import { exportExcel, exportPaper } from '@/api/paper/paper'
+import { handExamByForce, backExam } from '@/api/paper/exam'
 import ExamSelect from '@/components/ExamSelect'
 import { Loading } from 'element-ui'
 
@@ -223,6 +252,56 @@ export default {
           loading.close()
         })
       }
+    },
+
+    handHandExamByForce(paperId) {
+      const msg = '强制交卷后学生无法继续作答,确认强制交卷吗？'
+      const data = {
+        id: paperId
+      }
+      this.$confirm(msg, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        handExamByForce(data).then(() => {
+          this.$message({
+            message: '强制交卷成功！',
+            type: 'success'
+          })
+          this.$refs.pagingTable.getList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '强制交卷已取消，学生可继续作答！'
+        })
+      })
+    },
+
+    handBackExam(paperId) {
+      const msg = '退回交卷后学生可以继续作答,确认退回吗？'
+      const data = {
+        id: paperId
+      }
+      this.$confirm(msg, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        backExam(data).then(() => {
+          this.$message({
+            message: '退回交卷成功！',
+            type: 'success'
+          })
+          this.$refs.pagingTable.getList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '退回操作已取消！'
+        })
+      })
     },
 
     exportExcel() {

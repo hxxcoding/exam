@@ -85,6 +85,13 @@ public interface PaperService extends IService<Paper> {
     void handExam(String paperId);
 
     /**
+     * 退回试卷操作
+     * @param paperId
+     * @return
+     */
+    void backExam(String paperId);
+
+    /**
      * 阅卷完成
      * @param reqDTO
      */
