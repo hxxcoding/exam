@@ -54,6 +54,23 @@ export default {
           }).catch(res => {
             failure('error')
           })
+        },
+        file_picker_callback: function(callback, value, meta) {
+          const input = document.createElement('input')
+          const fileType = '.pdf, .txt, .zip, .rar, .7z, .docx, .xlsx, .pptx, .mp3, .mp4'
+          input.setAttribute('type', 'file')
+          input.setAttribute('accept', fileType)
+          input.click()
+          input.onchange = function() {
+            const file = this.files[0]
+            const formData = new FormData()
+            formData.set('file', file)
+            uploadFile(formData).then(res => {
+              callback(res.data.url)
+            }).catch(res => {
+              this.$message.warning(`${res.msg}`)
+            })
+          }
         }
       }
     }
