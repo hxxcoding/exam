@@ -58,4 +58,9 @@ public class QuAnswerOffice extends Model<QuAnswerOffice> {
      */
     private Integer score;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
 }

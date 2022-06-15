@@ -96,6 +96,13 @@
                   <div v-if="item.quType === 12">{{ scope.row.point | pptMethodFilter }}</div>
                 </template>
               </el-table-column>
+
+              <el-table-column
+                align="center"
+                label="备注"
+                prop="remark"
+              />
+
               <el-table-column
                 align="center"
                 label="答题结果"

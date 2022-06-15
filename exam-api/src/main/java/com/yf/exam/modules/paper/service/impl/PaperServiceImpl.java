@@ -774,7 +774,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 Object userAnswer = docx.executeMethod(an.getMethod(), position);
                 PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
                         .setPoint(an.getMethod())
-                        .setPointScore(an.getScore());
+                        .setPointScore(an.getScore())
+                        .setRemark(an.getRemark());
                 if (userAnswer == null) point.setUserScore(0);
                 if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
                     point.setUserScore(an.getScore());
@@ -790,7 +791,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 Object userAnswer = docx.executeMethod(an.getMethod(), an.getPos());
                 PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
                         .setPoint(an.getMethod())
-                        .setPointScore(an.getScore());
+                        .setPointScore(an.getScore())
+                        .setRemark(an.getRemark());
                 if (userAnswer == null) point.setUserScore(0);
                 if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
                     point.setUserScore(an.getScore());
@@ -807,7 +809,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 Object userAnswer = pptx.executeMethod(an.getMethod(), position);
                 PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
                         .setPoint(an.getMethod())
-                        .setPointScore(an.getScore());
+                        .setPointScore(an.getScore())
+                        .setRemark(an.getRemark());
                 if (userAnswer == null) point.setUserScore(0);
                 if (userAnswer != null && an.getAnswer().equals(userAnswer.toString())) {
                     point.setUserScore(an.getScore());

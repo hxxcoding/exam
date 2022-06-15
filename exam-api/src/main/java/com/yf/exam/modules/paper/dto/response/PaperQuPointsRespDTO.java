@@ -36,4 +36,9 @@ public class PaperQuPointsRespDTO implements Serializable {
      * 学生获得的分数
      */
     private Integer userScore;
+
+    /**
+     * 备注
+     */
+    private String remark;
 }

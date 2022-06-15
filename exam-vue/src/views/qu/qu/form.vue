@@ -214,6 +214,12 @@
                 </template>
               </el-table-column>
 
+              <el-table-column label="备注" align="center">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.remark" />
+                </template>
+              </el-table-column>
+
               <el-table-column label="删除" align="center" width="60">
                 <template slot-scope="scope">
                   <el-button type="danger" icon="el-icon-delete" circle @click="removeOfficeAnswerItem(scope.$index)" />
@@ -289,6 +295,12 @@
               <el-table-column label="设置得分" align="center">
                 <template slot-scope="scope">
                   <el-input-number v-model="scope.row.score" :min="0" style="width: 150px" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="备注" align="center">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.remark" />
                 </template>
               </el-table-column>
 
@@ -379,6 +391,12 @@
               <el-table-column label="设置得分" align="center">
                 <template slot-scope="scope">
                   <el-input-number v-model="scope.row.score" :min="0" style="width: 150px" />
+                </template>
+              </el-table-column>
+
+              <el-table-column label="备注" align="center">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.remark" />
                 </template>
               </el-table-column>
 

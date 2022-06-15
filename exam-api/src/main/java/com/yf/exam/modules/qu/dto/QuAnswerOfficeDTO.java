@@ -35,4 +35,7 @@ public class QuAnswerOfficeDTO implements Serializable {
     @ApiModelProperty(value = "分数", required=true)
     private Integer score;
 
+    @ApiModelProperty(value = "备注", required=true)
+    private String remark;
+
 }
