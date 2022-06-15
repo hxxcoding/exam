@@ -635,7 +635,7 @@ export default {
           this.wordParagraphs = response.data
           this.wordParagraphs[this.wordParagraphs.length] = {
             paragraph: '全文格式',
-            pos: undefined
+            pos: ''
           }
           this.fetchQuOfficeMethods()
           this.$notify({
@@ -668,9 +668,6 @@ export default {
     },
 
     readFormat(row) {
-      if (row.pos === '') {
-        row.pos = null
-      }
       readFormat(this.postForm.answer, row.pos, row.method)
         .then(response => {
           row.answer = response.data
@@ -685,7 +682,7 @@ export default {
 
     handleOfficeAnswerAdd() {
       this.postForm.officeAnswerList.push({
-        pos: this.postForm.quType === 10 ? undefined : '',
+        pos: '',
         method: '',
         answer: '',
         score: 0

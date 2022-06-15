@@ -25,8 +25,7 @@
     <select id="listByRandom" resultMap="BaseResultMap">
         SELECT a.*
         FROM el_qu a
-        LEFT JOIN el_qu_repo b ON a.id=b.qu_id AND b.repo_id=#{repoId}
-        WHERE a.qu_type=#{quType}
+        INNER JOIN el_qu_repo b ON a.id=b.qu_id AND a.qu_type=#{quType} AND b.repo_id=#{repoId}
         <if test="excludes!=null">
             AND a.id NOT IN
             <foreach item="item" collection="excludes" separator="," open="(" close=")" index="">'${item}'</foreach>

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yf.exam.ability.upload.service.UploadService;
 import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.BeanMapper;
+import com.yf.exam.core.utils.StringUtils;
 import com.yf.exam.core.utils.poi.ExcelUtils;
 import com.yf.exam.core.utils.poi.PPTUtils;
 import com.yf.exam.core.utils.poi.WordUtils;
@@ -22,6 +23,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
@@ -81,7 +83,7 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
         String realPath = uploadService.getRealPath(url.substring(url.indexOf(Constant.FILE_PREFIX)));
         if (url.endsWith(".docx")) {
             try {
-                Integer position = pos != null ? Integer.parseInt(pos) : null;
+                Integer position = StringUtils.isBlank(pos) ? null : Integer.parseInt(pos);
                 WordUtils word = new WordUtils(realPath);
                 return word.executeMethod(method, position).toString();
             } catch (RuntimeException e) {
@@ -96,7 +98,7 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
             }
         } else if (url.endsWith(".pptx")) {
             try {
-                Integer position = pos != null ? Integer.parseInt(pos) : null;
+                Integer position = StringUtils.isBlank(pos) ? null : Integer.parseInt(pos);
                 PPTUtils ppt = new PPTUtils(realPath);
                 return ppt.executeMethod(method, position).toString();
             } catch (RuntimeException e) {
@@ -130,6 +132,7 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
      */
     @Override
     @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
     public void saveAll(String quId, List<QuAnswerOfficeDTO> list) {
         //最终要保存的列表
         List<QuAnswerOffice> saveList = new ArrayList<>();
@@ -141,7 +144,7 @@ public class QuAnswerOfficeServiceImpl extends ServiceImpl<QuAnswerOfficeMapper,
                 QuAnswerOffice answer = new QuAnswerOffice();
                 BeanMapper.copy(item, answer);
                 answer.setQuId(quId);
-                existIds.remove(item.getId());
+                existIds.remove(item.getId()); // 如果存在就移除
                 saveList.add(answer);
             }
             //保存标签列表

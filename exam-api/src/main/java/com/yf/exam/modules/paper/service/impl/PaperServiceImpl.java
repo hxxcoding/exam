@@ -1024,7 +1024,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 PdfUtils.getPaperPdfDocument(new XEasyPdfDocument(), resp, user, depart).save(out).close();
             } catch (Exception e) {
                 FileUtils.deleteDir(dir);
-                throw new ServiceException("导出失败!");
+                throw new ServiceException("导出失败: " + e.getMessage());
             }
         }
 

@@ -53,7 +53,7 @@ public class ExcelUtils {
     public Object executeMethod(String methodName, Object... args) {
         try {
             Class<?>[] classes = null;
-            if (args[0] == null) {
+            if (StringUtils.isBlank(args[0].toString())) {
                 args = null;
             } else {
                 classes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
