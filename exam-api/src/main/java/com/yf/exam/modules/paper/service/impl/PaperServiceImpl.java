@@ -770,7 +770,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         if (quType.equals(QuType.WORD) && filePath.endsWith(".docx")) {
             WordUtils docx = new WordUtils(filePath);
             for (QuAnswerOffice an : officeAnswers) {
-                Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
+                Integer position = StringUtils.isBlank(an.getPos()) ? null : Integer.parseInt(an.getPos());
                 Object userAnswer = docx.executeMethod(an.getMethod(), position);
                 PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
                         .setPoint(an.getMethod())
@@ -803,7 +803,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         } else if (quType.equals(QuType.PPT) && filePath.endsWith(".pptx")) {
             PPTUtils pptx = new PPTUtils(filePath);
             for (QuAnswerOffice an : officeAnswers) {
-                Integer position = an.getPos() != null ? Integer.parseInt(an.getPos()) : null;
+                Integer position = StringUtils.isBlank(an.getPos()) ? null : Integer.parseInt(an.getPos());
                 Object userAnswer = pptx.executeMethod(an.getMethod(), position);
                 PaperQuPointsRespDTO point = new PaperQuPointsRespDTO()
                         .setPoint(an.getMethod())
