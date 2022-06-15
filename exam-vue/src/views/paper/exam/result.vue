@@ -101,7 +101,8 @@
                 label="答题结果"
               >
                 <template slot-scope="scope">
-                  <div>{{ scope.row.pointScore === scope.row.userScore ? '正确':'错误' }}</div>
+                  <div v-if="scope.row.pointScore === scope.row.userScore" style="color: #24da70;">正确</div>
+                  <div v-else style="color: #ff0000;">错误</div>
                 </template>
               </el-table-column>
               <el-table-column
