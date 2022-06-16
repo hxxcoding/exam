@@ -236,6 +236,17 @@ public class PPTUtils {
     }
 
     /**
+     * 获取渐变背景渐变光圈
+     * @param pos
+     * @return
+     */
+    public String getBackgroundGradientFractions(Integer pos){
+        final XSLFSlide slide = xmlSlideShow.getSlides().get(pos);
+        final XSLFGradientPaint paint = (XSLFGradientPaint) slide.getBackground().getFillStyle().getPaint();
+        return Arrays.toString(paint.getGradientFractions());
+    }
+
+    /**
      * 获取内容(第二个文本框)文字
      * @param pos
      * @return

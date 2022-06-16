@@ -185,7 +185,8 @@ export function pptMethodFilter(value) {
     'getContentText': '获取内容文本框文字',
     'getBackgroundFillStyle': '获取背景填充类型',
     'getBackgroundGradientType': '获取渐变背景类型',
-    'getBackgroundGradientAngle': '获取渐变背景角度'
+    'getBackgroundGradientAngle': '获取渐变背景角度',
+    'getBackgroundGradientFractions': '获取渐变背景渐变光圈'
   }
   return map[value]
 }
