@@ -180,7 +180,9 @@ export function pptMethodFilter(value) {
     'getTitleEaFontName': '获取标题文本框字体名称',
     'getTitleEaFontSize': '获取标题文本框字体大小',
     'getContentText': '获取内容文本框文字',
-    'getBackgroundFillStyle': '获取背景填充类型'
+    'getBackgroundFillStyle': '获取背景填充类型',
+    'getBackgroundGradientType': '获取渐变背景类型',
+    'getBackgroundGradientAngle': '获取渐变背景角度'
   }
   return map[value]
 }

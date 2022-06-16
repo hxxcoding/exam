@@ -4,6 +4,7 @@ import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.Reflections;
 import com.yf.exam.modules.qu.dto.PPTSlideDTO;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFGradientPaint;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTHyperlink;
 import org.openxmlformats.schemas.presentationml.x2006.main.*;
@@ -208,13 +209,30 @@ public class PPTUtils {
     }
 
     /**
-     * 获取背景填充类型
-     * @param pos
+     * 获取背景填充类型 需要获取某个填充类型的设置，需要强制类型转换
      * @return "XSLFGradientPaint"为渐变填充 "XSLFTexturePaint"为图片或纹理填充
      */
     public String getBackgroundFillStyle(Integer pos) {
         final XSLFSlide slide = xmlSlideShow.getSlides().get(pos);
         return slide.getBackground().getFillStyle().getPaint().getClass().getSimpleName();
+    }
+
+    /**
+     * 获取渐变背景类型
+     */
+    public String getBackgroundGradientType(Integer pos) {
+        final XSLFSlide slide = xmlSlideShow.getSlides().get(pos);
+        final XSLFGradientPaint paint = (XSLFGradientPaint) slide.getBackground().getFillStyle().getPaint();
+        return paint.getGradientType().toString();
+    }
+
+    /**
+     * 获取渐变背景角度
+     */
+    public Double getBackgroundGradientAngle(Integer pos) {
+        final XSLFSlide slide = xmlSlideShow.getSlides().get(pos);
+        final XSLFGradientPaint paint = (XSLFGradientPaint) slide.getBackground().getFillStyle().getPaint();
+        return paint.getGradientAngle();
     }
 
     /**
