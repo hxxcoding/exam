@@ -87,20 +87,34 @@ public class PPTUtils {
     }
 
     /**
-     * 只能获取该页面的第一个跳转的超链接
+     * 获取该页面的第一个跳转的超链接的动作
      * @param pos
      * @return
      */
-    public String getJumpHyperlink(Integer pos){
+    public String getJumpHyperlinkAction(Integer pos){
         List<CTShape> spList = pgetSpList(pos);
         for (CTShape sp : spList) {
             CTHyperlink hyperlink = sp.getNvSpPr().getCNvPr().getHlinkClick();
             if (hyperlink != null) {
                 String action = hyperlink.getAction();
-                int index = action.indexOf("jump=");
-                if (index != -1) {
-                    return action.substring(index);
-                }
+                String name = sp.getNvSpPr().getCNvPr().getName();
+                return action + "&" + name.substring(0, name.length() - 2);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取该页面的第一个跳转的超链接所在组件的名称
+     * @param pos
+     * @return
+     */
+    public String getJumpHyperlinkComponentName(Integer pos){
+        List<CTShape> spList = pgetSpList(pos);
+        for (CTShape sp : spList) {
+            if (sp.getNvSpPr().getCNvPr().getHlinkClick() != null) {
+                String name = sp.getNvSpPr().getCNvPr().getName();
+                return name.substring(0, name.length() - 2);
             }
         }
         return null;

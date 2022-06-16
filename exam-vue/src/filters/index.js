@@ -171,7 +171,8 @@ export function excelMethodFilter(value) {
 export function pptMethodFilter(value) {
   const map = {
     'getThemeName': '获取主题',
-    'getJumpHyperlink': '获取跳转超链接',
+    'getJumpHyperlinkAction': '获取超链接动作',
+    'getJumpHyperlinkComponentName': '获取超链接所在组件的名称',
     'getAnimMainSeqAction': '获取主序列动画',
     'getTransitionMode': '获取过渡方式',
     'getLayoutName': '获取版式名称',
