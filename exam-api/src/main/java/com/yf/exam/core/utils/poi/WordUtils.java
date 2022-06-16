@@ -9,7 +9,9 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColumns;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFramePr;
 
 import java.io.FileInputStream;
@@ -364,8 +366,28 @@ public class WordUtils {
      * @return
      */
     public String getPicTextAround(Integer pos) {
-        return pgetFirstRun(pos).getCTR()
-                .getDrawingArray(0).getAnchorArray(0).getWrapSquare().getWrapText().toString();
+        final CTDrawing drawing = pgetFirstRun(pos).getCTR().getDrawingArray(0);
+        if (drawing.getInlineList().size() != 0) {
+            return "嵌入型";
+        } else if (drawing.getAnchorList().size() != 0) {
+            final CTAnchor ctAnchor = drawing.getAnchorList().get(0);
+            if (ctAnchor.getWrapSquare() != null) {
+                return "四周型";
+            } else if (ctAnchor.getWrapTight() != null) {
+                return "紧密型";
+            } else if (ctAnchor.getWrapThrough() != null) {
+                return "穿越型";
+            } else if (ctAnchor.getWrapTopAndBottom() != null) {
+                return "上下型";
+            } else if (ctAnchor.getWrapNone() != null) {
+                if (ctAnchor.getBehindDoc()) {
+                    return "衬于文字下方";
+                } else {
+                    return "浮于文字上方";
+                }
+            }
+        }
+        return null;
     }
 
     /**
