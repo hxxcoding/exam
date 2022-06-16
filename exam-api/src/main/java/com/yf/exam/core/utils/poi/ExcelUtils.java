@@ -83,6 +83,13 @@ public class ExcelUtils {
     }
 
     /**
+     * 获取工作表名称
+     */
+    public String getSheetName() {
+        return xssfWorkbook.getSheetAt(0).getSheetName();
+    }
+
+    /**
      * 获取cell的函数
      * @param row
      * @param cell
@@ -580,6 +587,14 @@ public class ExcelUtils {
     public Double getChartMajorUnit() {
         return pgetXSSFChart().getCTChart().getPlotArea().getValAxArray(0)
                 .getMajorUnit().getVal();
+    }
+
+    /**
+     * 是否显示图例
+     * @return
+     */
+    public Boolean isChartDisplayLegend() {
+        return pgetXSSFChart().getCTChart().getLegend() != null;
     }
 
     /**

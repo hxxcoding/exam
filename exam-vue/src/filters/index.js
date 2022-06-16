@@ -116,6 +116,7 @@ export function wordMethodFilter(value) {
 export function excelMethodFilter(value) {
   const map = {
     'getFunction': '获取函数',
+    'getSheetName': '获取工作表名称',
     'getNumFormatCode': '获取数字格式',
     'getNumValue': '获取数字值',
     'getBorderStyleTop': '获取顶部边框样式',
@@ -160,6 +161,7 @@ export function excelMethodFilter(value) {
     'getChartDataRef': '获取图表的数据范围',
     'isChartShowVal': '是否图表旁显示值',
     'getChartMajorUnit': '获取图表坐标的数据间隔大小',
+    'isChartDisplayLegend': '是否显示图例',
     'getSortStateRef': '获取排序影响的范围',
     'getSortConditionRef': '获取排序条件',
     'getAutoFilterRef': '获取自动筛选的范围',
