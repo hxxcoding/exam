@@ -156,6 +156,7 @@ export function excelMethodFilter(value) {
     'getFooterContent': '获取页脚内容和格式',
     'getConditionalFormatting': '获取条件格式',
     'getChartTitle': '获取图表标题',
+    'getChartType': '获取图表类型',
     'getChartCatTitle': '获取cat坐标标题',
     'getChartValTitle': '获取val坐标标题',
     'getChartDataRef': '获取图表的数据范围',

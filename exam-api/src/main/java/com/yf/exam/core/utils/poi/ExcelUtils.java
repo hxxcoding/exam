@@ -1,6 +1,5 @@
 package com.yf.exam.core.utils.poi;
 
-import com.yf.exam.core.exception.ServiceException;
 import com.yf.exam.core.utils.Reflections;
 import com.yf.exam.core.utils.StringUtils;
 import org.apache.poi.ss.usermodel.RichTextString;
@@ -10,7 +9,9 @@ import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellFill;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBar3DChart;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTPlotArea;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTFilter;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTFilterColumn;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTSortCondition;
@@ -519,9 +520,21 @@ public class ExcelUtils {
     private XSSFChart pgetXSSFChart() {
         return xssfWorkbook.getSheetAt(0).getDrawingPatriarch().getCharts().get(0);
     }
-    private CTBar3DChart pgetBar3DChart() {
-        final XSSFChart xssfChart = pgetXSSFChart();
-        return xssfChart.getCTChart().getPlotArea().getBar3DChartArray(0);
+
+    private CTBarChart pgetBarChart() {
+        final CTPlotArea plotArea = pgetXSSFChart().getCTChart().getPlotArea();
+        if (plotArea.getBarChartList().size() != 0) { // 二维柱状图
+            return plotArea.getBarChartArray(0);
+        }
+        return null;
+    }
+
+    private CTBar3DChart pget3DBarChart() {
+        final CTPlotArea plotArea = pgetXSSFChart().getCTChart().getPlotArea();
+        if (plotArea.getBar3DChartList().size() != 0) { // 二维柱状图
+            return plotArea.getBar3DChartArray(0);
+        }
+        return null;
     }
 
     /**
@@ -554,12 +567,21 @@ public class ExcelUtils {
                 .getTitle().getTx().getRich().getPArray(0).getRArray(0).getT();
     }
 
+    private List<CTBarSer> pgetBarSerList() {
+        final List<CTBarSer> serList;
+        if (pgetBarChart() != null) {
+            serList = Objects.requireNonNull(pgetBarChart()).getSerList();
+        } else if (pget3DBarChart() != null) {
+            serList =  Objects.requireNonNull(pget3DBarChart()).getSerList();
+        } else serList = null;
+        return serList;
+    }
+
     /**
      * 获取图表的数据范围
-     * @return
      */
     public String getChartDataRef() {
-        final List<CTBarSer> serList = pgetBar3DChart().getSerList();
+        final List<CTBarSer> serList = pgetBarSerList();
         StringBuilder sb = new StringBuilder();
         for (CTBarSer ser : serList) {
             final String f0 = ser.getTx().getStrRef().getF(); // 数据标题
@@ -573,11 +595,33 @@ public class ExcelUtils {
     }
 
     /**
+     * 三维柱状/条形图 bar3dChart 二位柱状/条形图 barChart
+     * barDir 条形为bar柱状为col
+     * 获取图表的类型
+     * 暂时只能获取柱状图类型
+     */
+    public String getChartType() {
+        StringBuilder sb = new StringBuilder();
+        if (pgetBarChart() != null) {
+            sb.append("BarChart").append("&");
+            final CTBarChart barChart = pgetBarChart();
+            sb.append(barChart.getBarDir().getVal()).append("&");
+            sb.append(barChart.getGrouping().getVal());
+        } else if (pget3DBarChart() != null) {
+            sb.append("3DBarChart").append("&");
+            final CTBar3DChart bar3DChart = pget3DBarChart();
+            sb.append(bar3DChart.getBarDir().getVal()).append("&");
+            sb.append(bar3DChart.getGrouping().getVal());
+        }
+        return sb.toString();
+    }
+
+    /**
      * 是否图表旁显示值
      * @return
      */
     public Boolean isChartShowVal() {
-        return pgetBar3DChart().getSerList().get(0).getDLbls().getShowVal().getVal();
+        return pgetBarSerList().get(0).getDLbls().getShowVal().getVal();
     }
 
     /**
