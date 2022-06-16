@@ -179,7 +179,8 @@ export function pptMethodFilter(value) {
     'getTitleText': '获取标题文本内容',
     'getTitleEaFontName': '获取标题文本框字体名称',
     'getTitleEaFontSize': '获取标题文本框字体大小',
-    'getContentText': '获取内容文本框文字'
+    'getContentText': '获取内容文本框文字',
+    'getBackgroundFillStyle': '获取背景填充类型'
   }
   return map[value]
 }

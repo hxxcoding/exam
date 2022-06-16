@@ -208,6 +208,16 @@ public class PPTUtils {
     }
 
     /**
+     * 获取背景填充类型
+     * @param pos
+     * @return "XSLFGradientPaint"为渐变填充 "XSLFTexturePaint"为图片或纹理填充
+     */
+    public String getBackgroundFillStyle(Integer pos) {
+        final XSLFSlide slide = xmlSlideShow.getSlides().get(pos);
+        return slide.getBackground().getFillStyle().getPaint().getClass().getSimpleName();
+    }
+
+    /**
      * 获取内容(第二个文本框)文字
      * @param pos
      * @return
