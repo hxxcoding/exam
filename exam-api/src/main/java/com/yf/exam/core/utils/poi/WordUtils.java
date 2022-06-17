@@ -149,6 +149,34 @@ public class WordUtils {
     }
 
     /**
+     * 获取奇数页页眉
+     */
+    public String getOddPageHeader() {
+        return xwpfDocument.getHeaderFooterPolicy().getOddPageHeader().getText();
+    }
+
+    /**
+     * 获取奇数页页脚
+     */
+    public String getOddPageFooter() {
+        return xwpfDocument.getHeaderFooterPolicy().getOddPageFooter().getText();
+    }
+
+    /**
+     * 获取偶数页页眉
+     */
+    public String getEvenPageHeader() {
+        return xwpfDocument.getHeaderFooterPolicy().getEvenPageHeader().getText();
+    }
+
+    /**
+     * 获取偶数页页脚
+     */
+    public String getEvenPageFooter() {
+        return xwpfDocument.getHeaderFooterPolicy().getEvenPageFooter().getText();
+    }
+
+    /**
      * 获取某个段落的分栏数
      * 分栏之后该段落的 前后各增加 一个paragraph
      * 原文字在段1, 分栏后文字在段2, 分栏数据在段3
