@@ -107,6 +107,7 @@ export function wordMethodFilter(value) {
     'getDefaultAsciiFontFamily': '获取默认英文字体',
     'getUnderlineType': '获取下划线类型',
     'getPicTextAround': '获取图片环绕方式',
+    'getPicExtent': '获取图片尺寸',
     'getTableRowNum': '获取表格行数',
     'getTableColNum': '获取表格列数'
   }

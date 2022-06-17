@@ -9,6 +9,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColumns;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
@@ -361,9 +362,8 @@ public class WordUtils {
     }
 
     /**
-     * 获取文字环绕方式
+     * 获取图片文字环绕方式
      * @param pos 图片位于第三段到第四段之间 此时pos = 3
-     * @return
      */
     public String getPicTextAround(Integer pos) {
         final CTDrawing drawing = pgetFirstRun(pos).getCTR().getDrawingArray(0);
@@ -388,6 +388,20 @@ public class WordUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取图片尺寸
+     */
+    public String getPicExtent(Integer pos) {
+        final CTDrawing drawing = pgetFirstRun(pos).getCTR().getDrawingArray(0);
+        CTPositiveSize2D extent = null;
+        if (drawing.getInlineList().size() != 0) {
+            extent = drawing.getInlineList().get(0).getExtent();
+        } else if (drawing.getAnchorList().size() != 0) {
+            extent = drawing.getAnchorList().get(0).getExtent();
+        }
+        return extent != null ? extent.getCx() + "&" + extent.getCy() : null;
     }
 
     /**
