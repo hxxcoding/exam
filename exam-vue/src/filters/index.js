@@ -167,6 +167,7 @@ export function excelMethodFilter(value) {
     'getChartDataRef': '获取图表的数据范围',
     'isChartShowVal': '是否图表旁显示值',
     'getChartMajorUnit': '获取图表坐标的数据间隔大小',
+    'getChartLegendPos': '获取图表图例位置',
     'isChartDisplayLegend': '是否显示图例',
     'getSortStateRef': '获取排序影响的范围',
     'getSortConditionRef': '获取排序条件',

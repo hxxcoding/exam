@@ -642,6 +642,14 @@ public class ExcelUtils {
     }
 
     /**
+     * 获取图例位置
+     * @return
+     */
+    public String getChartLegendPos() {
+        return pgetXSSFChart().getCTChart().getLegend().getLegendPos().getVal().toString();
+    }
+
+    /**
      * 获取排序影响的范围
      * @return
      */
