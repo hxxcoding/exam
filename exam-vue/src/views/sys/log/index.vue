@@ -18,26 +18,55 @@
         <el-table-column
           label="日志类型"
           prop="title"
+          align="center"
         />
 
         <el-table-column
           label="操作人"
           prop="userName"
+          align="center"
         />
 
         <el-table-column
           label="IP"
           prop="ip"
+          align="center"
         />
 
         <el-table-column
           label="操作时间"
           prop="createTime"
+          align="center"
         />
+
+        <el-table-column
+          label="操作"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button type="text" icon="el-icon-search" @click="displayLogData(scope.row.data)">查看明细</el-button>
+          </template>
+        </el-table-column>
 
       </template>
 
     </data-table>
+
+    <el-dialog
+      title="日志明细"
+      :visible.sync="dialogVisible"
+      width="40%"
+    >
+      <el-input
+        v-model="logData"
+        type="textarea"
+        :rows="15"
+        placeholder="请输入内容"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 
 </template>
@@ -62,6 +91,9 @@ export default {
   data() {
     return {
 
+      dialogVisible: false,
+      logData: '',
+
       listQuery: {
         current: 1,
         size: 10,
@@ -72,25 +104,17 @@ export default {
       options: {
         // 列表请求URL
         listUrl: '/exam/api/sys/log/paging'
-      },
-
-      types: [
-        {
-          value: '登录系统',
-          label: '登录系统'
-        }
-      ]
+      }
     }
   },
 
   methods: {
 
-    // 批量操作监听
-    handleMultiAction(obj) {
-      if (obj.opt === 'cancel') {
-        this.handleCancelOrder(obj.ids)
-      }
+    displayLogData(data) {
+      this.dialogVisible = true
+      this.logData = JSON.stringify(JSON.parse(data), null, 4)
     }
+
   }
 }
 </script>
