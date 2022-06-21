@@ -7,6 +7,7 @@ import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFGradientPaint;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTHyperlink;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextParagraph;
 import org.openxmlformats.schemas.presentationml.x2006.main.*;
 
 import java.io.FileInputStream;
@@ -258,6 +259,52 @@ public class PPTUtils {
     private List<CTShape> pgetSpList(Integer pos) {
         final List<XSLFSlide> slides = xmlSlideShow.getSlides();
         return slides.get(pos).getXmlObject().getCSld().getSpTree().getSpList();
+    }
+
+    /**
+     * 母版中是否包含日期占位符
+     */
+    public Boolean isContainDatetimeInSlideMaster(Integer pos) {
+        final List<CTShape> spList = xmlSlideShow.getSlides().get(pos).getSlideMaster().getXmlObject()
+                .getCSld().getSpTree().getSpList();
+        for (CTShape ctShape : spList) {
+            final CTTextParagraph pArray = ctShape.getTxBody().getPArray(0);
+            if (pArray.getFldList().size() != 0
+                    && pArray.getFldArray(0).getType().equals("datetime8")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 母版中是否包含页脚占位符
+     */
+    public Boolean isContainFooterInSlideMaster(Integer pos) {
+        final List<CTShape> spList = xmlSlideShow.getSlides().get(pos).getSlideMaster().getXmlObject()
+                .getCSld().getSpTree().getSpList();
+        for (CTShape ctShape : spList) {
+            if (ctShape.getNvSpPr().getCNvPr().getName().startsWith("页脚")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 母版中是否包含幻灯片编号占位符
+     */
+    public Boolean isContainSlideNumInSlideMaster(Integer pos) {
+        final List<CTShape> spList = xmlSlideShow.getSlides().get(pos).getSlideMaster().getXmlObject()
+                .getCSld().getSpTree().getSpList();
+        for (CTShape ctShape : spList) {
+            final CTTextParagraph pArray = ctShape.getTxBody().getPArray(0);
+            if (pArray.getFldList().size() != 0
+                    && pArray.getFldArray(0).getType().equals("slidenum")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

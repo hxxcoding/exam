@@ -192,7 +192,10 @@ export function pptMethodFilter(value) {
     'getBackgroundFillStyle': '获取背景填充类型',
     'getBackgroundGradientType': '获取渐变背景类型',
     'getBackgroundGradientAngle': '获取渐变背景角度',
-    'getBackgroundGradientFractions': '获取渐变背景渐变光圈'
+    'getBackgroundGradientFractions': '获取渐变背景渐变光圈',
+    'isContainDatetimeInSlideMaster': '母版中是否包含日期占位符',
+    'isContainFooterInSlideMaster': '母版中是否包含页脚占位符',
+    'isContainSlideNumInSlideMaster': '母版中是否包含幻灯片编号占位符'
   }
   return map[value]
 }
