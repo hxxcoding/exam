@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import com.yf.exam.ability.upload.dto.FileUrlReqDTO;
+import com.yf.exam.core.annon.LogInject;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
@@ -66,6 +67,7 @@ public class QuController extends BaseController {
      * @return
      */
     @ApiOperation(value = "添加或修改")
+    @LogInject(title = "保存或修改试题")
     @RequiresPermissions("qu:save")
     @RequestMapping(value = "/save", method = {RequestMethod.POST})
     public ApiRest<BaseIdRespDTO> save(@RequestBody QuDetailDTO reqDTO) {
@@ -80,6 +82,7 @@ public class QuController extends BaseController {
      * @return
      */
     @ApiOperation(value = "批量删除")
+    @LogInject(title = "批量删除试题")
     @RequiresPermissions("qu:delete")
     @RequestMapping(value = "/delete", method = {RequestMethod.POST})
     public ApiRest<?> deleteBatch(@RequestBody BaseIdsReqDTO reqDTO) {
@@ -235,7 +238,8 @@ public class QuController extends BaseController {
      */
     @RequiresPermissions("qu:import")
     @RequestMapping(value = "import")
-    public ApiRest importFile(@RequestParam("file") MultipartFile file) {
+    @LogInject(title = "批量导入试题")
+    public ApiRest<?> importFile(@RequestParam("file") MultipartFile file) {
         try {
             ImportExcel ei = new ImportExcel(file, 1, 0);
             List<QuExportDTO> list = ei.getDataList(QuExportDTO.class);

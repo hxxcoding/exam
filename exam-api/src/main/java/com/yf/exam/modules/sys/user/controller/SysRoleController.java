@@ -2,6 +2,7 @@ package com.yf.exam.modules.sys.user.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yf.exam.core.annon.LogInject;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.PagingReqDTO;
@@ -79,6 +80,7 @@ public class SysRoleController extends BaseController {
     }
 
     @ApiOperation(value = "修改身份菜单授权")
+    @LogInject(title = "修改身份权限(高危)")
     @RequiresPermissions("sys:role:menu:update")
     @RequestMapping(value = "/menu/update", method = { RequestMethod.POST })
     public ApiRest<?> updateRoleMenu(@RequestBody SysRoleMenuSaveReqDTO reqDTO) {

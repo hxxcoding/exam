@@ -2,6 +2,7 @@ package com.yf.exam.modules.sys.user.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yf.exam.core.annon.LogInject;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
@@ -63,6 +64,7 @@ public class SysMenuController extends BaseController {
     }
 
     @ApiOperation(value = "添加或修改")
+    @LogInject(title = "修改菜单(高危)")
     @RequiresPermissions("sys:menu:save")
     @RequestMapping(value = "/save", method = { RequestMethod.POST })
     public ApiRest<Object> saveMenu(@RequestBody SysMenuDTO reqDTO) {
@@ -73,6 +75,7 @@ public class SysMenuController extends BaseController {
     }
 
     @ApiOperation(value = "删除")
+    @LogInject(title = "删除菜单(高危)")
     @RequiresPermissions("sys:menu:delete")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST })
     public ApiRest<Object> deleteMenu(@RequestBody BaseIdReqDTO reqDTO) {

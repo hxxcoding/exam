@@ -92,6 +92,7 @@ public class SysUserController extends BaseController {
      * @return
      */
     @ApiOperation(value = "踢人下线")
+    @LogInject(title = "踢人下线")
     @RequiresPermissions("sys:user:kickout")
     @RequestMapping(value = "/kickout", method = {RequestMethod.POST})
     public ApiRest<?> kickout(@RequestBody BaseIdReqDTO reqDTO) {
@@ -142,6 +143,7 @@ public class SysUserController extends BaseController {
      * @return
      */
     @ApiOperation(value = "批量删除")
+    @LogInject(title = "批量删除用户")
     @RequiresPermissions("sys:user:delete")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
     public ApiRest<?> deleteBatch(@RequestBody BaseIdsReqDTO reqDTO) {
@@ -171,6 +173,7 @@ public class SysUserController extends BaseController {
      * @return
      */
     @ApiOperation(value = "修改状态")
+    @LogInject(title = "修改用户状态")
     @RequiresPermissions("sys:user:state")
     @RequestMapping(value = "/state", method = { RequestMethod.POST})
     public ApiRest<?> state(@RequestBody BaseStateReqDTO reqDTO) {
@@ -245,6 +248,7 @@ public class SysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "import")
+    @LogInject(title = "批量倒入用户")
     @RequiresPermissions("sys:user:import")
     public ApiRest importFile(@RequestParam("file") MultipartFile file) {
         try {

@@ -113,6 +113,7 @@ public class PaperController extends BaseController {
      * 向正在考试的用户发送信息  if (paperId == "*") sendAll即向全体在考试同学发送
      */
     @ApiOperation(value = "向正在考试的用户发送信息")
+    @LogInject(title = "向正在考试的用户发送信息")
     @RequiresPermissions("paper:send-msg")
     @RequestMapping(value = "/send-msg", method = { RequestMethod.POST })
     public ApiRest<?> sendMsg(@RequestBody SendMsgReqDTO reqDTO) {
@@ -199,6 +200,7 @@ public class PaperController extends BaseController {
      * @return
      */
     @ApiOperation(value = "退回交卷")
+    @LogInject(title = "退回交卷")
     @RequiresPermissions("paper:back-exam")
     @RequestMapping(value = "/back-exam", method = { RequestMethod.POST})
     public ApiRest<?> backExam(@RequestBody BaseIdReqDTO reqDTO) {

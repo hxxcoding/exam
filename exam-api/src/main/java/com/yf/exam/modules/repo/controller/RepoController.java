@@ -2,6 +2,7 @@ package com.yf.exam.modules.repo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yf.exam.core.annon.LogInject;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
@@ -51,6 +52,7 @@ public class RepoController extends BaseController {
     * @return
     */
     @ApiOperation(value = "添加或修改")
+    @LogInject(title = "保存或修改题库")
     @RequiresPermissions("repo:save")
     @RequestMapping(value = "/save", method = { RequestMethod.POST})
     public ApiRest save(@RequestBody RepoDTO reqDTO) {
@@ -64,6 +66,7 @@ public class RepoController extends BaseController {
     * @return
     */
     @ApiOperation(value = "批量删除")
+    @LogInject(title = "批量删除题库")
     @RequiresPermissions("repo:delete")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST})
     public ApiRest<?> edit(@RequestBody BaseIdsReqDTO reqDTO) {
@@ -108,6 +111,7 @@ public class RepoController extends BaseController {
      * @return
      */
     @ApiOperation(value = "批量操作", notes = "批量加入或从题库移除")
+    @LogInject(title = "批量操作题库关系")
     @RequiresPermissions("repo:batch-action")
     @RequestMapping(value = "/batch-action", method = { RequestMethod.POST})
     public ApiRest paging(@RequestBody QuRepoBatchReqDTO reqDTO) {

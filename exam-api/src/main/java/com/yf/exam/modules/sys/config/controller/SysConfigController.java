@@ -1,5 +1,6 @@
 package com.yf.exam.modules.sys.config.controller;
 
+import com.yf.exam.core.annon.LogInject;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdRespDTO;
@@ -39,6 +40,7 @@ public class SysConfigController extends BaseController {
     * @return
     */
     @ApiOperation(value = "添加或修改")
+    @LogInject(title = "修改系统配置")
     @RequiresPermissions("sys:config:save")
     @RequestMapping(value = "/save", method = { RequestMethod.POST})
     public ApiRest<BaseIdRespDTO> save(@RequestBody SysConfigDTO reqDTO) {

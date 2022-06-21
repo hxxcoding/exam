@@ -2,6 +2,7 @@ package com.yf.exam.modules.exam.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yf.exam.core.annon.LogInject;
 import com.yf.exam.core.api.ApiRest;
 import com.yf.exam.core.api.controller.BaseController;
 import com.yf.exam.core.api.dto.BaseIdReqDTO;
@@ -48,8 +49,9 @@ public class ExamController extends BaseController {
     */
     @ApiOperation(value = "添加或修改")
     @RequiresPermissions("exam:save")
+    @LogInject(title = "添加或修改考试")
     @RequestMapping(value = "/save", method = { RequestMethod.POST })
-    public ApiRest save(@RequestBody ExamSaveReqDTO reqDTO) {
+    public ApiRest<?> save(@RequestBody ExamSaveReqDTO reqDTO) {
         //复制参数
         baseService.save(reqDTO);
         return super.success();
@@ -62,6 +64,7 @@ public class ExamController extends BaseController {
     */
     @ApiOperation(value = "批量删除")
     @RequiresPermissions("exam:delete")
+    @LogInject(title = "批量删除考试")
     @RequestMapping(value = "/delete", method = { RequestMethod.POST })
     public ApiRest edit(@RequestBody BaseIdsReqDTO reqDTO) {
         //根据ID删除
@@ -90,7 +93,7 @@ public class ExamController extends BaseController {
     @ApiOperation(value = "修改考试状态")
     @RequiresPermissions("exam:state")
     @RequestMapping(value = "/state", method = { RequestMethod.POST})
-    public ApiRest state(@RequestBody BaseStateReqDTO reqDTO) {
+    public ApiRest<?> state(@RequestBody BaseStateReqDTO reqDTO) {
 
         QueryWrapper<Exam> wrapper = new QueryWrapper<>();
         wrapper.lambda().in(Exam::getId, reqDTO.getIds());
