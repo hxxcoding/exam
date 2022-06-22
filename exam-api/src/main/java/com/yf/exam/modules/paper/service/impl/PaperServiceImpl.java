@@ -135,8 +135,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Autowired
     private UploadConfig uploadConfig;
 
-    private static final Timer timer = new Timer();
-    private static final int DELAY_MINUTES = 3; // 默认考试结束后3分钟提交未交卷的试卷
+//    private static final Timer timer = new Timer();
+//    private static final int DELAY_MINUTES = 3; // 默认考试结束后3分钟提交未交卷的试卷
 
     /**
      * 展示的选项，ABC这样
@@ -217,20 +217,20 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         //保存试卷内容
         Paper savedPaper = this.savePaper(userId, seat, exam, quList);
         String paperId = savedPaper.getId();
-        Calendar executeTime = Calendar.getInstance();
-        executeTime.setTime(savedPaper.getLimitTime());
-        executeTime.add(Calendar.MINUTE, DELAY_MINUTES);
 
-        // 向timer队列中添加一个交卷任务 在executeTime执行
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    log.info("自动交卷执行[userId=" + savedPaper.getUserId() + ",paperId=" + paperId + "]");
-                    paperService.handExam(paperId);
-                } catch (Exception ignored) {}
-            }
-        }, executeTime.getTime());
+//        // 向timer队列中添加一个交卷任务 在executeTime执行
+//        Calendar executeTime = Calendar.getInstance();
+//        executeTime.setTime(savedPaper.getLimitTime());
+//        executeTime.add(Calendar.MINUTE, DELAY_MINUTES);
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                try {
+//                    log.info("自动交卷执行[userId=" + savedPaper.getUserId() + ",paperId=" + paperId + "]");
+//                    paperService.handExam(paperId);
+//                } catch (Exception ignored) {}
+//            }
+//        }, executeTime.getTime());
 
         return savedPaper.getId();
     }
