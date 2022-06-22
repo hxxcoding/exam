@@ -22,4 +22,6 @@ public interface SysLogService extends IService<SysLog> {
     * @return
     */
     IPage<SysLogDTO> paging(PagingReqDTO<SysLogDTO> reqDTO);
+
+    void removeOverdueLogs();
 }
