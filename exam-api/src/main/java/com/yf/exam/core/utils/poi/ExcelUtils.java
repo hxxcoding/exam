@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * ExcelUtils
+ * ExcelUtils Excel文件判分工具类
  * </p>
  *
  * @author Xiaoxiao Hu
@@ -47,9 +47,9 @@ public class ExcelUtils {
 
     /**
      * 通过方法名和参数获取方法并执行
-     * @param methodName
-     * @param args
-     * @return
+     * @param methodName 方法名
+     * @param args 方法参数数组
+     * @return 方法执行结果
      */
     public Object executeMethod(String methodName, Object... args) {
         try {
@@ -67,9 +67,6 @@ public class ExcelUtils {
 
     /**
      * 获取单元格的数字的格式
-     * @param row
-     * @param cell
-     * @return
      */
     public String getNumFormatCode(Integer row, Integer cell) {
         long s =  xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell).getCTCell().getS();
@@ -92,9 +89,6 @@ public class ExcelUtils {
 
     /**
      * 获取cell的函数
-     * @param row
-     * @param cell
-     * @return
      */
     public String getFunction(Integer row, Integer cell) {
         return xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell)
@@ -108,9 +102,6 @@ public class ExcelUtils {
 
     /**
      * 获取受到该单元格函数影响的范围
-     * @param row
-     * @param cell
-     * @return
      */
     public String getFuncRefRange(Integer row, Integer cell) {
         return xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell)
@@ -124,9 +115,6 @@ public class ExcelUtils {
 
     /**
      * 获取数字单元格的值
-     * @param row
-     * @param cell
-     * @return
      */
     public String getNumValue(Integer row, Integer cell) {
         return xssfWorkbook.getSheetAt(0).getRow(row).getCell(cell)
@@ -219,7 +207,6 @@ public class ExcelUtils {
     /**
      * 获取合并的单元格
      * @param cellAddress 合并开始的坐标
-     * @return
      */
     public String getMergedRegion(String cellAddress) {
         List<CellRangeAddress> mergedRegions = xssfWorkbook.getSheetAt(0).getMergedRegions();
@@ -233,8 +220,6 @@ public class ExcelUtils {
 
     /**
      * 获取某个单元格的文字内容
-     * @param cellAddress
-     * @return
      */
     public String getRichTextString(String cellAddress) {
         CellAddress address = new CellAddress(cellAddress);
@@ -246,8 +231,6 @@ public class ExcelUtils {
 
     /**
      * 获取单元格样式索引
-     * @param cellAddress
-     * @return
      */
     private short pgetStyleIndex(String cellAddress) {
         CellAddress address = new CellAddress(cellAddress);
@@ -257,8 +240,6 @@ public class ExcelUtils {
 
     /**
      * 获取某个单元格的字体
-     * @param cellAddress
-     * @return
      */
     private XSSFFont pgetFont(String cellAddress) {
         CTXf cellXf = xssfWorkbook.getStylesSource().getCellXfAt(pgetStyleIndex(cellAddress));
@@ -267,8 +248,6 @@ public class ExcelUtils {
 
     /**
      * 获取某个单元格的字体名称
-     * @param cellAddress
-     * @return
      */
     public String getFontName(String cellAddress) {
         return Objects.requireNonNull(this.pgetFont(cellAddress)).getFontName();
@@ -276,8 +255,6 @@ public class ExcelUtils {
 
     /**
      * 获取某个单元格的字体大小
-     * @param cellAddress
-     * @return
      */
     public Short getFontSize(String cellAddress) {
         return Objects.requireNonNull(this.pgetFont(cellAddress)).getFontHeightInPoints();
@@ -285,8 +262,6 @@ public class ExcelUtils {
 
     /**
      * 获取某个单元格的字体是否加粗
-     * @param cellAddress
-     * @return
      */
     public Boolean isBold(String cellAddress) {
         return Objects.requireNonNull(this.pgetFont(cellAddress)).getBold();
@@ -294,8 +269,6 @@ public class ExcelUtils {
 
     /**
      * 获取水平对齐方式
-     * @param cellAddress
-     * @return
      */
     public String getHorizontalAlignment(String cellAddress) {
         short styleIndex = pgetStyleIndex(cellAddress);
@@ -307,8 +280,6 @@ public class ExcelUtils {
     }
     /**
      * 获取垂直对齐方式
-     * @param cellAddress
-     * @return
      */
     public String getVerticalAlignment(String cellAddress) {
         short styleIndex = pgetStyleIndex(cellAddress);
@@ -321,8 +292,6 @@ public class ExcelUtils {
 
     /**
      * 获取背景填充颜色
-     * @param cellAddress
-     * @return
      */
     public String getFillBackgroundColor(String cellAddress) {
         XSSFCellFill fill = pgetCellFill(cellAddress);
@@ -332,8 +301,6 @@ public class ExcelUtils {
 
     /**
      * 获取图案填充颜色
-     * @param cellAddress
-     * @return
      */
     public String getFillForegroundColor(String cellAddress) {
         XSSFCellFill fill = pgetCellFill(cellAddress);
@@ -343,8 +310,6 @@ public class ExcelUtils {
 
     /**
      * 获取图案填充类型
-     * @param cellAddress
-     * @return
      */
     public String getForegroundPatternType(String cellAddress) {
         XSSFCellFill fill = pgetCellFill(cellAddress);
@@ -360,8 +325,6 @@ public class ExcelUtils {
 
     /**
      * 获取行高
-     * @param cellAddress
-     * @return
      */
     public Float getRowHeight(String cellAddress) {
         CellAddress address = new CellAddress(cellAddress);
@@ -370,8 +333,6 @@ public class ExcelUtils {
 
     /**
      * 获取列宽
-     * @param cellAddress
-     * @return
      */
     public Integer getColWidth(String cellAddress) {
         CellAddress address = new CellAddress(cellAddress);
@@ -380,7 +341,6 @@ public class ExcelUtils {
 
     /**
      * 获取打印纸张类型
-     * @return
      */
     public String getPrintPaperSize() {
         return xssfWorkbook.getSheetAt(0).getPrintSetup().getPaperSizeEnum().name();
@@ -396,7 +356,6 @@ public class ExcelUtils {
 
     /**
      * 获取打印页眉边距
-     * @return
      */
     public Double getPrintHeaderMargin() {
         return xssfWorkbook.getSheetAt(0).getPrintSetup().getHeaderMargin();
@@ -404,7 +363,6 @@ public class ExcelUtils {
 
     /**
      * 获取打印页脚边距
-     * @return
      */
     public Double getPrintFooterMargin() {
         return xssfWorkbook.getSheetAt(0).getPrintSetup().getFooterMargin();
@@ -412,7 +370,6 @@ public class ExcelUtils {
 
     /**
      * 获取打印上页边距
-     * @return
      */
     public Double getPrintTopMargin() {
         return xssfWorkbook.getSheetAt(0).getPrintSetup().getTopMargin();
@@ -420,7 +377,6 @@ public class ExcelUtils {
 
     /**
      * 获取打印下页边距
-     * @return
      */
     public Double getPrintBottomMargin() {
         return xssfWorkbook.getSheetAt(0).getPrintSetup().getBottomMargin();
@@ -428,7 +384,6 @@ public class ExcelUtils {
 
     /**
      * 获取打印左页边距
-     * @return
      */
     public Double getPrintLeftMargin() {
         return xssfWorkbook.getSheetAt(0).getPrintSetup().getLeftMargin();
@@ -436,7 +391,6 @@ public class ExcelUtils {
 
     /**
      * 获取打印右页边距
-     * @return
      */
     public Double getPrintRightMargin() {
         return xssfWorkbook.getSheetAt(0).getPrintSetup().getRightMargin();
@@ -444,7 +398,6 @@ public class ExcelUtils {
 
     /**
      * 打印页面是否水平居中
-     * @return
      */
     public Boolean isPrintHorizontallyCenter() {
         return xssfWorkbook.getSheetAt(0).getHorizontallyCenter();
@@ -452,7 +405,6 @@ public class ExcelUtils {
 
     /**
      * 打印页面是否垂直居中
-     * @return
      */
     public Boolean isPrintVerticallyCenter() {
         return xssfWorkbook.getSheetAt(0).getVerticallyCenter();
@@ -460,7 +412,6 @@ public class ExcelUtils {
 
     /**
      * 是否打印网格线
-     * @return
      */
     public Boolean isPrintGridLines() {
         return xssfWorkbook.getSheetAt(0).getCTWorksheet().getPrintOptions().getGridLines();
@@ -468,7 +419,6 @@ public class ExcelUtils {
 
     /**
      * 是否打印行列号
-     * @return
      */
     public Boolean isPrintHeadings() {
         return xssfWorkbook.getSheetAt(0).getCTWorksheet().getPrintOptions().getHeadings();
@@ -476,7 +426,6 @@ public class ExcelUtils {
 
     /**
      * 获取页眉内容和格式
-     * @return
      */
     public String getHeaderContent() {
         return xssfWorkbook.getSheetAt(0).getHeaderFooterProperties().getHeaderFooter().getOddHeader();
@@ -484,7 +433,6 @@ public class ExcelUtils {
 
     /**
      * 获取页脚内容和格式
-     * @return
      */
     public String getFooterContent() {
         return xssfWorkbook.getSheetAt(0).getHeaderFooterProperties().getHeaderFooter().getOddFooter();
@@ -492,7 +440,6 @@ public class ExcelUtils {
 
     /**
      * 获取条件格式
-     * @return
      */
     public String getConditionalFormatting(String cellAddress) {
         CellAddress address = new CellAddress(cellAddress);
@@ -539,7 +486,6 @@ public class ExcelUtils {
 
     /**
      * 获取图表名称
-     * @return
      */
     public String getChartTitle() {
         return pgetXSSFChart().getTitleText().getString();
@@ -551,7 +497,6 @@ public class ExcelUtils {
      *          .getRich().getPArray(0).getRArray(0).getRPr().getSz(); // 行标题大小
      * xssfChart.getCTChart().getPlotArea().getCatAxArray(0).getTitle().getTx()
      *          .getRich().getPArray(0).getRArray(0).getRPr().getEa(); // 中文字体名称
-     * @return
      */
     public String getChartCatTitle() {
         return pgetXSSFChart().getCTChart().getPlotArea().getCatAxArray(0)
@@ -560,7 +505,6 @@ public class ExcelUtils {
 
     /**
      * 获取val坐标(纵坐标)标题
-     * @return
      */
     public String getChartValTitle() {
         return pgetXSSFChart().getCTChart().getPlotArea().getValAxArray(0)
@@ -618,7 +562,6 @@ public class ExcelUtils {
 
     /**
      * 是否图表旁显示值
-     * @return
      */
     public Boolean isChartShowVal() {
         return pgetBarSerList().get(0).getDLbls().getShowVal().getVal();
@@ -626,7 +569,6 @@ public class ExcelUtils {
 
     /**
      * 获取图表坐标的数据间隔大小
-     * @return
      */
     public Double getChartMajorUnit() {
         return pgetXSSFChart().getCTChart().getPlotArea().getValAxArray(0)
@@ -635,7 +577,6 @@ public class ExcelUtils {
 
     /**
      * 是否显示图例
-     * @return
      */
     public Boolean isChartDisplayLegend() {
         return pgetXSSFChart().getCTChart().getLegend() != null;
@@ -643,7 +584,6 @@ public class ExcelUtils {
 
     /**
      * 获取图例位置
-     * @return
      */
     public String getChartLegendPos() {
         return pgetXSSFChart().getCTChart().getLegend().getLegendPos().getVal().toString();
@@ -651,7 +591,6 @@ public class ExcelUtils {
 
     /**
      * 获取排序影响的范围
-     * @return
      */
     public String getSortStateRef() {
         return xssfWorkbook.getSheetAt(0).getCTWorksheet()
@@ -660,7 +599,6 @@ public class ExcelUtils {
 
     /**
      * 获取排序条件
-     * @return
      */
     public String getSortConditionRef() {
         final List<CTSortCondition> sortConditionList = xssfWorkbook.getSheetAt(0).getCTWorksheet()
@@ -677,7 +615,6 @@ public class ExcelUtils {
 
     /**
      * 获取自动筛选的范围
-     * @return
      */
     public String getAutoFilterRef() {
         return xssfWorkbook.getSheetAt(0).getCTWorksheet().getAutoFilter().getRef();
@@ -685,7 +622,6 @@ public class ExcelUtils {
 
     /**
      * 获取筛选条件
-     * @return
      */
     public String getFilterVal() {
         final List<CTFilterColumn> filterColumnList = xssfWorkbook.getSheetAt(0)
@@ -706,10 +642,4 @@ public class ExcelUtils {
         return res.substring(0, res.length() - 1);
     }
 
-//    public static void main(String[] args) {
-//        ExcelUtils xlsx = new ExcelUtils("/Users/hxx/Desktop/answer.xlsx");
-//        System.out.println(xlsx.getFuncRefRange("H3"));
-//        CellAddress address = new CellAddress("I3");
-//        System.out.println(xlsx.xssfWorkbook.getSheetAt(0).getRow(address.getRow()).getCell(address.getColumn()).getCTCell());
-//    }
 }

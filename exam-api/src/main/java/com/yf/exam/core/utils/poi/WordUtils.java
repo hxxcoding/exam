@@ -22,6 +22,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * <p>
+ * WordUtils Word文件判分工具类
+ * </p>
+ *
+ * @author Xiaoxiao Hu
+ * @since 2022-01-11
+ */
 public class WordUtils {
 
     private final XWPFDocument xwpfDocument;
@@ -36,9 +44,8 @@ public class WordUtils {
 
     /**
      * 通过方法名和参数获取方法并执行
-     * @param methodName
-     * @param args
-     * @return
+     * @param methodName 方法名
+     * @param args 方法参数数组 方法执行结果
      */
     public Object executeMethod(String methodName, Object... args) {
         try {
@@ -56,7 +63,6 @@ public class WordUtils {
 
     /**
      * 分析word文件段落
-     * @return
      */
     public static List<WordParagraphDTO> analyzeWordParagraph(String filePath) {
         try (FileInputStream fis = new FileInputStream(filePath)) {
@@ -78,7 +84,6 @@ public class WordUtils {
 
     /**
      * 获取左页边距
-     * @return
      */
     public Integer getPgMarLeft() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getLeft().intValue();
@@ -86,7 +91,6 @@ public class WordUtils {
 
     /**
      * 获取右页边距
-     * @return
      */
     public Integer getPgMarRight() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getRight().intValue();
@@ -94,7 +98,6 @@ public class WordUtils {
 
     /**
      * 获取上页边距
-     * @return
      */
     public Integer getPgMarTop() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getTop().intValue();
@@ -102,7 +105,6 @@ public class WordUtils {
 
     /**
      * 获取下页边距
-     * @return
      */
     public Integer getPgMarBottom() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getBottom().intValue();
@@ -110,7 +112,6 @@ public class WordUtils {
 
     /**
      * 获取装订线
-     * @return
      */
     public Integer getPgMarGutter() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getGutter().intValue();
@@ -118,7 +119,6 @@ public class WordUtils {
 
     /**
      * 获取页眉距边缘
-     * @return 页眉距边缘
      */
     public Integer getPgMarHeader() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getHeader().intValue();
@@ -126,7 +126,6 @@ public class WordUtils {
 
     /**
      * 获取页脚距边缘
-     * @return 页脚距边缘
      */
     public Integer getPgMarFooter() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgMar().getFooter().intValue();
@@ -134,7 +133,6 @@ public class WordUtils {
 
     /**
      * 纸张高度 A4:  16839 x 11907
-     * @return
      */
     public Integer getPgSzH() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgSz().getH().intValue();
@@ -142,7 +140,6 @@ public class WordUtils {
 
     /**
      * 纸张宽度 A4:  16839 x 11907
-     * @return
      */
     public Integer getPgSzW() {
         return xwpfDocument.getDocument().getBody().getSectPr().getPgSz().getW().intValue();
@@ -180,8 +177,6 @@ public class WordUtils {
      * 获取某个段落的分栏数
      * 分栏之后该段落的 前后各增加 一个paragraph
      * 原文字在段1, 分栏后文字在段2, 分栏数据在段3
-     * @param pos
-     * @return
      */
     public Integer getColsNum(Integer pos) {
         return xwpfDocument.getDocument().getBody().getPList().get(pos + 1)
@@ -192,8 +187,6 @@ public class WordUtils {
      * 获取某个段落的是否存在分栏分隔线
      * 默认原始文件未分栏之后该段落的 前后各增加 一个paragraph
      * 原文字在段1, 分栏后文字在段2, 分栏数据在段3
-     * @param pos
-     * @return
      */
     public Boolean isColsLine(Integer pos) {
         CTColumns cols = xwpfDocument.getDocument().getBody().getPList().get(pos + 1)
@@ -207,8 +200,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的首行缩进 未缩进返回-1
-     * @param pos
-     * @return
      */
     public Integer getIndentationFirstLine(Integer pos) {
         return xwpfDocument.getParagraphs().get(pos).getIndentationFirstLine();
@@ -216,8 +207,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的悬挂缩进 未缩进返回-1
-     * @param pos
-     * @return
      */
     public Integer getIndentationHanging(Integer pos) {
         return xwpfDocument.getParagraphs().get(pos).getIndentationHanging();
@@ -225,8 +214,6 @@ public class WordUtils {
 
     /**
      * 获取左侧缩进
-     * @param pos
-     * @return
      */
     public Integer getIndentationLeft(Integer pos) {
         return xwpfDocument.getParagraphs().get(pos).getIndentationLeft();
@@ -234,8 +221,6 @@ public class WordUtils {
 
     /**
      * 获取右侧缩进
-     * @param pos
-     * @return
      */
     public Integer getIndentationRight(Integer pos) {
         return xwpfDocument.getParagraphs().get(pos).getIndentationRight();
@@ -243,8 +228,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的行间距 默认-1.0
-     * @param pos
-     * @return
      */
     public Double getSpacingBetween(Integer pos) {
         return xwpfDocument.getParagraphs().get(pos).getSpacingBetween();
@@ -252,8 +235,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的段前间距
-     * @param pos
-     * @return
      */
     public Integer getSpacingBeforeLines(Integer pos) {
         return xwpfDocument.getParagraphs().get(pos).getSpacingBeforeLines();
@@ -261,8 +242,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的段后间距
-     * @param pos
-     * @return
      */
     public Integer getSpacingAfterLines(Integer pos) {
         return xwpfDocument.getParagraphs().get(pos).getSpacingAfterLines();
@@ -270,8 +249,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的项目符号
-     * @param pos
-     * @return
      */
     public String getNumFmt(Integer pos) {
         String numFmt = xwpfDocument.getParagraphs().get(pos).getNumFmt();
@@ -284,8 +261,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的字体大小 默认-1
-     * @param pos 段落
-     * @return 字体大小
      */
     public Integer getFontSize(Integer pos) {
         return pgetFirstRun(pos).getFontSize();
@@ -293,8 +268,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的字体
-     * @param pos 段落
-     * @return 字体
      */
     public String getFontFamily(Integer pos) {
         List<XWPFRun> runs = xwpfDocument.getParagraphs().get(pos).getRuns();
@@ -310,7 +283,6 @@ public class WordUtils {
      * 获取某个段落中的某一句话的字体
      * @param paraPos 段落
      * @param runPos 句子
-     * @return 字体
      */
     public String getFontFamily(Integer paraPos, Integer runPos) {
         List<XWPFRun> runs = xwpfDocument.getParagraphs().get(paraPos).getRuns();
@@ -324,8 +296,6 @@ public class WordUtils {
 
     /**
      * 获取颜色
-     * @param pos
-     * @return
      */
     public String getColor(Integer pos) {
         return xwpfDocument.getParagraphArray(pos).getRuns().get(0).getColor();
@@ -333,7 +303,6 @@ public class WordUtils {
 
     /**
      * 获取默认中文字体
-     * @return 字体
      */
     public String getDefaultChineseFontFamily() throws IOException, XmlException {
         String fontFamily = xwpfDocument.getStyle().getDocDefaults().getRPrDefault().getRPr().getRFonts().getEastAsia();
@@ -346,7 +315,6 @@ public class WordUtils {
 
     /**
      * 获取默认英文字体
-     * @return 字体
      */
     public String getDefaultAsciiFontFamily() throws IOException, XmlException {
         String fontFamily = xwpfDocument.getStyle().getDocDefaults().getRPrDefault().getRPr().getRFonts().getAscii();
@@ -359,8 +327,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落的下划线类型
-     * @param pos 段落
-     * @return
      */
     public String getUnderlineType(Integer pos) {
         UnderlinePatterns underline = pgetFirstRun(pos).getUnderline();
@@ -373,8 +339,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落是否加粗
-     * @param pos 段落
-     * @return
      */
     public Boolean isBold(Integer pos) {
         return pgetFirstRun(pos).isBold();
@@ -382,8 +346,6 @@ public class WordUtils {
 
     /**
      * 获取某个段落是否斜体
-     * @param pos 段落
-     * @return
      */
     public Boolean isItalic(Integer pos) {
         return pgetFirstRun(pos).isItalic();
@@ -434,8 +396,6 @@ public class WordUtils {
 
     /**
      * 获取对齐方式
-     * @param pos
-     * @return
      */
     public String getAlignment(Integer pos) {
         return xwpfDocument.getParagraphs().get(pos).getAlignment().toString();
@@ -443,8 +403,6 @@ public class WordUtils {
 
     /**
      * 获取着重号样式
-     * @param pos
-     * @return
      */
     public String getEmphasisMark(Integer pos) {
         return pgetFirstRun(pos).getEmphasisMark().toString();
@@ -452,8 +410,6 @@ public class WordUtils {
 
     /**
      * 获取首字下沉格式和行数
-     * @param pos
-     * @return
      */
     public String getDropCapAndLines(Integer pos) {
         final CTFramePr framePr = xwpfDocument.getParagraphs().get(pos).getCTP().getPPr().getFramePr();
@@ -462,8 +418,6 @@ public class WordUtils {
 
     /**
      * 获取句子底纹填充色
-     * @param pos
-     * @return
      */
     public String getShadingFillWithRun(Integer pos) {
         byte[] colors = (byte[]) pgetFirstRun(pos).getCTR().getRPr().getShd().getFill();
@@ -472,8 +426,6 @@ public class WordUtils {
 
     /**
      * 获取段落底纹填充色
-     * @param pos
-     * @return
      */
     public String getShadingFillWithPara(Integer pos) {
         byte[] colors = (byte[]) xwpfDocument.getParagraphArray(pos).getCTP().getPPr().getShd().getFill();
@@ -486,7 +438,6 @@ public class WordUtils {
 
     /**
      * 获取表格行数
-     * @return
      */
     public Integer getTableRowNum() {
         return xwpfDocument.getTableArray(0).getNumberOfRows();
@@ -494,7 +445,6 @@ public class WordUtils {
 
     /**
      * 获取表格列数
-     * @return
      */
     public Integer getTableColNum() {
         return xwpfDocument.getTableArray(0).getRow(0).getTableCells().size();

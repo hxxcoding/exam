@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * <p>
- *  PPT判分方法
+ *  PPTUtils PPT判分工具类
  * </p>
  *
  * @author Xiaoxiao Hu
@@ -39,9 +39,9 @@ public class PPTUtils {
 
     /**
      * 通过方法名和参数获取方法并执行
-     * @param methodName
-     * @param args
-     * @return
+     * @param methodName 方法名
+     * @param args 方法参数数组
+     * @return 方法执行结果
      */
     public Object executeMethod(String methodName, Object... args) {
         try {
@@ -59,8 +59,8 @@ public class PPTUtils {
 
     /**
      * 分析ppt文件页面
-     * @param filePath
-     * @return
+     * @param filePath ppt文件路径
+     * @return 幻灯片列表
      */
     public static List<PPTSlideDTO> analyzePPTSlide(String filePath) {
         try (FileInputStream fis = new FileInputStream(filePath)) {
@@ -80,8 +80,6 @@ public class PPTUtils {
 
     /**
      * 获取主题/设计模版名称
-     * @param pos
-     * @return
      */
     public String getThemeName(Integer pos) {
         XSLFSlide xslfSlide = xmlSlideShow.getSlides().get(pos);
@@ -90,8 +88,6 @@ public class PPTUtils {
 
     /**
      * 获取该页面的第一个跳转的超链接的动作
-     * @param pos
-     * @return
      */
     public String getJumpHyperlinkAction(Integer pos){
         List<CTShape> spList = pgetSpList(pos);
@@ -108,8 +104,6 @@ public class PPTUtils {
 
     /**
      * 获取该页面的第一个跳转的超链接所在组件的名称
-     * @param pos
-     * @return
      */
     public String getJumpHyperlinkComponentName(Integer pos){
         List<CTShape> spList = pgetSpList(pos);
@@ -148,18 +142,8 @@ public class PPTUtils {
         return getAnimMainSeqAction(slidePos, 0);
     }
 
-//    public String getAnimMainSeqAction(String pos) {
-//        String[] p = pos.split(",");
-//        Integer slidePos = Integer.parseInt(p[0]);
-//        Integer actionPos = null;
-//        if (p.length >= 2) {
-//            actionPos = Integer.parseInt(p[1]);
-//        }
-//        return getAnimMainSeqAction(slidePos, actionPos != null ? actionPos : 0);
-//    }
-
     /**
-     * 获取第pos页ppt进入时的过渡方式, 仅支持获取简单的过渡方式, 高级渡方式待研究过
+     * 获取第pos页ppt进入时的过渡方式, 仅支持获取简单的过渡方式, 高级渡方式待研究
      * 可用的页面切换方式为：推入/擦除/随即线条/揭开/覆盖/时钟/梳理
      */
     public String getTransitionMode(Integer pos){
@@ -172,8 +156,6 @@ public class PPTUtils {
 
     /**
      * 获取版式名称
-     * @param pos
-     * @return
      */
     public String getLayoutName(Integer pos) {
         final List<XSLFSlide> slides = xmlSlideShow.getSlides();
@@ -182,8 +164,6 @@ public class PPTUtils {
 
     /**
      * 获取标题(第一个文本框)文字
-     * @param pos
-     * @return
      */
     public String getTitleText(Integer pos) {
         return pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getT(); // 获取标题文字
@@ -192,8 +172,6 @@ public class PPTUtils {
     /**
      * 获取标题(第一个文本框)中文字体
      * pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getRPr().getLatin().getTypeface(); // 获取
-     * @param pos
-     * @return
      */
     public String getTitleEaFontName(Integer pos) {
         return pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getRPr().getEa().getTypeface();
@@ -202,8 +180,6 @@ public class PPTUtils {
     /**
      * 获取标题(第一个文本框)字体大小
      * pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getRPr().getLatin().getTypeface(); // 获取
-     * @param pos
-     * @return
      */
     public Integer getTitleEaFontSize(Integer pos) {
         return pgetSpList(pos).get(0).getTxBody().getPArray(0).getRArray(0).getRPr().getSz();
@@ -238,8 +214,6 @@ public class PPTUtils {
 
     /**
      * 获取渐变背景渐变光圈
-     * @param pos
-     * @return
      */
     public String getBackgroundGradientFractions(Integer pos){
         final XSLFSlide slide = xmlSlideShow.getSlides().get(pos);
@@ -249,8 +223,6 @@ public class PPTUtils {
 
     /**
      * 获取内容(第二个文本框)文字
-     * @param pos
-     * @return
      */
     public String getContentText(Integer pos) {
         return pgetSpList(pos).get(1).getTxBody().getPArray(0).getRArray(0).getT(); // 获取标题文字
