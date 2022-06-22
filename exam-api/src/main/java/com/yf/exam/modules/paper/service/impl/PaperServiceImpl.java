@@ -216,8 +216,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         //保存试卷内容
         Paper savedPaper = this.savePaper(userId, seat, exam, quList);
-        String paperId = savedPaper.getId();
 
+//        String paperId = savedPaper.getId();
 //        // 向timer队列中添加一个交卷任务 在executeTime执行
 //        Calendar executeTime = Calendar.getInstance();
 //        executeTime.setTime(savedPaper.getLimitTime());
