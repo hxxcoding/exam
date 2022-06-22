@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yf.exam.ability.upload.config.UploadConfig;
 import com.yf.exam.ability.upload.service.UploadService;
 import com.yf.exam.ability.upload.utils.FileUtils;
 import com.yf.exam.core.api.dto.PagingReqDTO;
@@ -131,11 +132,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Autowired
     private SysDictService sysDictService;
 
-    @Value("${conf.upload.dir}")
-    private String uploadDir;
-
-    @Value("${conf.upload.url}")
-    private String uploadUrl;
+    @Autowired
+    private UploadConfig uploadConfig;
 
     private static final Timer timer = new Timer();
     private static final int DELAY_MINUTES = 3; // 默认考试结束后3分钟提交未交卷的试卷
@@ -1005,7 +1003,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     public String listPaperForExport(List<String> ids) {
         String time = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(new Date());
         String folderName = "export_paper_" + time;
-        String fileDir = this.uploadDir + folderName + File.separator;
+        String fileDir = uploadConfig.getDir() + folderName + File.separator;
         File dir = new File(fileDir);
         if (!dir.mkdir()) {
             throw new ServiceException("文件夹创建失败!");
@@ -1033,8 +1031,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         // 打包文件
         String zipName = folderName + ".zip";
-        ZipUtils.compress(fileDir, this.uploadDir + zipName);
+        ZipUtils.compress(fileDir, uploadConfig.getDir() + zipName);
         FileUtils.deleteDir(dir);
-        return this.uploadUrl + zipName;
+        return uploadConfig.getUrl() + zipName;
     }
 }
