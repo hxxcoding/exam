@@ -676,6 +676,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Override
     public void fillAnswer(PaperAnswerDTO reqDTO) {
 
+        Paper paper = paperService.getById(reqDTO.getPaperId());
+        if (!paper.getState().equals(PaperState.ING)) {
+            return;
+        }
         //是否正确
         boolean right = false;
 
