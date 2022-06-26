@@ -72,6 +72,12 @@ public class WordUtils {
             for (int i = 0; i < paragraphs.size(); i++) {
                 if (!StringUtils.isBlank(paragraphs.get(i).getText().trim())) {
                     paragraphText.add(new WordParagraphDTO(String.valueOf(i), paragraphs.get(i).getText()));
+                } else {
+                    try {
+                        if (paragraphs.get(i).getRuns().get(0).getCTR().getDrawingList().size() != 0) {
+                            paragraphText.add(new WordParagraphDTO(String.valueOf(i), "图片所在段落"));
+                        }
+                    } catch (Exception ignore) {}
                 }
             }
             return paragraphText;
