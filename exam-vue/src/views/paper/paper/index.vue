@@ -20,6 +20,7 @@
           width="200px"
           placeholder="请选择学期/教师/选课号"
         />
+
         <el-select v-model="listQuery.params.state" placeholder="考试状态" class="filter-item" clearable>
           <el-option
             v-for="item in paperStates"
@@ -30,6 +31,15 @@
         </el-select>
 
         <el-input v-model="listQuery.params.userName" placeholder="搜索学号" style="width: 200px;" class="filter-item" clearable />
+
+        <el-select v-model="listQuery.params.maxScore" placeholder="选择最高成绩" class="filter-item" clearable :disabled="groupQueryDisable()">
+          <el-option
+            v-for="item in maxScoreOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
 
         <el-button-group class="filter-item" style="float:  right">
           <el-button v-perm="['paper:export']" size="mini" icon="el-icon-download" @click="exportExcel">导出成绩</el-button>
@@ -57,19 +67,19 @@
         <el-table-column
           label="姓名"
           align="center"
-          prop="userId_real_name"
+          prop="realName"
         />
 
         <el-table-column
           label="选课号"
           align="center"
-          prop="departId_dept_name"
+          prop="deptName"
         />
 
         <el-table-column
           label="学号"
           align="center"
-          prop="userId_user_name"
+          prop="userName"
         />
 
         <el-table-column
@@ -197,6 +207,11 @@ export default {
         { value: 2, label: '已考完' },
         { value: 3, label: '!已弃考' }
       ],
+
+      maxScoreOptions: [
+        { value: true, label: '最高分' }
+      ],
+
       treeData: [],
       defaultProps: {
         value: 'id',
@@ -208,7 +223,8 @@ export default {
         current: 1,
         size: 10,
         params: {
-          examId: ''
+          examId: '',
+          maxScore: ''
         }
       },
 
@@ -306,6 +322,14 @@ export default {
 
     exportExcel() {
       exportExcel(this.listQuery.params)
+    },
+    groupQueryDisable() {
+      if (this.listQuery.params.examId === '') {
+        this.listQuery.params.maxScore = null
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

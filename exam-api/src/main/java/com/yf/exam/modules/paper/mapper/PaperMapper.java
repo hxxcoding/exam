@@ -8,6 +8,8 @@ import com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO;
 import com.yf.exam.modules.paper.entity.Paper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
 * <p>
 * 试卷Mapper
@@ -25,4 +27,9 @@ public interface PaperMapper extends BaseMapper<Paper> {
      * @return
      */
     IPage<PaperDetailRespDTO> paging(Page page, @Param("query") PaperQueryReqDTO query);
+
+    /**
+     * 导出成绩
+     */
+    List<PaperDetailRespDTO> export(@Param("query") PaperQueryReqDTO query);
 }

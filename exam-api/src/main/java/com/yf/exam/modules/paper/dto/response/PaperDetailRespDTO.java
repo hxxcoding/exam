@@ -20,13 +20,20 @@ import lombok.EqualsAndHashCode;
 @ApiModel(value="试卷详细信息响应类", description="试卷详细信息响应类")
 public class PaperDetailRespDTO extends PaperDTO {
 
-    @Dict(dictTable = "sys_user", dicText = {"real_name", "user_name"}, dicCode = "id")
     @ApiModelProperty(value = "用户ID", required=true)
     private String userId;
 
-    @Dict(dictTable = "sys_depart", dicText = "dept_name", dicCode = "id")
+    @ApiModelProperty(value = "用户ID", required=true)
+    private String realName;
+
+    @ApiModelProperty(value = "用户ID", required=true)
+    private String userName;
+
     @ApiModelProperty(value = "部门ID", required=true)
     private String departId;
+
+    @ApiModelProperty(value = "部门名称", required=true)
+    private String deptName;
 
 
 }

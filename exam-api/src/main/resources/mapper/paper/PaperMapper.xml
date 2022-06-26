@@ -28,7 +28,6 @@
         `id`,`user_id`,`depart_id`,`exam_id`,`title`,`total_time`,`user_time`,`total_score`,`qualify_score`,`obj_score`,`subj_score`,`user_score`,`has_saq`,`state`,`create_time`,`update_time`,`limit_time`
     </sql>
 
-
     <resultMap id="ListResultMap"
                extends="BaseResultMap"
                type="com.yf.exam.modules.paper.dto.response.PaperDetailRespDTO">
@@ -36,8 +35,31 @@
     </resultMap>
 
     <select id="paging" resultMap="ListResultMap">
-        SELECT pp.*,uc.real_name, uc.depart_id dept_id FROM el_paper pp
+        <include refid="query"></include>
+    </select>
+
+    <select id="export" resultMap="ListResultMap">
+        <include refid="query"></include>
+    </select>
+
+    <sql id="query">
+        SELECT
+               pp.*,
+               uc.real_name AS real_name,
+               uc.user_name AS user_name,
+               uc.depart_id AS dept_id,
+               dp.dept_name AS dept_name
+        FROM el_paper pp
         LEFT JOIN sys_user uc ON pp.user_id=uc.id
+        LEFT JOIN sys_depart dp ON uc.depart_id=dp.id
+        <if test="query.examId!=null and query.examId!='' and query.maxScore!=null and query.maxScore==true">
+            RIGHT JOIN (
+                SELECT pp.user_id, MAX(pp.user_score) AS max_score
+                FROM el_paper pp
+                WHERE pp.exam_id=#{query.examId}
+                GROUP BY pp.user_id
+            ) t ON t.user_id = pp.user_id AND t.max_score = pp.user_score
+        </if>
         <where>
             <if test="query!=null">
                 <if test="query.examId!=null and query.examId!=''">
@@ -63,7 +85,11 @@
             </if>
         </where>
 
+        <if test="query.examId!=null and query.examId!='' and query.maxScore!=null and query.maxScore==true">
+            GROUP BY pp.user_id
+        </if>
+
         ORDER BY create_time DESC
-    </select>
+    </sql>
 
 </mapper>

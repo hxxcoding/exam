@@ -36,13 +36,13 @@
         <el-table-column
           align="center"
           label="学号"
-          prop="userId_user_name"
+          prop="userName"
         />
 
         <el-table-column
           align="center"
           label="姓名"
-          prop="userId_real_name"
+          prop="realName"
         />
 
         <el-table-column
@@ -55,7 +55,7 @@
         <el-table-column
           align="center"
           label="选课号"
-          prop="departId_dept_name"
+          prop="deptName"
         />
 
         <el-table-column

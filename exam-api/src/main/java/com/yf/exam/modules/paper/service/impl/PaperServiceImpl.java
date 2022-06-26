@@ -320,9 +320,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
         //获得数据
         IPage<Paper> page = paperService.page(query, wrapper);
-        LambdaQueryWrapper<Paper> paperWrapper = new LambdaQueryWrapper<>();
         IPage<PaperDetailRespDTO> pageData = page.convert(item -> {
             PaperDetailRespDTO paperDTO = new PaperDetailRespDTO();
+            final SysUser user = sysUserService.getById(item.getUserId());
+            final SysDepart depart = sysDepartService.getById(item.getDepartId());
+            paperDTO.setRealName(user.getRealName());
+            paperDTO.setUserName(user.getUserName());
+            paperDTO.setDeptName(depart.getDeptName());
             BeanUtils.copyProperties(item, paperDTO);
             return paperDTO;
         });
@@ -343,7 +347,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             throw new ServiceException("试卷未提交,无法查看结果!");
         }
         BeanMapper.copy(paper, respDTO);
-
+        final SysUser user = sysUserService.getById(paper.getUserId());
+        respDTO.setUserName(user.getUserName());
+        respDTO.setRealName(user.getRealName());
+        final SysDepart depart = sysDepartService.getById(user.getDepartId());
+        respDTO.setDeptName(depart.getDeptName());
         List<PaperQuDetailDTO> quList = paperQuService.listForPaperResult(paperId);
         respDTO.setQuList(quList);
 
@@ -943,40 +951,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Override
     public List<PaperExportDTO> listForExport(PaperQueryReqDTO reqDTO) {
         List<PaperExportDTO> res = new ArrayList<>();
-        // 设置导出条件
-        LambdaQueryWrapper<Paper> wrapper = new LambdaQueryWrapper<>();
-        if (!StringUtils.isBlank(reqDTO.getExamId())) {
-            wrapper.eq(Paper::getExamId, reqDTO.getExamId());
-        }
-        if (!StringUtils.isBlank(reqDTO.getDepartId())) {
-            List<String> departIds = sysDepartService.listAllSubIds(reqDTO.getDepartId());
-            wrapper.in(Paper::getDepartId, departIds);
-        }
-        if (reqDTO.getState() != null) {
-            wrapper.eq(Paper::getState, reqDTO.getState());
-        }
-        if (!StringUtils.isBlank(reqDTO.getUserName())) {
-            List<String> userIds = sysUserService.list(new LambdaQueryWrapper<SysUser>().like(SysUser::getUserName, reqDTO.getUserName()))
-                    .stream().map(SysUser::getId).collect(Collectors.toList());
-            wrapper.in(Paper::getUserId, userIds);
-        }
-        wrapper.orderByDesc(Paper::getCreateTime);
-        List<Paper> paperList = paperService.list(wrapper);
-        if (!StringUtils.isBlank(reqDTO.getExamId()) && reqDTO.getMaxScore() != null && reqDTO.getMaxScore()) { // 同一个考试查询最高分
-            Map<String, Paper> map = new LinkedHashMap<>();
-            for (Paper paper : paperList) {
-                String key = paper.getExamId() + paper.getUserId();
-                if (map.get(key) == null || map.get(key) != null && paper.getUserScore() > map.get(key).getUserScore()) {
-                    map.put(key, paper);
-                }
-            }
-            paperList = new ArrayList<>(map.values());
-        }
+        final List<PaperDetailRespDTO> paperList = baseMapper.export(reqDTO);
         int no = 1;
         // 计算各个题型分数
-        for (Paper paper : paperList) {
+        for (PaperDetailRespDTO paper : paperList) {
             PaperExportDTO exportDTO = new PaperExportDTO();
-            SysUser user = sysUserService.getById(paper.getUserId());
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             // 查询每种题目的得分
             int radioScore = 0, multiScore = 0, judgeScore = 0, blankScore = 0, officeScore = 0;
@@ -992,9 +971,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
             }
             exportDTO.setNo(no)
                     .setTitle(paper.getTitle())
-                    .setRealName(user.getRealName())
-                    .setUserName(user.getUserName())
-                    .setDeptName(sysDictService.findDict("sys_depart", "dept_name", "id", paper.getDepartId()))
+                    .setRealName(paper.getRealName())
+                    .setUserName(paper.getUserName())
+                    .setDeptName(paper.getDeptName())
                     .setSeat(paper.getSeat())
                     .setTimeRange(formatter.format(paper.getCreateTime()) + " ~ " + formatter.format(paper.getUpdateTime()))
                     .setUserTime(paper.getUserTime())

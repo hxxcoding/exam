@@ -38,5 +38,8 @@ public class PaperQueryReqDTO implements Serializable {
     @ApiModelProperty(value = "试卷状态", required=true)
     private Integer state;
 
+    @ApiModelProperty(value = "最高分", required=true)
+    private Boolean maxScore;
+
     
 }

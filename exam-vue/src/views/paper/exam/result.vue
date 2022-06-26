@@ -4,9 +4,9 @@
     <el-button v-role="['sa', 'teacher']" @click="saveToPdf">保存为PDF</el-button>
     <h2 class="text-center">{{ paperData.title }}</h2>
     <el-descriptions column="4" :content-style="{'text-align': 'center'}" :label-style="{'text-align': 'center'}" border>
-      <el-descriptions-item label="考生姓名">{{ paperData.userId_real_name }}</el-descriptions-item>
-      <el-descriptions-item label="考生学号">{{ paperData.userId_user_name }}</el-descriptions-item>
-      <el-descriptions-item label="考生班级">{{ paperData.departId_dept_name }}</el-descriptions-item>
+      <el-descriptions-item label="考生姓名">{{ paperData.realName }}</el-descriptions-item>
+      <el-descriptions-item label="考生学号">{{ paperData.userName }}</el-descriptions-item>
+      <el-descriptions-item label="考生班级">{{ paperData.deptName }}</el-descriptions-item>
       <el-descriptions-item label="考场座位号">{{ paperData.seat }}</el-descriptions-item>
       <el-descriptions-item span="2" label="考试时间">{{ paperData.createTime }} ~ {{ paperData.updateTime }}</el-descriptions-item>
       <el-descriptions-item span="2" label="考试用时">{{ paperData.userTime }}分钟</el-descriptions-item>
@@ -311,9 +311,9 @@ export default {
 
     saveToPdf() {
       htmlToPdf.downloadPDF(document.querySelector('#pdfDom'),
-        this.paperData.userId_user_name + '_' +
-        this.paperData.userId_real_name + '_' +
-        this.paperData.departId_dept_name + '_' +
+        this.paperData.userName + '_' +
+        this.paperData.realName + '_' +
+        this.paperData.deptName + '_' +
         this.paperData.userScore + '_' + this.paperId)
     }
   }

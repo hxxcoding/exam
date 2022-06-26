@@ -219,7 +219,6 @@ public class PaperController extends BaseController {
     @RequiresPermissions("paper:paper-result")
     @RequestMapping(value = "/paper-result", method = { RequestMethod.POST})
     public ApiRest<ExamResultRespDTO> paperResult(@RequestBody BaseIdReqDTO reqDTO) {
-        //根据ID删除
         ExamResultRespDTO respDTO = baseService.paperResult(reqDTO.getId());
         return super.success(respDTO);
     }
@@ -242,10 +241,14 @@ public class PaperController extends BaseController {
     @RequestMapping(value = "/export", method = { RequestMethod.POST })
     public void exportFile(HttpServletResponse response, @RequestBody PaperQueryReqDTO reqDTO) {
         try {
+            String title = "成绩单";
+            if (reqDTO.getMaxScore() != null && reqDTO.getMaxScore()) {
+                title += "(最高分)";
+            }
             List<PaperExportDTO> list = baseService.listForExport(reqDTO);
             // 导出文件名
             String fileName = "导出成绩-" + System.currentTimeMillis() + ".xlsx";
-            new ExportExcel("成绩单", PaperExportDTO.class).setDataList(list).write(response, fileName).dispose();
+            new ExportExcel(title, PaperExportDTO.class).setDataList(list).write(response, fileName).dispose();
         } catch (Exception e) {
             throw new ServiceException("导出失败:" + e.getMessage());
         }
