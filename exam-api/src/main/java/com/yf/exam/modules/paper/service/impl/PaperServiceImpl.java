@@ -960,7 +960,18 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     .stream().map(SysUser::getId).collect(Collectors.toList());
             wrapper.in(Paper::getUserId, userIds);
         }
+        wrapper.orderByDesc(Paper::getCreateTime);
         List<Paper> paperList = paperService.list(wrapper);
+        if (!StringUtils.isBlank(reqDTO.getExamId()) && reqDTO.getMaxScore() != null && reqDTO.getMaxScore()) { // 同一个考试查询最高分
+            Map<String, Paper> map = new LinkedHashMap<>();
+            for (Paper paper : paperList) {
+                String key = paper.getExamId() + paper.getUserId();
+                if (map.get(key) == null || map.get(key) != null && paper.getUserScore() > map.get(key).getUserScore()) {
+                    map.put(key, paper);
+                }
+            }
+            paperList = new ArrayList<>(map.values());
+        }
         int no = 1;
         // 计算各个题型分数
         for (Paper paper : paperList) {
